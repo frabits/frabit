@@ -4,5 +4,8 @@ GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gp
 This file is part of Frabit
 
 */
+package db
 
-package frabitd
+// generateSQLPatches contains DDLs for patching schema to the latest version.
+// Add new statements at the end of the list so they form a changelog.
+var generateSQLPatches = []string{}

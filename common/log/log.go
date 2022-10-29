@@ -5,14 +5,4 @@ This file is part of Frabit
 
 */
 
-package agent
-
-type Agent struct {
-	frabit string
-}
-
-func New(f string) *Agent {
-	return &Agent{
-		frabit: f,
-	}
-}
+package log

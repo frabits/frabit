@@ -5,14 +5,14 @@ This file is part of Frabit
 
 */
 
-package agent
+package config
 
-type Agent struct {
-	frabit string
+type Config struct {
+	MySQLFrabitDatabase string
+	MySQLFrabitHost     string
+	MySQLFrabitPort     string
+	MySQLFrabitUserName string
+	MySQLFrabitPassword string
 }
 
-func New(f string) *Agent {
-	return &Agent{
-		frabit: f,
-	}
-}
+var Conf Config
