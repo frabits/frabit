@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	"github.com/frabit-io/frabit/common/log"
-	"github.com/frabit-io/frabit/frabitd/config"
+	"github.com/frabit-io/frabit/server/config"
 
 	_ "github.com/go-sql-driver/mysql"
 )

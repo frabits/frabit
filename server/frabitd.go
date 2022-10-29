@@ -5,4 +5,4 @@ This file is part of Frabit
 
 */
 
-package frabitd
+package server
