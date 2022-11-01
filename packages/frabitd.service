@@ -1,0 +1,14 @@
+[Unit]
+Description=frabitd
+After=time-sync.target network.target
+
+[Service]
+EnvironmentFile=-/etc/sysconfig/frabitd
+Type=simple
+User=frabit
+Group=frabit
+PermissionsStartOnly=true
+ExecStart=/usr/bin/frabitd
+
+[Install]
+WantedBy=multi-user.target

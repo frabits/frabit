@@ -9,9 +9,38 @@
 
 package version
 
+import (
+	"fmt"
+	"time"
+)
+
 type Version struct {
 	Major int
 	Minor int
 	Patch int
 	Dist  string
+}
+
+type Build struct {
+	GitHash string
+	Date    time.Time
+	Arch    string
+}
+
+func init() {
+	newVersion()
+}
+func newVersion() *Version {
+	return &Version{}
+
+}
+
+func (v Version) String() string {
+	str := fmt.Sprintf("%d.%d.%d-%s", v.Major, v.Minor, v.Patch, v.Dist)
+	return str
+}
+
+func (v Version) BuildInfo() string {
+	str := fmt.Sprintf("%d.%d.%d-%s", v.Major, v.Minor, v.Patch, v.Dist)
+	return str
 }
