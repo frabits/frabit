@@ -10,17 +10,18 @@
 
 ## What is Frabit?
 
-Frabit is a Database CI/CD solution for the Developers and DBAs. The Frabit family consists of these tools:
+Frabit is a comprehensive platform for database and can be  used by the Developers and DBAs. The Frabit family consists of these components:
 
-- [Frabit Console](https://bytebase.com/?source=github): A web-based GUI for developers and DBAs to manage the database development lifecycle.
-- [Frabit CLI (frabit-admin)](https://www.bytebase.com/docs/cli/overview): The CLI to help developers integrate MySQL and PostgreSQL schema change into the existing CI/CD workflow.
-- [Frabit agent](https://github.com/marketplace/bytebase): The GitHub App and GitHub Action to detect SQL anti-patterns and enforce a consistent SQL style guide during Pull Request.
-- [Frabit server](https://github.com/marketplace/bytebase): The GitHub App and GitHub Action to detect SQL anti-patterns and enforce a consistent SQL style guide during Pull Request.
+
+- **Frabit Console**: A web-based GUI for developers and DBAs to manage the database.
+- **Frabit CLI (frabit-admin)**: The CLI to help developers integrate MySQL and PostgreSQL schema change into the existing CI/CD workflow.
+- **Frabit agent**: The frabit-agent take actions at remote node, it's running as daemon process.
+- **Frabit server**: The frabit-server is core service for frabit stack,it's running as a centralized daemon process.
 
 
 ## Support Database
 
-✅ MySQL ✅ MongoDB ✅ TiDB ✅ ClickHouse ✅ Redis
+✅ MySQL  ✅ Redis ✅ MongoDB  ✅ ClickHouse
 
 ## Features
 
@@ -34,7 +35,7 @@ Frabit is a Database CI/CD solution for the Developers and DBAs. The Frabit fami
     - Approval policy
     - Backup schedule enforcement  
 - [x] Role-based access control (RBAC)
-- [x] Webhook integration for Slack, Discord, MS Teams, DingTalk(钉钉), Feishu(飞书), WeCom(企业微信)
+- [x] Webhook integration for Slack, DingTalk(钉钉), Feishu(飞书), WeCom(企业微信)
 
 ## Install
 
