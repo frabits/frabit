@@ -14,6 +14,13 @@ import (
 	"time"
 )
 
+const (
+	Major = 1
+	Minor = 0
+	Patch = 0
+	Dist  = "community"
+)
+
 type Version struct {
 	Major int
 	Minor int
@@ -23,16 +30,30 @@ type Version struct {
 
 type Build struct {
 	GitHash string
-	Date    time.Time
+	Date    string
 	Arch    string
 }
 
 func init() {
 	newVersion()
+	newBuild()
 }
-func newVersion() *Version {
-	return &Version{}
 
+func newVersion() *Version {
+	return &Version{
+		Major: Major,
+		Minor: Minor,
+		Patch: Patch,
+		Dist:  Dist,
+	}
+}
+
+func newBuild() *Build {
+	return &Build{
+		GitHash: "unknown",
+		Date:    time.Now().Format(time.RFC3339),
+		Arch:    "",
+	}
 }
 
 func (v Version) String() string {
@@ -40,7 +61,7 @@ func (v Version) String() string {
 	return str
 }
 
-func (v Version) BuildInfo() string {
-	str := fmt.Sprintf("%d.%d.%d-%s", v.Major, v.Minor, v.Patch, v.Dist)
+func (b Build) BuildInfo() string {
+	str := fmt.Sprintf("GitHash:%s\n Date:%s\n Arch:%s\n", b.GitHash, b.Date, b.Arch)
 	return str
 }
