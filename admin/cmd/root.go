@@ -18,7 +18,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "frabit-admin",
-	Short: "Bytebase is a database schema change and version control tool",
+	Short: "Frabit is a comprehensive database platform for DBAs and developers",
 	Run: func(_ *cobra.Command, _ []string) {
 		fmt.Println(runtime.GOOS, runtime.GOARCH)
 	},

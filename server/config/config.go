@@ -8,11 +8,13 @@ This file is part of Frabit
 package config
 
 type Config struct {
-	MySQLFrabitDatabase string
-	MySQLFrabitHost     string
-	MySQLFrabitPort     string
-	MySQLFrabitUserName string
-	MySQLFrabitPassword string
+	MySQLFrabitDatabase           string
+	MySQLFrabitHost               string
+	MySQLFrabitPort               string
+	MySQLFrabitUserName           string
+	MySQLFrabitPassword           string
+	MySQLFrabitMaxPoolConnections int
+	SkipFrabitDatabaseUpdate      bool
 }
 
 var Conf Config

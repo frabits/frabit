@@ -16,27 +16,28 @@ import (
 	"github.com/frabit-io/frabit/server/config"
 
 	_ "github.com/go-sql-driver/mysql"
+	"go.uber.org/zap"
 )
 
-// OpenTopology returns the DB instance for the frabit backed database
-func OpenOrchestrator() (db *sql.DB, err error) {
+// OpenFrabit returns the DB instance for the frabit backed database
+func OpenFrabit() (db *sql.DB, err error) {
 	// first time ever we talk to MySQL
 	query := fmt.Sprintf("create database if not exists %s", config.Conf.MySQLFrabitDatabase)
 	if _, err := db.Exec(query); err != nil {
-		return db, log.Errore(err)
+		return db, err
 	}
-	if !config.Config.SkipOrchestratorDatabaseUpdate {
+	if !config.Conf.SkipFrabitDatabaseUpdate {
 		initFrabitDB(db)
 	}
 	maxIdleConns := int(100)
 	if maxIdleConns < 10 {
 		maxIdleConns = 10
 	}
-	log.Infof("Connecting to backend %s:%d: maxConnections: %d, maxIdleConns: %d",
-		config.Conf.MySQLFrabitHost,
-		config.Conf.MySQLFrabitPort,
-		config.Conf.MySQLFrabitMaxPoolConnections,
-		maxIdleConns)
+	log.Info("Connecting to backend  %s:%d: maxConnections: %d, maxIdleConns: %d",
+		zap.String("host", config.Conf.MySQLFrabitHost),
+		zap.String("port", config.Conf.MySQLFrabitPort),
+		zap.Int("maxConnections", config.Conf.MySQLFrabitMaxPoolConnections),
+		zap.Int("maxIdleConns", maxIdleConns))
 	db.SetMaxIdleConns(maxIdleConns)
 	return db, err
 }
@@ -55,7 +56,7 @@ func initFrabitDB(db *sql.DB) error {
 func deployStatements(db *sql.DB, queries []string) error {
 	tx, err := db.Begin()
 	if err != nil {
-		log.Fatale(err)
+		log.Error("Start transaction failed", zap.Error(err))
 	}
 	for i, query := range queries {
 		if i == 0 {
@@ -63,19 +64,19 @@ func deployStatements(db *sql.DB, queries []string) error {
 		}
 		if _, err := tx.Exec(query); err != nil {
 			if strings.Contains(err.Error(), "syntax error") {
-				return log.Fatalf("Cannot initiate orchestrator: %+v; query=%+v", err, query)
+				return err
 			}
 			if !strings.Contains(err.Error(), "duplicate column name") &&
 				!strings.Contains(err.Error(), "Duplicate column name") &&
 				!strings.Contains(err.Error(), "check that column/key exists") &&
 				!strings.Contains(err.Error(), "already exists") &&
 				!strings.Contains(err.Error(), "Duplicate key name") {
-				log.Errorf("Error initiating frabit: %+v; query=%+v", err, query)
+				log.Error("Error initiating frabit", zap.Error(err), zap.String("query", query))
 			}
 		}
 	}
 	if err := tx.Commit(); err != nil {
-		log.Fatale(err)
+		log.Error("Commit transaction failed", zap.Error(err))
 	}
 	return nil
 }

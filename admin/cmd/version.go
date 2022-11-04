@@ -17,13 +17,13 @@ import (
 
 var newVersionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Bytebase is a database schema change and version control tool",
+	Short: "Frabit is a comprehensive database platform for DBAs and developers",
 	Run:   runVersion,
 }
 
 func runVersion(cmd *cobra.Command, args []string) {
-	v := version.Version{}
-	fmt.Printf("%s\n", v.String())
+	fmt.Printf("%s\n", version.InfoStr.String())
+	fmt.Printf("%s", version.InfoStr.BuildInfo())
 }
 
 func init() {

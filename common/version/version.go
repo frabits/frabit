@@ -11,6 +11,7 @@ package version
 
 import (
 	"fmt"
+	"runtime"
 	"time"
 )
 
@@ -20,6 +21,11 @@ const (
 	Patch = 0
 	Dist  = "community"
 )
+
+type Info struct {
+	Version
+	Build
+}
 
 type Version struct {
 	Major int
@@ -34,13 +40,20 @@ type Build struct {
 	Arch    string
 }
 
+var InfoStr Info
+
 func init() {
-	newVersion()
-	newBuild()
+	InfoStr = newInfo()
 }
 
-func newVersion() *Version {
-	return &Version{
+func newInfo() Info {
+	return Info{
+		Version: newVersion(),
+		Build:   newBuild(),
+	}
+}
+func newVersion() Version {
+	return Version{
 		Major: Major,
 		Minor: Minor,
 		Patch: Patch,
@@ -48,11 +61,11 @@ func newVersion() *Version {
 	}
 }
 
-func newBuild() *Build {
-	return &Build{
+func newBuild() Build {
+	return Build{
 		GitHash: "unknown",
 		Date:    time.Now().Format(time.RFC3339),
-		Arch:    "",
+		Arch:    runtime.GOARCH,
 	}
 }
 
@@ -62,6 +75,6 @@ func (v Version) String() string {
 }
 
 func (b Build) BuildInfo() string {
-	str := fmt.Sprintf("GitHash:%s\n Date:%s\n Arch:%s\n", b.GitHash, b.Date, b.Arch)
+	str := fmt.Sprintf("GitHash:%s BuildDate:%s Arch:%s", b.GitHash, b.Date, b.Arch)
 	return str
 }
