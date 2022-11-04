@@ -15,17 +15,14 @@ import (
 )
 
 var (
-	// `gl` is the global logger.
-	// Other packages should use public methods such as Info/Error to do the logging.
-	// For other types of logging, e.g. logging to a separate file, they should use their own loggers.
-	gl     *zap.Logger
+	Logger *zap.Logger
 	gLevel zap.AtomicLevel
 )
 
 // Initializes the global console logger.
 func init() {
 	gLevel = zap.NewAtomicLevelAt(zap.InfoLevel)
-	gl = zap.New(zapcore.NewCore(
+	Logger = zap.New(zapcore.NewCore(
 		zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig()),
 		zapcore.Lock(os.Stdout),
 		gLevel,
@@ -44,25 +41,25 @@ func EnabledLevel(level zapcore.Level) bool {
 
 // Debug wraps the zap Logger's Debug method.
 func Debug(msg string, fields ...zap.Field) {
-	gl.Debug(msg, fields...)
+	Logger.Debug(msg, fields...)
 }
 
 // Info wraps the zap Logger's Info method.
 func Info(msg string, fields ...zap.Field) {
-	gl.Info(msg, fields...)
+	Logger.Info(msg, fields...)
 }
 
 // Warn wraps the zap Logger's Warn method.
 func Warn(msg string, fields ...zap.Field) {
-	gl.Warn(msg, fields...)
+	Logger.Warn(msg, fields...)
 }
 
 // Error wraps the zap Logger's Error method.
 func Error(msg string, fields ...zap.Field) {
-	gl.Error(msg, fields...)
+	Logger.Error(msg, fields...)
 }
 
 // Sync wraps the zap Logger's Sync method.
 func Sync() {
-	_ = gl.Sync()
+	_ = Logger.Sync()
 }
