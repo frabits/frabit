@@ -10,8 +10,9 @@
 
 ## What is Frabit?
 
-Frabit is a comprehensive platform for database and can be  used by the Developers and DBAs. The Frabit family consists of these components:
+Why named "Frabit"? It's consist of the first letter of "Fly" that mean speed and "rabbit" remove repeated letter 'b'. Crafty rabbit will ready three Caves.
 
+Frabit is a comprehensive platform for database and can be  used by the Developers and DBAs. The Frabit family consists of these components:
 
 - **Frabit Console**: A web-based GUI for developers and DBAs to manage the database.
 - **Frabit CLI (frabit-admin)**: The CLI to help developers integrate MySQL and PostgreSQL schema change into the existing CI/CD workflow.
