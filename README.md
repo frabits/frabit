@@ -10,7 +10,8 @@
 
 ## What is Frabit?
 
-Why named "Frabit"? It's consist of the first letter of "Fly" that mean speed and "rabbit" remove repeated letter 'b'. Crafty rabbit will ready three Caves.
+Why named "Frabit"? It's consist of the first letter of "Fly" that mean speed and "rabbit" remove repeated letter 'b'. 
+Crafty rabbit will ready three caves.
 
 Frabit is a comprehensive platform for database and can be  used by the Developers and DBAs. The Frabit family consists of these components:
 
