@@ -7,6 +7,8 @@ This file is part of Frabit
 
 package agent
 
+import "fmt"
+
 type Agent struct {
 	frabit string
 }
@@ -15,4 +17,8 @@ func New(f string) *Agent {
 	return &Agent{
 		frabit: f,
 	}
+}
+
+func RunAgent(mysqlURI string) {
+	fmt.Println("start  agent process as sidecar")
 }

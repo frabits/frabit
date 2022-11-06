@@ -9,10 +9,10 @@ package cmd
 
 import (
 	"fmt"
-
 	"github.com/frabit-io/frabit/common/version"
-
 	"github.com/spf13/cobra"
+
+	_ "github.com/frabit-io/frabit/common"
 )
 
 var newVersionCmd = &cobra.Command{
