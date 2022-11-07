@@ -25,6 +25,25 @@ var generateSQLBase = []string{
           PRIMARY KEY (hostname,port)
         ) ENGINE=InnoDB	`,
 	`
-		CREATE INDEX first_seen_idx_database_instance_stale_binlog_coordinates ON database_instance_stale_binlog_coordinates (first_seen)
-	`,
+        CREATE TABLE IF NOT EXISTS license (
+          id bigint NOT NULL auto_increment,
+          license_level varchar(15) NOT NULL default "basic" comment "valid license level include：basic、gold and  ",
+          current_license varchar(500) NOT NULL DEFAULT '',
+          last_license varchar(500) NOT NULL DEFAULT '',
+          update_id bigint not null default 0 comment ''
+          PRIMARY KEY (id)
+        ) ENGINE=InnoDB`,
+	`
+        CREATE TABLE IF NOT EXISTS version (
+	      id bigint NOT NULL auto_increment,
+	      version varchar(15) NOT NULL default "v1.0.0" comment "frabit component version", 
+	      PRIMARY KEY (id)
+	) ENGINE=InnoDB`,
+	`
+        CREATE TABLE IF NOT EXISTS user (
+	      id bigint NOT NULL auto_increment,
+	      user_name varchar(100) NOT NULL default "" comment "login user name", 
+          email varchar(100) NOT NULL default "", 
+	      PRIMARY KEY (id)
+	) ENGINE=InnoDB`,
 }
