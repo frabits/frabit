@@ -6,12 +6,3 @@ This file is part of Frabit
 */
 
 package service
-
-import (
-	"fmt"
-	"time"
-)
-
-func (s server) SetupDeployRouter() {
-	fmt.Println("todo:", time.Time{})
-}
