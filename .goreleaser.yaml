@@ -1,6 +1,7 @@
 builds:
-  - main: ./cmd/frabit-admin
-  - env: [CGO_ENABLED=0]
+  -
+    main: ./cmd/frabit-admin
+    env: [CGO_ENABLED=0]
     goos:
       - linux
       - windows
@@ -8,7 +9,7 @@ builds:
     goarch:
       - amd64
       - arm64
-  binary: frabit-admin
+    binary: frabit-admin
 
 nfpms:
   - maintainer: Blylei <blylei.info@gmail.com>
