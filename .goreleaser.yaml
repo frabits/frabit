@@ -24,9 +24,9 @@ nfpms:
 release:
   # Repo in which the release will be created.
   # Default is extracted from the origin remote URL or empty if its private hosted.
-  # github:
-  #  owner: user
-  #  name: repo
+  github:
+    owner: blylei
+    name: frabit
 
   # IDs of the archives to use.
   # Defaults to all.
