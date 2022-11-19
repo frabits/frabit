@@ -1,8 +1,16 @@
-name: Tests
-on: [push, pull_request]
+name: ci
+
+on:
+  push:
+    branches:
+      - 'main'
+    tags:
+      - 'v*'
+  pull_request:
+  workflow_dispatch:
+
 env:
   GOVERSION: "1.18"
-  SKEEMA_TEST_IMAGES: "mysql:5.7,mysql:8.0,mariadb:10.5"
 jobs:
   test:
     name: Check code quality and run tests
