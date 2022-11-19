@@ -22,11 +22,6 @@ jobs:
         with:
           go-version: ${{env.GOVERSION}}
 
-      - name: Report coverage
-        env:
-          COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: go install github.com/mattn/goveralls && goveralls -v -coverprofile=coverage.out -service=github
-
   release:
     name: Build and deploy new release
     needs: test
