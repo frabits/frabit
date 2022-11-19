@@ -8,6 +8,8 @@ builds:
     goarch:
       - amd64
       - arm64
+  binary: frabit-admin
+
 nfpms:
   - maintainer: Blylei <blylei.info@gmail.com>
     description: Frabit is a comprehensive platform for database and can be used by the Developers and DBAs.
@@ -27,9 +29,9 @@ release:
 
   # IDs of the archives to use.
   # Defaults to all.
-  #ids:
-  #  - frabit-admin
-  #  - frabit-agent
+  ids:
+    - frabit-admin
+    - frabit-agent
 
   # If set to true, will not auto-publish the release.
   # Available only for GitHub and Gitea.
