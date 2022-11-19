@@ -114,7 +114,7 @@ release:
   #
   # Default: false.
   # Since: v1.11.
-  skip_upload: false
+  skip_upload: true
 
   # You can add extra pre-existing files to the release.
   # The filename on the release will be the last part of the path (base).
