@@ -1,0 +1,19 @@
+project_name: frabit
+builds:
+  - env: [CGO_ENABLED=0]
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+nfpms:
+  - maintainer: Blylei <blylei.info@gmail.com>
+    description: Frabit is a comprehensive platform for database and can be used by the Developers and DBAs.
+    homepage: https://github.com/frabit-io/frabit
+    license: GPLv3
+    formats:
+      - deb
+      - rpm
+      - apk
