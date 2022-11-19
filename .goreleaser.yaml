@@ -1,4 +1,3 @@
-project_name: frabit
 builds:
   - main: ./cmd/frabit-admin
   - env: [CGO_ENABLED=0]
