@@ -10,13 +10,13 @@
 
 ## What is Frabit?
 
-Why named "Frabit"? It's consist of the first letter of "Fly" that mean speed and "rabbit" remove repeated letter 'b'. 
+Why named "Frabit"? It's consist of the first letter of "Fly" that means speed and "rabbit" remove repeated letter 'b'. 
 Crafty rabbit will ready three caves.
 
 Frabit is a comprehensive platform for database and can be  used by the Developers and DBAs. The Frabit family consists of these components:
 
-- **Frabit Console**: A web-based GUI for developers and DBAs to manage the database.
-- **Frabit CLI (frabit-admin)**: The CLI to help developers integrate MySQL and PostgreSQL schema change into the existing CI/CD workflow.
+- **Frabit Console**: A web-based GUI for developers and DBAs to use/manage the databases.
+- **Frabit CLI (frabit-admin)**: The CLI mostly used to deploy/upgrade database cluster、make backup/restore and so forth. Mostly, DBAs will use this toolkit .
 - **Frabit agent**: The frabit-agent take actions at remote node, it's running as daemon process.
 - **Frabit server**: The frabit-server is core service for frabit stack,it's running as a centralized daemon process.
 
