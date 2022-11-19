@@ -12,6 +12,8 @@ package main
 import (
 	"fmt"
 	"time"
+
+	_ "github.com/frabit-io/frabit/server"
 )
 
 func main() {
