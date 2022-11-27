@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "frabit",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "pinia": "^2.0.26",
     "vue": "^3.2.41"
   },
   "devDependencies": {
