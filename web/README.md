@@ -1,7 +1,17 @@
-# Vue 3 + Vite
+![GitHub](https://img.shields.io/github/license/frabit-io/frabit)
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+<p align="center" >
+<img src="https://raw.githubusercontent.com/frabit-io/frabit/main/docs/images/dblist.png" width="60%" />
+</p>
 
-## Recommended IDE Setup
+# Frabit DB综合管理平台
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+## 1、备份、恢复管理
+
+## 2、部署、升级
+
+## 3、SQL工单管理
+
+## 4、数据库高可用管理
+
+## 5、数据库会话管理
