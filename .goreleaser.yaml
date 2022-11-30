@@ -18,7 +18,6 @@ nfpms:
     formats:
       - deb
       - rpm
-      - apk
 
 release:
   # Repo in which the release will be created.
