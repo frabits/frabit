@@ -41,7 +41,9 @@ Frabit is a comprehensive platform for database and can be  used by the Develope
 
 ## Install
 
+### 1、Build from source code
 Clone source code from GitHub
+
 ```bash
 git clone https://github.com/frabit-io/frabit.git
 ```
@@ -56,4 +58,7 @@ Copy executable file to your PATH
 cp frabit /usr/local/bin
 ```
 
+### 2、rpm or deb package
+
+### 3、install binary file
 Now, enjoy this toolkit
