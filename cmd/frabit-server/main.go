@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"time"
 
-	_ "github.com/frabit-io/frabit/server"
+	_ "github.com/frabits/frabit/server"
 )
 
 func main() {

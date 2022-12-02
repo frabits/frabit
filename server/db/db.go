@@ -12,8 +12,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/frabit-io/frabit/common/log"
-	"github.com/frabit-io/frabit/server/config"
+	"github.com/frabits/frabit/common/log"
+	"github.com/frabits/frabit/server/config"
 
 	_ "github.com/go-sql-driver/mysql"
 	"go.uber.org/zap"

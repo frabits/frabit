@@ -10,7 +10,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/frabit-io/frabit/common/version"
+	"github.com/frabits/frabit/common/version"
 
 	"github.com/spf13/cobra"
 )

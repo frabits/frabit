@@ -12,7 +12,7 @@ package main
 import (
 	"os"
 
-	"github.com/frabit-io/frabit/admin/cmd"
+	"github.com/frabits/frabit/admin/cmd"
 )
 
 func main() {

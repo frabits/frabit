@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/frabit-io/frabit/server/config"
+	"github.com/frabits/frabit/server/config"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,12 +1,12 @@
-module github.com/frabit-io/frabit
+module github.com/frabits/frabit
 
 go 1.18
 
 require (
 	github.com/gin-gonic/gin v1.8.1
-	github.com/go-sql-driver/mysql v1.6.0
+	github.com/go-sql-driver/mysql v1.7.0
 	github.com/spf13/cobra v1.6.1
-	go.uber.org/zap v1.23.0
+	go.uber.org/zap v1.24.0
 )
 
 require (

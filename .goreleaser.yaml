@@ -13,7 +13,7 @@ builds:
 nfpms:
   - maintainer: Blylei <blylei.info@gmail.com>
     description: Frabit is a comprehensive platform for database and can be used by the Developers and DBAs.
-    homepage: https://github.com/frabit-io/frabit
+    homepage: https://github.com/frabits/frabit
     license: GPLv3
     formats:
       - deb
@@ -23,7 +23,7 @@ release:
   # Repo in which the release will be created.
   # Default is extracted from the origin remote URL or empty if its private hosted.
   github:
-    owner: frabit-io
+    owner: frabits
     name: frabit
 
   # IDs of the archives to use.

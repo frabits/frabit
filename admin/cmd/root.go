@@ -13,7 +13,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	_ "github.com/frabit-io/frabit/common"
+	_ "github.com/frabits/frabit/common"
 )
 
 var rootCmd = &cobra.Command{

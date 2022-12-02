@@ -10,7 +10,7 @@ package main
 import (
 	"os"
 
-	"github.com/frabit-io/frabit/agent/cmd"
+	"github.com/frabits/frabit/agent/cmd"
 )
 
 func main() {
