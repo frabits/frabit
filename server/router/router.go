@@ -6,3 +6,20 @@ This file is part of Frabit
 */
 
 package router
+
+import (
+	"fmt"
+	"time"
+
+	_ "github.com/frabits/frabit/server/service"
+
+	"github.com/gin-gonic/gin"
+)
+
+type Router struct {
+	gin.Engine
+}
+
+func (r *Router) Setup(g gin.RouterGroup) {
+	fmt.Println(time.Now().Format(time.RFC3339))
+}

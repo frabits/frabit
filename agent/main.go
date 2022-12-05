@@ -6,15 +6,3 @@ This file is part of Frabit
 */
 
 package main
-
-import (
-	"os"
-
-	"github.com/frabits/frabit/agent/cmd"
-)
-
-func main() {
-	if err := cmd.Execute(); err != nil {
-		os.Exit(1)
-	}
-}

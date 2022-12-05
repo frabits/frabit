@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/frabits/frabit/server/config"
+	_ "github.com/frabits/frabit/server/router"
 
 	"github.com/gin-gonic/gin"
 )

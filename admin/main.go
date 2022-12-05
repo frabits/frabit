@@ -7,7 +7,9 @@ This file is part of Frabit
 
 package main
 
-import "github.com/frabits/frabit/cmd/frabit-server/cmd"
+import (
+	"github.com/frabits/frabit/admin/cmd"
+)
 
 func main() {
 	cmd.Execute()

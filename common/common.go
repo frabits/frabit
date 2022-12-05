@@ -6,3 +6,7 @@ This file is part of Frabit
 */
 
 package common
+
+import "time"
+
+var Dateyyyymmdd = time.RFC3339

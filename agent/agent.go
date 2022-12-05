@@ -5,7 +5,7 @@ This file is part of Frabit
 
 */
 
-package agent
+package main
 
 import "fmt"
 
