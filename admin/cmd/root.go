@@ -1,4 +1,5 @@
-/* (c) 2022 Frabit Project maintained and limited by Blylei < blylei.info@gmail.com >
+/*
+Copyright © 2022 Frabit Project maintained and limited by Blylei < blylei.info@gmail.com >
 GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 This file is part of Frabit
@@ -15,17 +16,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "frabit-admin",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Use: "frabit-admin",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

@@ -1,4 +1,5 @@
-/* (c) 2022 Frabit Project maintained and limited by Blylei < blylei.info@gmail.com >
+/*
+Copyright © 2022 Frabit Project maintained and limited by Blylei < blylei.info@gmail.com >
 GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 This file is part of Frabit
@@ -9,6 +10,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/frabits/frabit/common/version"
 
@@ -26,9 +28,13 @@ var flag struct {
 	port int
 }
 
-// Execute executes the root command.
-func Execute() error {
-	return rootCmd.Execute()
+// Execute adds all child commands to the root command and sets flags appropriately.
+// This is called by main.main(). It only needs to happen once to the rootCmd.
+func Execute() {
+	err := rootCmd.Execute()
+	if err != nil {
+		os.Exit(1)
+	}
 }
 
 func init() {

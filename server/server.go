@@ -1,4 +1,5 @@
-/* (c) 2022 Frabit Project maintained and limited by Blylei < blylei.info@gmail.com >
+/*
+Copyright © 2022 Frabit Project maintained and limited by Blylei < blylei.info@gmail.com >
 GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 This file is part of Frabit
@@ -13,21 +14,21 @@ import (
 	"time"
 
 	"github.com/frabits/frabit/server/config"
-	_ "github.com/frabits/frabit/server/router"
-
-	"github.com/gin-gonic/gin"
+	"github.com/frabits/frabit/server/router"
+	"github.com/frabits/frabit/server/service"
 )
 
 type Server struct {
-	startedTs int64
-	Conf      config.Config
-	g         gin.Engine
+	startedTs     int64
+	BackupService service.BackupService
+	config        config.Config
+	g             router.Router
 }
 
-func NewServer(ctx context.Context, cfg config.Config) *Server {
+func NewServer(cfg config.Config) *Server {
 	srv := &Server{
 		startedTs: time.Now().Unix(),
-		Conf:      cfg,
+		config:    cfg,
 	}
 
 	return srv

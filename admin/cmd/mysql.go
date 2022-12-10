@@ -1,7 +1,11 @@
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+Copyright © 2022 Frabit Project maintained and limited by Blylei < blylei.info@gmail.com >
+GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+This file is part of Frabit
 
 */
+
 package cmd
 
 import (
@@ -22,6 +26,7 @@ to quickly create a Cobra application.`,
 
 func init() {
 	deployCmd.AddCommand(mysqlCmd)
+	upgradeCmd.AddCommand(mysqlCmd)
 
 	// Here you will define your flags and configuration settings.
 
