@@ -11,7 +11,7 @@ import (
 // deployCmd represents the deploy command
 var deployCmd = &cobra.Command{
 	Use:   "deploy",
-	Short: "A brief description of your command",
+	Short: "Deploy a database based on provide database type",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 

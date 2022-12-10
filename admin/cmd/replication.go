@@ -11,7 +11,22 @@ import (
 )
 
 // replicationCmd represents the replication command
-var replicationCmd = &cobra.Command{
+var replicationMysqlCmd = &cobra.Command{
+	Use:   "replication",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("replication called")
+	},
+}
+
+// replicationCmd represents the replication command
+var replicationClickhouseCmd = &cobra.Command{
 	Use:   "replication",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
@@ -26,7 +41,8 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	mysqlCmd.AddCommand(replicationCmd)
+	mysqlCmd.AddCommand(replicationMysqlCmd)
+	clickhouseCmd.AddCommand(replicationClickhouseCmd)
 
 	// Here you will define your flags and configuration settings.
 
