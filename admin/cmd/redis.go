@@ -8,9 +8,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// deployCmd represents the deploy command
-var deployCmd = &cobra.Command{
-	Use:   "deploy",
+// redisCmd represents the redis command
+var redisCmd = &cobra.Command{
+	Use:   "redis",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -21,15 +21,15 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	rootCmd.AddCommand(deployCmd)
+	deployCmd.AddCommand(redisCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// deployCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// redisCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// deployCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// redisCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
