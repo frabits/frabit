@@ -12,7 +12,7 @@
 ![GitHub](https://img.shields.io/github/license/frabit-io/frabit)
 </div>
 
-## What is Frabit? 
+##  Frabit是什么 
 
 Why named "Frabit"? It's consist of the first letter of "Fly" that means speed and "rabbit" remove repeated letter 'b'. 
 Crafty rabbit will ready three caves.
@@ -25,11 +25,11 @@ Frabit is a comprehensive platform for database and can be  used by the Develope
 - **Frabit server**: The frabit-server is core service for frabit stack,it's running as a centralized daemon process.
 
 
-## Support Database
+## 支持数据库类型
 
 ✅ MySQL  ✅ Redis ✅ MongoDB  ✅ ClickHouse
 
-## Features
+## 特性
 
 - [x] Web-based database cluster deployment and upgrade
 - [x] Built-in SQL Editor
@@ -43,9 +43,9 @@ Frabit is a comprehensive platform for database and can be  used by the Develope
 - [x] Role-based access control (RBAC)
 - [x] Webhook integration for Slack, DingTalk(钉钉), Feishu(飞书), WeCom(企业微信)
 
-## Install
+## 安装、部署
 
-### 1、Build from source code
+### 1、源码编译安装
 Clone source code from GitHub
 
 ```bash
@@ -62,7 +62,7 @@ Copy executable file to your PATH
 cp frabit /usr/local/bin
 ```
 
-### 2、rpm or deb package
+### 2、使用rpm/deb进行安装
 
-### 3、install binary file
+### 3、直接使用二进制文件进行安装
 Now, enjoy this toolkit
