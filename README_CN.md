@@ -6,10 +6,11 @@
 
 [简体中文](https://github.com/frabits/frabit/blob/main/README_CN.md) | [English](https://github.com/frabits/frabit/blob/main/README.md)
 
-[![GoDoc](https://pkg.go.dev/badge/github.com/frabit-io/frabit?utm_source=godoc)](https://godoc.org/github.com/frabit-io/frabit)
-![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/frabit-io/frabit)
-[![Go Report Card](https://goreportcard.com/badge/github.com/frabit-io/frabit)](https://goreportcard.com/report/github.com/frabit-io/frabit)
-![GitHub](https://img.shields.io/github/license/frabit-io/frabit)
+[![GitHub release](https://img.shields.io/github/v/release/frabits/frabit)](https://github.com/frabits/frabit/releases)
+[![GoDoc](https://pkg.go.dev/badge/github.com/frabits/frabit?utm_source=godoc)](https://godoc.org/github.com/frabits/frabit)
+![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/frabits/frabit)
+[![Go Report Card](https://goreportcard.com/badge/github.com/frabits/frabit)](https://goreportcard.com/report/github.com/frabits/frabit)
+![GitHub](https://img.shields.io/github/license/frabits/frabit)
 </div>
 
 ##  Frabit是什么 
