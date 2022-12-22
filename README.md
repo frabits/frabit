@@ -3,9 +3,7 @@
 <p align="center" >
 <img src="https://raw.githubusercontent.com/frabits/frabit/main/docs/images/dblist.png" width="60%" />
 </p>
-<p align="center" >
-frabit - Open source database automatic platform
-</p>
+<h1>frabit - Open source database automatic platform</h1>
 [简体中文](https://github.com/frabits/frabit/blob/main/README_CN.md) | [English](https://github.com/frabits/frabit/blob/main/README.md)
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/frabits/frabit/ci.yaml?branch=main)
