@@ -3,10 +3,11 @@
 <p align="center" >
 <img src="https://raw.githubusercontent.com/frabits/frabit/main/docs/images/dblist.png" width="60%" />
 </p>
-
+<h1>frabit - Open source database automatic platform</h1>
+    
 [简体中文](https://github.com/frabits/frabit/blob/main/README_CN.md) | [English](https://github.com/frabits/frabit/blob/main/README.md)
 
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/frabits/frabit/ci/main)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/frabits/frabit/ci.yaml?branch=main)
 [![GitHub release](https://img.shields.io/github/v/release/frabits/frabit)](https://github.com/frabits/frabit/releases)
 [![GoDoc](https://pkg.go.dev/badge/github.com/frabits/frabit?utm_source=godoc)](https://godoc.org/github.com/frabits/frabit)
 ![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/frabits/frabit)
