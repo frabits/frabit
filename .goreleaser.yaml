@@ -1,116 +1,284 @@
+before:
+  hooks:
+    - go mod tidy
 builds:
-  -
+  - id: frabit-server
+    main: ./cmd/frabit-server
+    binary: frabit-server
+
+  - id: frabit-agent
+    main: ./agent
+    binary: frabit-agent
+
+  - id: frabit-admin
     main: ./admin
-    env: [CGO_ENABLED=0]
-    goos:
-      - linux
-      - darwin
-    goarch:
-      - amd64
-      - arm64
-    # binary: frabit-admin
+    binary: frabit-admin
 
 nfpms:
-  - maintainer: Blylei <blylei.info@gmail.com>
-    description: Frabit is a comprehensive platform for database and can be used by the Developers and DBAs.
+  # note that this is an array of nfpm configs
+  -
+    id: frabit-server
+    package_name: frabit-server
+
+    # You can change the file name of the package.
+    #
+    # Default:`{{ .PackageName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}{{ with .Mips }}_{{ . }}{{ end }}{{ if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}`
+    file_name_template: "{{ .ConventionalFileName }}"
+
+    # Build IDs for the builds you want to create NFPM packages for.
+    # Defaults empty, which means no filtering.
+    builds:
+      - frabit-admin
+      - frabit-server
+
+    # Your app's vendor.
+    # Default is empty.
+    vendor: Frabit Inc.
+
+    # Template to your app's homepage.
+    # Default is empty.
     homepage: https://github.com/frabits/frabit
+
+    maintainer: Blylei <blylei.info@gmail.com>
+
+    # Template to your app's description.
+    # Default is empty.
+    description: |-
+      Drum rolls installer package.
+      Software to create fast and easy drum rolls.
+
+    # Your app's license.
+    # Default is empty.
     license: GPLv3
+
+    # Formats to be generated.
     formats:
       - deb
       - rpm
 
-release:
-  # Repo in which the release will be created.
-  # Default is extracted from the origin remote URL or empty if its private hosted.
-  github:
-    owner: frabits
-    name: frabit
+    # Template to the path that the binaries should be installed.
+    # Defaults to `/usr/bin`.
+    bindir: /usr/bin
 
-  # IDs of the archives to use.
-  # Defaults to all.
-  ids:
-    - frabit-admin
-    - frabit-agent
-    - frabit-server
+    # Version Epoch.
+    # Default is extracted from `version` if it is semver compatible.
+    epoch: 2
 
-  # If set to true, will not auto-publish the release.
-  # Available only for GitHub and Gitea.
-  # Default is false.
-  draft: false
+    # Section.
+    section: default
 
-  # Whether to remove existing draft releases with the same name before creating
-  # a new one.
-  # Only effective if `draft` is set to true.
-  # Available only for GitHub.
-  #
-  # Default: false.
-  # Since: v1.11.
-  replace_existing_draft: true
+    # Priority.
+    priority: extra
 
-  # Useful if you want to delay the creation of the tag in the remote.
-  # You can create the tag locally, but not push it, and run GoReleaser.
-  # It'll then set the `target_commitish` portion of the GitHub release to the
-  # value of this field.
-  # Only works on GitHub.
-  #
-  # Default: empty.
-  # Since: v1.11.
-  target_commitish: '{{ .Commit }}'
+    # Makes a meta package - an empty package that contains only supporting
+    # files and dependencies.
+    # When set to `true`, the `builds` option is ignored.
+    # Defaults to false.
+    meta: true
+    # Contents to add to the package.
+    # GoReleaser will automatically add the binaries.
 
-  # If set, will create a release discussion in the category specified.
-  #
-  # Warning: do not use categories in the 'Announcement' format.
-  #  Check https://github.com/goreleaser/goreleaser/issues/2304 for more info.
-  #
-  # Default is empty.
-  discussion_category_name: Database
+    # Custom configuration applied only to the RPM packager.
+    rpm:
+      # RPM specific scripts.
+      scripts:
+        # The pretrans script runs before all RPM package transactions / stages.
+        # pretrans: ./scripts/pretrans.sh
+        # The posttrans script runs after all RPM package transactions / stages.
+        # posttrans: ./scripts/posttrans.sh
 
-  # If set to auto, will mark the release as not ready for production
-  # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
-  # If set to true, will mark the release as not ready for production.
-  # Default is false.
-  # prerelease: true
+      # The package summary. This is, by default, the first line of the
+      # description, but can be explicitly provided here.
+      # Defaults to the first line of the description.
+      summary: Explicit Summary for Sample Package
 
-  # What to do with the release notes in case there the release already exists.
-  #
-  # Valid options are:
-  # - `keep-existing`: keep the existing notes
-  # - `append`: append the current release notes to the existing notes
-  # - `prepend`: prepend the current release notes to the existing notes
-  # - `replace`: replace existing notes
-  #
-  # Default is `keep-existing`.
-  mode: append
+      # The package group. This option is deprecated by most distros
+      # but required by old distros like CentOS 5 / EL 5 and earlier.
+      group: Unspecified
 
-  # Header template for the release body.
-  # Defaults to empty.
-  header: |
-    ## Some title ({{ .Date }})
+      # The packager is used to identify the organization that actually packaged
+      # the software, as opposed to the author of the software.
+      # `maintainer` will be used as fallback if not specified.
+      # This will expand any env var you set in the field, eg packager: ${PACKAGER}
+      # packager: GoReleaser <staff@goreleaser.com>
 
-    Welcome to this new release!
+      # Compression algorithm (gzip (default), lzma or xz).
+      compression: lzma
 
-  # Footer template for the release body.
-  # Defaults to empty.
-  footer: |
-    ## Thanks!
 
-    Those were the changes on {{ .Tag }}!
+    # Custom configuration applied only to the Deb packager.
+    deb:
 
-  # You can change the name of the release.
-  # Default is `{{.Tag}}` on OSS and `{{.PrefixedTag}}` on Pro.
-  name_template: "{{.ProjectName}}-v{{.Version}} {{.Env.USER}}"
+      # Custom deb special files.
+      scripts:
+        # Deb rules script.
+        # rules: foo.sh
+        # Deb templates file, when using debconf.
+        # templates: templates
 
-  # You can disable this pipe in order to not create the release on any SCM.
-  # Keep in mind that this might also break things that depend on the release
-  # URL, for instance, homebrew taps.
-  #
-  # Defaults to false.
-  disable: false
+      # Custom deb triggers
+      triggers:
+        # register interest on a trigger activated by another package
+        # (also available: interest_await, interest_noawait)
+        interest:
+          - some-trigger-name
+        # activate a trigger for another package
+        # (also available: activate_await, activate_noawait)
+        activate:
+          - another-trigger-name
 
-  # Set this to true if you want to disable just the artifact upload to the SCM.
-  # If this is true, GoReleaser will still create the release with the
-  # changelog, but won't upload anything to it.
-  #
-  # Default: false.
-  # Since: v1.11.
-  skip_upload: false
+      # Packages which would break if this package would be installed.
+      # The installation of this package is blocked if `some-package`
+      # is already installed.
+      breaks:
+        - some-package
+
+      # The package is signed if a key_file is set
+      signature:
+        # Template to the PGP secret key file path (can also be ASCII-armored).
+        # The passphrase is taken from the environment variable
+        # `$NFPM_ID_DEB_PASSPHRASE` with a fallback to `$NFPM_ID_PASSPHRASE`,
+        # where ID is the id of the current nfpm config.
+        # The id will be transformed to uppercase.
+        # E.g. If your nfpm id is 'default' then the deb-specific passphrase
+        # should be set as `$NFPM_DEFAULT_DEB_PASSPHRASE`
+        # key_file: '{{ .Env.GPG_KEY_PATH }}'
+
+        # The type describes the signers role, possible values are "origin",
+        # "maint" and "archive". If unset, the type defaults to "origin".
+        type: origin
+  - id: frabit-agent
+    package_name: frabit-agent
+
+    # You can change the file name of the package.
+    #
+    # Default:`{{ .PackageName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}{{ with .Mips }}_{{ . }}{{ end }}{{ if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}`
+    file_name_template: "{{ .ConventionalFileName }}"
+
+    # Build IDs for the builds you want to create NFPM packages for.
+    # Defaults empty, which means no filtering.
+    builds:
+      - frabit-agent
+
+    # Your app's vendor.
+    # Default is empty.
+    vendor: Frabit Inc.
+
+    # Template to your app's homepage.
+    # Default is empty.
+    homepage: https://github.com/frabits/frabit
+
+    maintainer: Blylei <blylei.info@gmail.com>
+
+    # Template to your app's description.
+    # Default is empty.
+    description: |-
+      Drum rolls installer package.
+      Software to create fast and easy drum rolls.
+
+    # Your app's license.
+    # Default is empty.
+    license: GPLv3
+
+    # Formats to be generated.
+    formats:
+      - deb
+      - rpm
+
+    # Template to the path that the binaries should be installed.
+    # Defaults to `/usr/bin`.
+    bindir: /usr/bin
+
+    # Version Epoch.
+    # Default is extracted from `version` if it is semver compatible.
+    epoch: 2
+
+    # Section.
+    section: default
+
+    # Priority.
+    priority: extra
+
+    # Makes a meta package - an empty package that contains only supporting
+    # files and dependencies.
+    # When set to `true`, the `builds` option is ignored.
+    # Defaults to false.
+    meta: true
+    # Contents to add to the package.
+    # GoReleaser will automatically add the binaries.
+
+    # Custom configuration applied only to the RPM packager.
+    rpm:
+      # RPM specific scripts.
+      scripts:
+      # The pretrans script runs before all RPM package transactions / stages.
+      # pretrans: ./scripts/pretrans.sh
+      # The posttrans script runs after all RPM package transactions / stages.
+      # posttrans: ./scripts/posttrans.sh
+
+      # The package summary. This is, by default, the first line of the
+      # description, but can be explicitly provided here.
+      # Defaults to the first line of the description.
+      summary: Explicit Summary for Sample Package
+
+      # The package group. This option is deprecated by most distros
+      # but required by old distros like CentOS 5 / EL 5 and earlier.
+      group: Unspecified
+
+      # The packager is used to identify the organization that actually packaged
+      # the software, as opposed to the author of the software.
+      # `maintainer` will be used as fallback if not specified.
+      # This will expand any env var you set in the field, eg packager: ${PACKAGER}
+      # packager: GoReleaser <staff@goreleaser.com>
+
+      # Compression algorithm (gzip (default), lzma or xz).
+      compression: lzma
+
+
+    # Custom configuration applied only to the Deb packager.
+    deb:
+
+      # Custom deb special files.
+      scripts:
+      # Deb rules script.
+      # rules: foo.sh
+      # Deb templates file, when using debconf.
+      # templates: templates
+
+      # Custom deb triggers
+      triggers:
+        # register interest on a trigger activated by another package
+        # (also available: interest_await, interest_noawait)
+        interest:
+          - some-trigger-name
+        # activate a trigger for another package
+        # (also available: activate_await, activate_noawait)
+        activate:
+          - another-trigger-name
+
+      # Packages which would break if this package would be installed.
+      # The installation of this package is blocked if `some-package`
+      # is already installed.
+      breaks:
+        - some-package
+
+      # The package is signed if a key_file is set
+      signature:
+        # Template to the PGP secret key file path (can also be ASCII-armored).
+        # The passphrase is taken from the environment variable
+        # `$NFPM_ID_DEB_PASSPHRASE` with a fallback to `$NFPM_ID_PASSPHRASE`,
+        # where ID is the id of the current nfpm config.
+        # The id will be transformed to uppercase.
+        # E.g. If your nfpm id is 'default' then the deb-specific passphrase
+        # should be set as `$NFPM_DEFAULT_DEB_PASSPHRASE`
+        # key_file: '{{ .Env.GPG_KEY_PATH }}'
+
+        # The type describes the signers role, possible values are "origin",
+        # "maint" and "archive". If unset, the type defaults to "origin".
+        type: origin
+
+checksum:
+  name_template: 'checksum.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}"

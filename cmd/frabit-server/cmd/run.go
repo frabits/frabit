@@ -9,6 +9,7 @@ package cmd
 
 import (
 	"context"
+
 	"github.com/frabits/frabit/server"
 	"github.com/frabits/frabit/server/config"
 	"github.com/frabits/frabit/server/db"
@@ -35,6 +36,6 @@ func start() {
 	cfg := config.Config{}
 	db, _ := db.OpenFrabit()
 	db.Ping()
-	srv := server.NewServer(ctx, cfg)
+	srv := server.NewServer(cfg)
 	srv.Run(ctx, 9180)
 }
