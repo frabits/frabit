@@ -60,11 +60,6 @@ Change directory to frabit and perform below command
 cd frabit && bash scripts/build.sh
 ```
 
-Copy executable file to your PATH
-```bash
-cp frabit /usr/local/bin
-```
-
 ### 2、rpm or deb package
 
 ### 3、install binary file
