@@ -5,14 +5,35 @@ builds:
   - id: frabit-server
     main: ./cmd/frabit-server
     binary: frabit-server
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm
+      - arm64
 
   - id: frabit-agent
     main: ./agent
     binary: frabit-agent
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm
+      - arm64
 
   - id: frabit-admin
     main: ./admin
     binary: frabit-admin
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm
+      - arm64
 
 archives:
 
