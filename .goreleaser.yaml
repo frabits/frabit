@@ -198,41 +198,4 @@ snapshot:
   name_template: "{{ .Version }}"
 
 release:
-  github:
-    owner: frabits
-    name: frabit
-
-  # IDs of the archives to use.
-  # Defaults to all.
-  ids:
-    - frabit-agent
-    - frabit-admin
-    - frabit-server
-  draft: true
-  replace_existing_draft: true
-  target_commitish: '{{ .Commit }}'
-  discussion_category_name: General
-  prerelease: true
-  mode: append
-  header: |
-    ## Some title ({{ .Date }})
-
-    Welcome to this new release!
-  footer: |
-    ## Thanks!
-
-    Those were the changes on {{ .Tag }}!
-
-  # You can change the name of the release.
-  # Default is `{{.Tag}}` on OSS and `{{.PrefixedTag}}` on Pro.
-  name_template: "{{.ProjectName}}-v{{.Version}} {{.Env.USER}}"
-  disable: true
-
-  # Set this to true if you want to disable just the artifact upload to the SCM.
-  # If this is true, GoReleaser will still create the release with the
-  # changelog, but won't upload anything to it.
-  #
-  # Default: false.
-  # Since: v1.11.
-  skip_upload: false
-
+  prerelease: auto
