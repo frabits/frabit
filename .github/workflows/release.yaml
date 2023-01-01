@@ -15,7 +15,7 @@ env:
 jobs:
 
   release:
-    name: Build and pubblish new release
+    name: Build and publish new release
     runs-on: ubuntu-latest
     steps:
       - name: Set up latest Go
