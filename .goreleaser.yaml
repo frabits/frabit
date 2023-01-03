@@ -199,3 +199,4 @@ snapshot:
 
 release:
   prerelease: auto
+  draft: true

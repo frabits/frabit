@@ -4,9 +4,6 @@
 # This file is part of Frabit
 #
 
-
-
-
 install -m=755 /usr/local/bin/
 
 
