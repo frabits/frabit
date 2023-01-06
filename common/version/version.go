@@ -51,6 +51,7 @@ func newInfo() Info {
 		Build:   newBuild(),
 	}
 }
+
 func newVersion() Version {
 	return Version{
 		Major: Major,

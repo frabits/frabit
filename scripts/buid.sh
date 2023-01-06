@@ -10,3 +10,11 @@ install -m=755 /usr/local/bin/
 install_exec(){
   pass
 }
+
+build_with_goreleaser(){
+  goreleaser release --rm-dist snapshot
+}
+
+main(){
+  build_with_goreleaser
+}

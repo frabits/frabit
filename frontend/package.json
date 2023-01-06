@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
+    "release": "vite build --mode release --outDir=../server/dist --emptyOutDir",
     "preview": "vite preview",
     "test:unit": "vitest --environment jsdom --root src/",
     "build-only": "vite build",

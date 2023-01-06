@@ -52,7 +52,13 @@ Frabit is a comprehensive platform for database and can be  used by the Develope
 Clone source code from GitHub
 
 ```bash
-git clone https://github.com/frabit-io/frabit.git
+git clone https://github.com/frabits/frabit.git
+```
+
+Install GoReleaser
+
+```bash
+go install github.com/goreleaser/goreleaser@latest
 ```
 
 Change directory to frabit and perform below command
