@@ -198,5 +198,4 @@ snapshot:
   name_template: "{{ .Version }}"
 
 release:
-  prerelease: auto
   draft: true

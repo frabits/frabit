@@ -12,7 +12,6 @@ permissions:
 env:
   GOVERSION: "1.18"
 jobs:
-
   release:
     name: Build and publish new release
     runs-on: ubuntu-latest
