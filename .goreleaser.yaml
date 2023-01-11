@@ -193,7 +193,6 @@ nfpms:
 
 checksum:
   name_template: 'checksum.txt'
-
 snapshot:
   name_template: "{{ .Version }}"
 release:
