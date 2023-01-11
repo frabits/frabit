@@ -48,7 +48,8 @@ Frabit is a comprehensive platform for database and can be  used by the Develope
 
 ## Install
 
-### 1、Build from source code
+### Linux
+#### 1、Build from source code
 Clone source code from GitHub
 
 ```bash
@@ -60,7 +61,9 @@ Change directory to frabit and perform below command
 cd frabit && bash scripts/build.sh
 ```
 
-### 2、rpm or deb package
+#### 2、rpm or deb package
 
-### 3、install binary file
+#### 3、install binary file
 Now, enjoy this toolkit
+
+### MacOS
