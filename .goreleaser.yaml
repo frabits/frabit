@@ -192,7 +192,7 @@ nfpms:
         type: origin
 brews:
   -
-    name: frabit
+    name: frabit-server
     tap:
       owner: frabits
       name: homebrew-tap
