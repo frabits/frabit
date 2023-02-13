@@ -198,7 +198,7 @@ brews:
       name: homebrew-tap
     commit_author:
       name: goreleaser
-      email: bot@skeema.net
+      email: support@frabit.io
     folder: Formula
     homepage: https://www.frabit.tech/
     description: "Frabit is a comprehensive open source database automatic platform."
