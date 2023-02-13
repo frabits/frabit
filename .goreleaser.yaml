@@ -190,6 +190,19 @@ nfpms:
         # The type describes the signers role, possible values are "origin",
         # "maint" and "archive". If unset, the type defaults to "origin".
         type: origin
+brews:
+  -
+    name: frabit
+    tap:
+      owner: frabits
+      name: homebrew-tap
+    commit_author:
+      name: goreleaser
+      email: bot@skeema.net
+    folder: Formula
+    homepage: https://www.frabit.tech/
+    description: "Frabit is a comprehensive open source database automatic platform."
+
 
 checksum:
   name_template: 'checksum.txt'
