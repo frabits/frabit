@@ -3,7 +3,7 @@
 <p align="center" >
 <img src="https://raw.githubusercontent.com/frabits/frabit/main/docs/images/dblist.png" width="60%" />
 </p>
-<h1>frabit - Open source database automatic platform</h1>
+<h1>Frabit - 新一代数据库自动化运维平台</h1>
     
 [简体中文](https://github.com/frabits/frabit/blob/main/README_CN.md) | [English](https://github.com/frabits/frabit/blob/main/README.md)
 
