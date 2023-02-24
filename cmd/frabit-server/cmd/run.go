@@ -20,7 +20,7 @@ import (
 // runCmd represents the run command
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "Start frabit server ",
+	Short: "Start frabit-server within daemon mode",
 	Run: func(cmd *cobra.Command, args []string) {
 		start()
 

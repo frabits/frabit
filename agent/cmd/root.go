@@ -19,7 +19,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:     "frabit-agent",
-	Short:   "Frabit is a comprehensive database platform for DBAs and developers",
+	Short:   "A component used with frabit-server",
 	Run:     runAgent,
 	Version: version.InfoStr.String(),
 }

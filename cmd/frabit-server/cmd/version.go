@@ -16,7 +16,7 @@ import (
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "A brief description of your command",
+	Short: "Display frabit version information",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("version called")
 	},

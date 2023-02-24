@@ -18,7 +18,7 @@ import (
 
 var newVersionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Frabit is a comprehensive database platform for DBAs and developers",
+	Short: "Display frabit-agent version information",
 	Run:   runVersion,
 }
 
