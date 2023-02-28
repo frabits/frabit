@@ -64,7 +64,52 @@ cd frabit && bash scripts/build.sh
 
 #### 2、rpm or deb package
 
+```bash
+version="2.0.10"
+arch=`uname -r`
+yum  install -y https://github.com/frabits/frabit/releases/download/v${version}/frabit-server-${version}.${arch}.rpm
+# optional
+yum  install -y https://github.com/frabits/frabit/releases/download/${version}/frabit-agent-${version}.${arch}.rpm
+````
+
 #### 3、install binary file
-Now, enjoy this toolkit
+
+Yeah,we also provide executable files, you can download the archiver files enter below commands:
+```bash
+version="2.0.10" 
+# for X86-64
+wget https://github.com/frabits/frabit/releases/download/v${version}/frabit_${version}_linux_amd64.tar.gz
+# for Arm64
+wget https://github.com/frabits/frabit/releases/download/v${version}/frabit_${version}_linux_arm64.tar.gz
+
+tar -xzf frabit_${version}_linux_amd64.tar.gz 
+sudo mkdir -p /usr/local/frabit
+cp -r * /usr/local/frabit
+```
 
 ### MacOS
+
+#### 1、Brew
+```bash
+brew install frabits/tap/frabit
+```
+
+#### 2、Binary file
+```bash
+version="2.0.10" 
+# for X86-64
+wget https://github.com/frabits/frabit/releases/download/v${version}/frabit_${version}_darwin_amd64.tar.gz
+# for Arm64
+wget https://github.com/frabits/frabit/releases/download/v${version}/frabit_${version}_darwin_arm64.tar.gz
+
+tar -xzf frabit_${version}_darwin_amd64.tar.gz
+sudo mkdir -p /usr/local/frabit
+cp -r * /usr/local/frabit
+```
+
+#### 3、Build from source code
+
+Assume your already install Golang and git
+```bash
+git clone https://github.com/frabits/frabit.git
+```
