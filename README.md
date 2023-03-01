@@ -46,6 +46,13 @@ Frabit is a comprehensive platform for database and can be  used by the Develope
 - [x] Role-based access control (RBAC)
 - [x] Webhook integration for Slack, DingTalk(钉钉), Feishu(飞书), WeCom(企业微信)
 
+## Community
+
+- [Mail list](https://groups.google.com/g/frabit)
+- [Slack](https://frabits.slack.com)
+- [Discussion](https://github.com/orgs/frabits/discussions)
+- [Issues](https://github.com/frabits/frabit/issues)
+
 ## Install
 
 ### Linux
