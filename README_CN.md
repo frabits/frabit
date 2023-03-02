@@ -1,9 +1,9 @@
 <div align="center">
 <p></p><p></p>
 <p align="center" >
-<img src="https://raw.githubusercontent.com/frabits/frabit/main/docs/images/dblist.png" width="60%" />
+<img src="docs/images/dblist.png" width="60%" />
 </p>
-<h1>Frabit - 新一代数据库自动化运维平台</h1>
+<h1>Frabit@新一代数据库自动化运维平台</h1>
     
 [简体中文](https://github.com/frabits/frabit/blob/main/README_CN.md) | [English](https://github.com/frabits/frabit/blob/main/README.md)
 
@@ -46,32 +46,64 @@ Frabit is a comprehensive platform for database and can be  used by the Develope
 - [x] Role-based access control (RBAC)
 - [x] Webhook integration for Slack, DingTalk(钉钉), Feishu(飞书), WeCom(企业微信)
 
+## 社区 
+
+- [Mail list](https://groups.google.com/g/frabit)
+- [Slack](https://frabits.slack.com)
+- [Discussion](https://github.com/orgs/frabits/discussions)
+- [Issues](https://github.com/frabits/frabit/issues) 
+
+国内伙伴，欢迎扫描下面的二维码哦，关注自媒体平台:
+
+![tv_platform](./docs/images/tv_matrix.jpg)
+
 ## 安装、部署
 
-### 1、源码编译安装
-Clone source code from GitHub
-
-```bash
-git clone https://github.com/frabits/frabit.git
+#### 1、二进制文件安装 
+##### 1.1、Linux/MacOS
+- Brew 
+```bash 
+brew install frabits/tap/frabit
 ```
 
-Install GoReleaser
+##### 1.2、Linux
+```bash
+version="2.0.10"
+arch=`uname -r`
+yum  install -y https://github.com/frabits/frabit/releases/download/v${version}/frabit-server-${version}.${arch}.rpm
+# optional
+yum  install -y https://github.com/frabits/frabit/releases/download/${version}/frabit-agent-${version}.${arch}.rpm
+````
 
+##### 1.3、直接从github发布页根据下载对应的二进制文件
+```bash
+version="2.0.10" 
+# for X86-64
+wget https://github.com/frabits/frabit/releases/download/v${version}/frabit_${version}_linux_amd64.tar.gz
+# for Arm64
+wget https://github.com/frabits/frabit/releases/download/v${version}/frabit_${version}_linux_arm64.tar.gz
+
+tar -xzf frabit_${version}_linux_amd64.tar.gz 
+sudo mkdir -p /usr/local/frabit
+cp -r * /usr/local/frabit
+```
+
+#### 3、源码编译安装
+
+frabit使用 [goreleaser](https://goreleaser.com/install) 来进行快速编译，在命令行执行一下命令快速安装Goreleaser：
 ```bash
 go install github.com/goreleaser/goreleaser@latest
 ```
 
-Change directory to frabit and perform below command
+执行下面的命令，将frabit的代码库从Github克隆到本地
+```bash
+git clone https://github.com/frabits/frabit.git
+```
+
+切换到代码库里，执行以下bash脚本，自动编译
 ```bash
 cd frabit && bash scripts/build.sh
 ```
+编译后，可执行文件位于当前路径的dist子文件夹里，如图所示：
 
-Copy executable file to your PATH
-```bash
-cp frabit /usr/local/bin
-```
-
-### 2、使用rpm/deb进行安装
-
-### 3、直接使用二进制文件进行安装
-Now, enjoy this toolkit
+![dist](./docs/images/dist.png)
