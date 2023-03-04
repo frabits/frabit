@@ -33,9 +33,9 @@ func init() {
 
 func start() {
 	ctx := context.Background()
-	cfg := config.Config{}
+	cfg := config.Conf
 	db, _ := db.OpenFrabit()
 	db.Ping()
 	srv := server.NewServer(cfg)
-	srv.Run(ctx, 9180)
+	srv.Run(ctx)
 }

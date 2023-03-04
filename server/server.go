@@ -13,16 +13,19 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/frabits/frabit/common/log"
 	"github.com/frabits/frabit/server/config"
 	"github.com/frabits/frabit/server/router"
 	"github.com/frabits/frabit/server/service"
 )
 
 type Server struct {
-	startedTs     int64
-	BackupService service.BackupService
-	config        config.Config
-	g             router.Router
+	startedTs      int64
+	BackupService  service.BackupService
+	DeployService  service.DeployService
+	UpgradeService service.UpgradeService
+	config         config.Config
+	g              router.Router
 }
 
 func NewServer(cfg config.Config) *Server {
@@ -34,13 +37,21 @@ func NewServer(cfg config.Config) *Server {
 	return srv
 }
 
-func (s *Server) Run(ctx context.Context, port int) error {
-	fmt.Println("unImplement")
+func (s *Server) Run(ctx context.Context) error {
+	if err := s.g.Run(s.config.Server.Port); err != nil {
+		log.Error("Server start failed")
+		return err
+
+	}
 	return nil
 }
 
-func (s *Server) Shutdown(ctx context.Context, port int) error {
-	fmt.Println("unImplement")
+func (s *Server) Shutdown(ctx context.Context) error {
+	if err := s.g.Run(s.config.Server.Port); err != nil {
+		log.Error("Server start failed")
+		return err
+
+	}
 	return nil
 }
 

@@ -6,3 +6,7 @@ This file is part of Frabit
 */
 
 package ctl
+
+type Driver interface {
+	Ping()
+}

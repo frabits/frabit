@@ -7,7 +7,7 @@ This file is part of Frabit
 
 package config
 
-type Config struct {
+type dbConfig struct {
 	MySQLFrabitDatabase           string
 	MySQLFrabitHost               string
 	MySQLFrabitPort               string
@@ -15,6 +15,16 @@ type Config struct {
 	MySQLFrabitPassword           string
 	MySQLFrabitMaxPoolConnections int
 	SkipFrabitDatabaseUpdate      bool
+}
+
+type frabitConfig struct {
+	Port      string
+	PluginDir string
+}
+
+type Config struct {
+	DB     dbConfig
+	Server frabitConfig
 }
 
 var Conf Config

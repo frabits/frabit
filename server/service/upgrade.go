@@ -7,3 +7,7 @@ This file is part of Frabit
 */
 
 package service
+
+type UpgradeService struct {
+	Id int
+}

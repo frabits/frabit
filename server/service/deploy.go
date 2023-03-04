@@ -16,3 +16,7 @@ import (
 func SetupDeployRouter() {
 	fmt.Println("todo:", time.Time{})
 }
+
+type DeployService struct {
+	Id int
+}
