@@ -7,6 +7,21 @@ This file is part of Frabit
 
 package ctl
 
+import "context"
+
+type DBType string
+
+const (
+	Redis   DBType = "REDIS"
+	MongoDB DBType = "MONGODB"
+)
+
+type DBConnInfo struct {
+	Host   string
+	Port   uint32
+	User   string
+	Passwd string
+}
 type Driver interface {
-	Ping()
+	Ping(ctx context.Context, db DBType, connInfo DBConnInfo)
 }

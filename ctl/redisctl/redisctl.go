@@ -6,3 +6,7 @@ This file is part of Frabit
 */
 
 package redisctl
+
+type RedisCtl struct {
+	Host string
+}
