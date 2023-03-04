@@ -22,11 +22,11 @@ import (
 // OpenFrabit returns the DB instance for the frabit backed database
 func OpenFrabit() (db *sql.DB, err error) {
 	// first time ever we talk to MySQL
-	query := fmt.Sprintf("create database if not exists %s", config.Conf.MySQLFrabitDatabase)
+	query := fmt.Sprintf("create database if not exists %s", config.Conf.DB.MySQLFrabitDatabase)
 	if _, err := db.Exec(query); err != nil {
 		return db, err
 	}
-	if !config.Conf.SkipFrabitDatabaseUpdate {
+	if !config.Conf.DB.SkipFrabitDatabaseUpdate {
 		initFrabitDB(db)
 	}
 	maxIdleConns := int(100)
@@ -34,9 +34,9 @@ func OpenFrabit() (db *sql.DB, err error) {
 		maxIdleConns = 10
 	}
 	log.Info("Connecting to backend  %s:%d: maxConnections: %d, maxIdleConns: %d",
-		zap.String("host", config.Conf.MySQLFrabitHost),
-		zap.String("port", config.Conf.MySQLFrabitPort),
-		zap.Int("maxConnections", config.Conf.MySQLFrabitMaxPoolConnections),
+		zap.String("host", config.Conf.DB.MySQLFrabitHost),
+		zap.String("port", config.Conf.DB.MySQLFrabitPort),
+		zap.Int("maxConnections", config.Conf.DB.MySQLFrabitMaxPoolConnections),
 		zap.Int("maxIdleConns", maxIdleConns))
 	db.SetMaxIdleConns(maxIdleConns)
 	return db, err
