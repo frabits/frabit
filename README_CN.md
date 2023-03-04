@@ -32,6 +32,16 @@ Frabit is a comprehensive platform for database and can be  used by the Develope
 
 ✅ MySQL  ✅ Redis ✅ MongoDB  ✅ ClickHouse
 
+## 支撑平台
+当前，Frabit提供了对Linux系统和MacOS/Darwin系统的支撑，包括amd64/X86_64和arm64架构
+- amd64
+  - Linux
+  - Darwin/MacOS
+
+- arm64
+  - Linux
+  - Darwin/MacOS
+
 ## 特性
 
 - [x] Web-based database cluster deployment and upgrade
