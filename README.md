@@ -59,11 +59,11 @@ Currently, we provide support for following platform and architecture
 
 ## Community
 
-- [Mail list](https://groups.google.com/g/frabit)
-- [Slack](https://frabits.slack.com)
 - [Discussion](https://github.com/orgs/frabits/discussions)
 - [Issues](https://github.com/frabits/frabit/issues)
 - [Twitter](https://twitter.com/frabit_io)
+- [Slack](https://frabits.slack.com)
+- [Mail list](https://groups.google.com/g/frabit)
 
 ## Install
 
