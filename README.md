@@ -32,7 +32,7 @@ Frabit is a comprehensive platform for database and can be  used by the Develope
 
 ✅ MySQL  ✅ Redis ✅ MongoDB  ✅ ClickHouse
 
-## Support platform
+## Support Platform
 
 Currently, we provide support for following platform and architecture
 - amd64

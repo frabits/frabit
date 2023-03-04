@@ -27,7 +27,10 @@ func OpenFrabit() (db *sql.DB, err error) {
 		return db, err
 	}
 	if !config.Conf.DB.SkipFrabitDatabaseUpdate {
-		initFrabitDB(db)
+		err := initFrabitDB(db)
+		if err != nil {
+			return nil, err
+		}
 	}
 	maxIdleConns := int(100)
 	if maxIdleConns < 10 {
@@ -51,7 +54,6 @@ func initFrabitDB(db *sql.DB) error {
 	if err := deployStatements(db, generateSQLPatches); err != nil {
 		return err
 	}
-
 	return nil
 }
 
