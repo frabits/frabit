@@ -45,8 +45,12 @@ func OpenFrabit() (db *sql.DB, err error) {
 // initFrabitDB attempts to create/upgrade the frabit backend database. It is created once in the
 // application's lifetime.
 func initFrabitDB(db *sql.DB) error {
-	deployStatements(db, generateSQLBase)
-	deployStatements(db, generateSQLPatches)
+	if err := deployStatements(db, generateSQLBase); err != nil {
+		return err
+	}
+	if err := deployStatements(db, generateSQLPatches); err != nil {
+		return err
+	}
 
 	return nil
 }
