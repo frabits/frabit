@@ -62,7 +62,7 @@ func genMongoDBConnectionURI(connCfg ctl.DBConnInfo) string {
 	if connCfg.Port != "" {
 		connectionURI = fmt.Sprintf("%s:%s", connectionURI, connCfg.Port)
 	}
-	if connCfg.Database != "" {
+	if connCfg.AuthDB != "" {
 		connectionURI = fmt.Sprintf("%s/%s", connectionURI, connCfg.Database)
 	}
 	// We use admin as the default authentication database.
@@ -78,7 +78,6 @@ func genMongoDBConnectionURI(connCfg ctl.DBConnInfo) string {
 	connectionURI = fmt.Sprintf("%s?authSource=%s", connectionURI, authenticationDatabase)
 
 	return connectionURI
-	return ""
 }
 
 func replaceCharacterWithPercentEncoding(s string) string {
