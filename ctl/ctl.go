@@ -24,7 +24,7 @@ const (
 type DBConnInfo struct {
 	// General DB filed
 	Host   string
-	Port   uint32
+	Port   string
 	User   string
 	Passwd string
 
