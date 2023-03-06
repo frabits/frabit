@@ -34,7 +34,7 @@ type Driver struct {
 	client  *mongo.Client
 }
 
-func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DBConnInfo) (*Driver, error) {
+func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DBConnInfo) (ctl.Driver, error) {
 	connectionURI := genMongoDBConnectionURI(config)
 	opts := options.Client().ApplyURI(connectionURI)
 	client, err := mongo.Connect(ctx, opts)
@@ -45,6 +45,14 @@ func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DB
 	driver.connCfg = config
 	driver.DBType = dbName
 	return driver, nil
+}
+
+func (driver *Driver) GetType() ctl.DBType {
+	return ctl.MongoDB
+}
+
+func (driver *Driver) Ping(ctx context.Context) error {
+	return nil
 }
 
 // genMongoDBConnectionURI generate a connection string based provide MongoDB config

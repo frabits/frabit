@@ -5,7 +5,7 @@ This file is part of Frabit
 
 */
 
-package db
+package meta_store
 
 import (
 	"database/sql"
@@ -58,7 +58,7 @@ func initFrabitDB(db *sql.DB) error {
 }
 
 // deployStatements will issue given sql queries that are not already known to be deployed.
-// This iterates both lists (to-run and already-deployed) and also verifies no contraditions.
+// This iterates both lists (to-run and already-deployed) and also verifies no contradictions.
 func deployStatements(db *sql.DB, queries []string) error {
 	tx, err := db.Begin()
 	if err != nil {

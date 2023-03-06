@@ -9,7 +9,6 @@ package ctl
 
 import (
 	"context"
-	"database/sql"
 )
 
 type DBType string
@@ -41,9 +40,9 @@ type DBConnInfo struct {
 type Driver interface {
 	Ping(ctx context.Context) error
 	Open(ctx context.Context, dbType DBType, config DBConnInfo) (Driver, error)
-	Close(ctx context.Context) error
+	// Close(ctx context.Context) error
 	GetType() DBType
-	GetDBConn(ctx context.Context) (*sql.DB, error)
-	Execute(ctx context.Context, statement string, createDatabase bool) (int64, error)
-	QueryConn(ctx context.Context, conn *sql.Conn, statement string) ([]interface{}, error)
+	// GetDBConn(ctx context.Context) (*sql.DB, error)
+	// Execute(ctx context.Context, statement string, createDatabase bool) (int64, error)
+	// QueryConn(ctx context.Context, conn *sql.Conn, statement string) ([]interface{}, error)
 }

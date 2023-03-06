@@ -10,6 +10,8 @@ package mysqlctl
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"strings"
 
 	"github.com/frabits/frabit/ctl"
 )
@@ -19,9 +21,40 @@ type Driver struct {
 	Port   uint32
 	Passwd string
 	DBName ctl.DBType
-	DB     *sql.DB
+	db     *sql.DB
 }
 
-func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DBConnInfo) {
+func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DBConnInfo) (ctl.Driver, error) {
+	protocol := "tcp"
+	if strings.HasPrefix(config.Host, "/") {
+		protocol = "unix"
+	}
 
+	params := []string{"multiStatements=true"}
+
+	port := config.Port
+	if port == "" {
+		port = "3306"
+	}
+
+	dsn := fmt.Sprintf("%s@%s(%s:%s)/%s?%s", config.User, protocol, config.Host, port, config.Database, strings.Join(params, "&"))
+	if config.Passwd != "" {
+		dsn = fmt.Sprintf("%s:%s@%s(%s:%s)/%s?%s", config.User, config.Passwd, protocol, config.Host, port, config.Database, strings.Join(params, "&"))
+	}
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		return nil, err
+	}
+	driver.DBName = dbName
+	driver.db = db
+
+	return driver, nil
+}
+
+func (driver *Driver) GetType() ctl.DBType {
+	return ctl.MySQL
+}
+
+func (driver *Driver) Ping(ctx context.Context) error {
+	return nil
 }

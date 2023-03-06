@@ -14,7 +14,9 @@ import (
 	"time"
 
 	"github.com/ClickHouse/clickhouse-go/v2"
+	"go.uber.org/zap"
 
+	"github.com/frabits/frabit/common/log"
 	"github.com/frabits/frabit/ctl"
 )
 
@@ -24,8 +26,9 @@ type Driver struct {
 	db         *sql.DB
 }
 
-func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DBConnInfo) (*Driver, error) {
+func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DBConnInfo) (ctl.Driver, error) {
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
+	log.Info("Connect to Clickhouse", zap.String("host", addr))
 	conn := clickhouse.OpenDB(&clickhouse.Options{
 		Addr: []string{addr},
 		Auth: clickhouse.Auth{
@@ -44,4 +47,12 @@ func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DB
 	driver.db = conn
 
 	return driver, nil
+}
+
+func (driver *Driver) GetType() ctl.DBType {
+	return ctl.ClickHouse
+}
+
+func (driver *Driver) Ping(ctx context.Context) error {
+	return nil
 }

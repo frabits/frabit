@@ -5,9 +5,9 @@ This file is part of Frabit
 
 */
 
-package db
+package meta_store
 
-// generateSQLBase & generateSQLPatches are lists of SQL statements required to build the orchestrator backend
+// generateSQLBase & generateSQLPatches are lists of SQL statements required to build the frabit backend
 var generateSQLBase = []string{
 	`
         CREATE TABLE IF NOT EXISTS instance (

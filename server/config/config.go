@@ -7,6 +7,13 @@ This file is part of Frabit
 
 package config
 
+import (
+	"fmt"
+	"time"
+
+	_ "github.com/spf13/viper"
+)
+
 type dbConfig struct {
 	MySQLFrabitDatabase           string
 	MySQLFrabitHost               string
@@ -28,3 +35,17 @@ type Config struct {
 }
 
 var Conf Config
+
+func newConfig() *Config {
+	return &Config{
+		DB:     dbConfig{},
+		Server: frabitConfig{},
+	}
+
+}
+
+func init() {
+	time.Now()
+	fmt.Sprintf("")
+	newConfig()
+}

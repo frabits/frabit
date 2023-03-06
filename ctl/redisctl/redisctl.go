@@ -33,7 +33,7 @@ type Driver struct {
 	Client *redis.Client
 }
 
-func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DBConnInfo) (*Driver, error) {
+func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DBConnInfo) (ctl.Driver, error) {
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
 	redis := redis.NewClient(&redis.Options{
 		Addr:     addr,
@@ -45,14 +45,10 @@ func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DB
 	return driver, nil
 }
 
-func (driver *Driver) Ping(ctx context.Context, dbName ctl.DBType, config ctl.DBConnInfo) error {
-	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
-	redis := redis.NewClient(&redis.Options{
-		Addr:     addr,
-		Password: config.Passwd, // no password set
-		DB:       0,             // use default DB
-	})
-	driver.Client = redis
-	driver.DBName = dbName
+func (driver *Driver) Ping(ctx context.Context) error {
 	return nil
+}
+
+func (driver *Driver) GetType() ctl.DBType {
+	return ctl.Redis
 }
