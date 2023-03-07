@@ -10,11 +10,13 @@ package server
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
 	"github.com/frabits/frabit/common/log"
 	"github.com/frabits/frabit/server/config"
+	store "github.com/frabits/frabit/server/meta_store"
 	"github.com/frabits/frabit/server/router"
 	"github.com/frabits/frabit/server/service"
 )
@@ -22,16 +24,23 @@ import (
 type Server struct {
 	startedTs      int64
 	BackupService  service.BackupService
+	RestoreService service.RestoreService
 	DeployService  service.DeployService
 	UpgradeService service.UpgradeService
 	config         config.Config
 	g              router.Router
+	db             *sql.DB
 }
 
 func NewServer(cfg config.Config) *Server {
+	meta, err := store.OpenFrabit()
+	if err != nil {
+
+	}
 	srv := &Server{
 		startedTs: time.Now().Unix(),
 		config:    cfg,
+		db:        meta,
 	}
 
 	return srv

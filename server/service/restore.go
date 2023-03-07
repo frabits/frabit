@@ -7,3 +7,7 @@ This file is part of Frabit
 */
 
 package service
+
+type RestoreService struct {
+	Id int
+}

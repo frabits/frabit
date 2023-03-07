@@ -8,15 +8,6 @@ This file is part of Frabit
 
 package service
 
-import (
-	"fmt"
-	"time"
-)
-
-func SetupDeployRouter() {
-	fmt.Println("todo:", time.Time{})
-}
-
 type DeployService struct {
 	Id int
 }

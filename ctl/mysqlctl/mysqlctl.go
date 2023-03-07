@@ -56,5 +56,5 @@ func (driver *Driver) GetType() ctl.DBType {
 }
 
 func (driver *Driver) Ping(ctx context.Context) error {
-	return nil
+	return driver.db.PingContext(ctx)
 }

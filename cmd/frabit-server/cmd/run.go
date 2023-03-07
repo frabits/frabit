@@ -12,8 +12,6 @@ import (
 
 	"github.com/frabits/frabit/server"
 	"github.com/frabits/frabit/server/config"
-	"github.com/frabits/frabit/server/meta_store"
-
 	"github.com/spf13/cobra"
 )
 
@@ -34,8 +32,6 @@ func init() {
 func start() {
 	ctx := context.Background()
 	cfg := config.Conf
-	db, _ := meta_store.OpenFrabit()
-	db.Ping()
 	srv := server.NewServer(cfg)
 	srv.Run(ctx)
 }
