@@ -1,17 +1,20 @@
 before:
   hooks:
     - go mod tidy
+
 builds:
+  - ldflags:
+        - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
   - id: frabit-server
     main: ./cmd/frabit-server
     binary: frabit-server
     goos:
       - linux
       - darwin
+      - windows
     goarch:
       - amd64
       - arm64
-
   - id: frabit-agent
     main: ./agent
     binary: frabit-agent

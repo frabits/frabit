@@ -13,7 +13,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"github.com/frabits/frabit/ctl"
+	"github.com/frabits/frabit/operator"
 )
 
 type RedisMode string
@@ -28,12 +28,12 @@ type Driver struct {
 	Host   string
 	Port   uint32
 	Passwd string
-	DBName ctl.DBType
+	DBName operator.DBType
 	Mode   RedisMode
 	Client *redis.Client
 }
 
-func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DBConnInfo) (ctl.Driver, error) {
+func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.Driver, error) {
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
 	redis := redis.NewClient(&redis.Options{
 		Addr:     addr,
@@ -46,9 +46,10 @@ func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DB
 }
 
 func (driver *Driver) Ping(ctx context.Context) error {
+	_ = driver.Client.Ping(ctx)
 	return nil
 }
 
-func (driver *Driver) GetType() ctl.DBType {
-	return ctl.Redis
+func (driver *Driver) GetType() operator.DBType {
+	return operator.Redis
 }

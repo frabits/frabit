@@ -12,7 +12,7 @@ install_exec(){
 }
 
 build_with_goreleaser(){
-  goreleaser release --rm-dist snapshot
+  goreleaser release --rm-dist --snapshot
 }
 
 main(){

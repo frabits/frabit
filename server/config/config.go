@@ -8,9 +8,6 @@ This file is part of Frabit
 package config
 
 import (
-	"fmt"
-	"time"
-
 	_ "github.com/spf13/viper"
 )
 
@@ -45,7 +42,5 @@ func newConfig() *Config {
 }
 
 func init() {
-	time.Now()
-	fmt.Sprintf("")
 	newConfig()
 }

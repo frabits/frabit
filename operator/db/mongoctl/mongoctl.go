@@ -16,7 +16,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"github.com/frabits/frabit/ctl"
+	"github.com/frabits/frabit/operator"
 )
 
 type MongoType string
@@ -29,12 +29,12 @@ const (
 
 // Driver is the MongoDB driver.
 type Driver struct {
-	DBType  ctl.DBType
-	connCfg ctl.DBConnInfo
+	DBType  operator.DBType
+	connCfg operator.DBConnInfo
 	client  *mongo.Client
 }
 
-func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DBConnInfo) (ctl.Driver, error) {
+func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.Driver, error) {
 	connectionURI := genMongoDBConnectionURI(config)
 	opts := options.Client().ApplyURI(connectionURI)
 	client, err := mongo.Connect(ctx, opts)
@@ -47,8 +47,8 @@ func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DB
 	return driver, nil
 }
 
-func (driver *Driver) GetType() ctl.DBType {
-	return ctl.MongoDB
+func (driver *Driver) GetType() operator.DBType {
+	return operator.MongoDB
 }
 
 func (driver *Driver) Ping(ctx context.Context) error {
@@ -56,7 +56,7 @@ func (driver *Driver) Ping(ctx context.Context) error {
 }
 
 // genMongoDBConnectionURI generate a connection string based provide MongoDB config
-func genMongoDBConnectionURI(connCfg ctl.DBConnInfo) string {
+func genMongoDBConnectionURI(connCfg operator.DBConnInfo) string {
 	connectionURI := "mongodb://"
 	if connCfg.SRV {
 		connectionURI = "mongodb+srv://"

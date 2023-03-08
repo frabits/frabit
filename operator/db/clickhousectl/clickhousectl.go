@@ -17,16 +17,16 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/frabits/frabit/common/log"
-	"github.com/frabits/frabit/ctl"
+	"github.com/frabits/frabit/operator"
 )
 
 type Driver struct {
-	connConfig ctl.DBConnInfo
-	dbType     ctl.DBType
+	connConfig operator.DBConnInfo
+	dbType     operator.DBType
 	db         *sql.DB
 }
 
-func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DBConnInfo) (ctl.Driver, error) {
+func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.Driver, error) {
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
 	log.Info("Connect to Clickhouse", zap.String("host", addr))
 	conn := clickhouse.OpenDB(&clickhouse.Options{
@@ -49,8 +49,8 @@ func (driver *Driver) Open(ctx context.Context, dbName ctl.DBType, config ctl.DB
 	return driver, nil
 }
 
-func (driver *Driver) GetType() ctl.DBType {
-	return ctl.ClickHouse
+func (driver *Driver) GetType() operator.DBType {
+	return operator.ClickHouse
 }
 
 func (driver *Driver) Ping(ctx context.Context) error {

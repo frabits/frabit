@@ -11,15 +11,20 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
+	"github.com/frabits/frabit/common/version"
 )
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Display frabit version information",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("version called")
-	},
+	Run:   runVersion,
+}
+
+func runVersion(cmd *cobra.Command, args []string) {
+	fmt.Printf("%s\n", version.InfoStr.String())
+	fmt.Printf("%s", version.InfoStr.BuildInfo())
 }
 
 func init() {
