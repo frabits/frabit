@@ -40,7 +40,7 @@ type DBConnInfo struct {
 type Driver interface {
 	Ping(ctx context.Context) error
 	Open(ctx context.Context, dbType DBType, config DBConnInfo) (Driver, error)
-	// Close(ctx context.Context) error
+	Close(ctx context.Context) error
 	GetType() DBType
 	// GetDBConn(ctx context.Context) (*sql.DB, error)
 	// Execute(ctx context.Context, statement string, createDatabase bool) (int64, error)

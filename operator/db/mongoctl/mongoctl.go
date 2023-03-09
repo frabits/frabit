@@ -55,6 +55,10 @@ func (driver *Driver) Ping(ctx context.Context) error {
 	return nil
 }
 
+func (driver *Driver) Close(ctx context.Context) error {
+	return driver.client.Disconnect(ctx)
+}
+
 // genMongoDBConnectionURI generate a connection string based provide MongoDB config
 func genMongoDBConnectionURI(connCfg operator.DBConnInfo) string {
 	connectionURI := "mongodb://"
