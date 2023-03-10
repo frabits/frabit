@@ -51,8 +51,7 @@ func (driver *Driver) Ping(ctx context.Context) error {
 }
 
 func (driver *Driver) Close(ctx context.Context) error {
-	_ = driver.Client.Close()
-	return nil
+	return driver.Client.Close()
 }
 func (driver *Driver) GetType() operator.DBType {
 	return operator.Redis
