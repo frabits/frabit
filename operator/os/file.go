@@ -6,3 +6,7 @@ This file is part of Frabit
 */
 
 package os
+
+type File struct {
+	Owner string
+}
