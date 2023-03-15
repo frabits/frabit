@@ -12,8 +12,8 @@ builds:
     goarch:
       - amd64
       - arm64
-    ldflags:
-      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
+#    ldflags:
+#      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
   - id: frabit-agent
     main: ./agent
     binary: frabit-agent
@@ -23,8 +23,8 @@ builds:
     goarch:
       - amd64
       - arm64
-    ldflags:
-      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
+#    ldflags:
+#      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
   - id: frabit-admin
     main: ./admin
     binary: frabit-admin
@@ -34,8 +34,8 @@ builds:
     goarch:
       - amd64
       - arm64
-    ldflags:
-      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
+#    ldflags:
+#      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
 archives:
 
 nfpms:
