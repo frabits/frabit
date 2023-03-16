@@ -1,4 +1,4 @@
-# This just for backend database to store metadata
+# This just for frabit backend database to store metadata
 database:
   host: "127.0.0.1"
   port: 3306
