@@ -12,8 +12,10 @@ builds:
     goarch:
       - amd64
       - arm64
-#    ldflags:
-#      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
+    ldflags:
+      - -s -w
+      - -X github.com/frabits/frabit/common/version.version={{ .Version }}
+      - -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
   - id: frabit-agent
     main: ./agent
     binary: frabit-agent
@@ -23,8 +25,10 @@ builds:
     goarch:
       - amd64
       - arm64
-#    ldflags:
-#      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
+    ldflags:
+      - -s -w
+      - -X github.com/frabits/frabit/common/version.version={{ .Version }}
+      - -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
   - id: frabit-admin
     main: ./admin
     binary: frabit-admin
@@ -34,16 +38,16 @@ builds:
     goarch:
       - amd64
       - arm64
-#    ldflags:
-#      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
+    ldflags:
+      - -s -w
+      - -X github.com/frabits/frabit/common/version.version={{ .Version }}
+      - -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
 archives:
 
 nfpms:
   -
     id: frabit-server
     package_name: frabit-server
-
-    # Default:`{{ .PackageName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}{{ with .Mips }}_{{ . }}{{ end }}{{ if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}`
     file_name_template: "{{ .ConventionalFileName }}"
     builds:
       - frabit-admin
@@ -55,8 +59,7 @@ nfpms:
     maintainer: Blylei <blylei.info@gmail.com>
 
     description: |-
-      Drum rolls installer package.
-      Software to create fast and easy drum rolls.
+      The next-generation database automatic operation platform.
 
     license: GPLv3
 
@@ -205,7 +208,7 @@ brews:
       email: support@frabit.io
     folder: Formula
     homepage: https://www.frabit.tech/
-    description: "Frabit is a comprehensive open source database automatic platform."
+    description: "The next-generation database automatic operation platform"
 
 
 checksum:
