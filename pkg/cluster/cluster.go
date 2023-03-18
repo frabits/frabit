@@ -13,12 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package cluster
 
-import (
-	"github.com/frabits/frabit/admin/cmd"
-)
+import "github.com/frabits/frabit/operator"
 
-func main() {
-	cmd.Execute()
+type Cluster struct {
+	DB operator.DBType
 }

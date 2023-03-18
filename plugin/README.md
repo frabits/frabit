@@ -1,0 +1,2 @@
+# Frabit plugin framework
+
