@@ -31,7 +31,6 @@ var newVersionCmd = &cobra.Command{
 
 func runVersion(cmd *cobra.Command, args []string) {
 	fmt.Printf("%s\n", version.InfoStr.String())
-	fmt.Printf("%s", version.InfoStr.BuildInfo())
 }
 
 func init() {

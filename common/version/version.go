@@ -93,12 +93,18 @@ func newBuild() Build {
 	}
 }
 
-func (v Version) String() string {
+func (v Version) versionString() string {
 	str := fmt.Sprintf("%s.%s.%s-%s", v.Major, v.Minor, v.Patch, v.Dist)
 	return str
 }
 
-func (b Build) BuildInfo() string {
+func (b Build) buildString() string {
 	str := fmt.Sprintf("Hash: %s\nDate: %s\nArch: %s\n", b.GitHash, b.Date, b.Arch)
+	return str
+}
+
+// String display frabit version and build information
+func (info Info) String() string {
+	str := fmt.Sprintf("%s\n%s\n", info.versionString(), info.buildString())
 	return str
 }
