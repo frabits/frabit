@@ -18,8 +18,9 @@ package mongoctl
 import (
 	"context"
 	"fmt"
-	"github.com/frabits/frabit/pkg/operator"
 	"strings"
+
+	"github.com/frabits/frabit/pkg/operator"
 
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -34,36 +35,36 @@ const (
 	SharedCluster MongoType = "SHAREDCLUSTER"
 )
 
-// Driver is the MongoDB driver.
-type Driver struct {
+// Operator is the MongoDB driver.
+type Operator struct {
 	DBType  operator.DBType
 	connCfg operator.DBConnInfo
 	client  *mongo.Client
 }
 
-func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.DBOperator, error) {
+func (op *Operator) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.DBOperator, error) {
 	connectionURI := genMongoDBConnectionURI(config)
 	opts := options.Client().ApplyURI(connectionURI)
 	client, err := mongo.Connect(ctx, opts)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create MongoDB client")
 	}
-	driver.client = client
-	driver.connCfg = config
-	driver.DBType = dbName
-	return driver, nil
+	op.client = client
+	op.connCfg = config
+	op.DBType = dbName
+	return op, nil
 }
 
-func (driver *Driver) GetType() operator.DBType {
+func (op *Operator) GetType() operator.DBType {
 	return operator.MongoDB
 }
 
-func (driver *Driver) Ping(ctx context.Context) error {
+func (op *Operator) Ping(ctx context.Context) error {
 	return nil
 }
 
-func (driver *Driver) Close(ctx context.Context) error {
-	return driver.client.Disconnect(ctx)
+func (op *Operator) Close(ctx context.Context) error {
+	return op.client.Disconnect(ctx)
 }
 
 // genMongoDBConnectionURI generate a connection string based provide MongoDB config

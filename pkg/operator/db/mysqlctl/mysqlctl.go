@@ -19,11 +19,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/frabits/frabit/pkg/operator"
 	"strings"
+
+	"github.com/frabits/frabit/pkg/operator"
 )
 
-type Driver struct {
+type Operator struct {
 	Host   string
 	Port   uint32
 	Passwd string
@@ -31,7 +32,7 @@ type Driver struct {
 	db     *sql.DB
 }
 
-func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.DBOperator, error) {
+func (op *Operator) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.DBOperator, error) {
 	protocol := "tcp"
 	if strings.HasPrefix(config.Host, "/") {
 		protocol = "unix"
@@ -52,20 +53,20 @@ func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config o
 	if err != nil {
 		return nil, err
 	}
-	driver.DBName = dbName
-	driver.db = db
+	op.DBName = dbName
+	op.db = db
 
-	return driver, nil
+	return op, nil
 }
 
-func (driver *Driver) GetType() operator.DBType {
+func (op *Operator) GetType() operator.DBType {
 	return operator.MySQL
 }
 
-func (driver *Driver) Ping(ctx context.Context) error {
-	return driver.db.PingContext(ctx)
+func (op *Operator) Ping(ctx context.Context) error {
+	return op.db.PingContext(ctx)
 }
 
-func (driver *Driver) Close(ctx context.Context) error {
-	return driver.db.Close()
+func (op *Operator) Close(ctx context.Context) error {
+	return op.db.Close()
 }

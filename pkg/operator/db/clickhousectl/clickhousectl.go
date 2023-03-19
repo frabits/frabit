@@ -19,22 +19,23 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/frabits/frabit/pkg/operator"
 	"time"
+
+	"github.com/frabits/frabit/common/log"
+	"github.com/frabits/frabit/pkg/operator"
 
 	"github.com/ClickHouse/clickhouse-go/v2"
 	"go.uber.org/zap"
-
-	"github.com/frabits/frabit/common/log"
 )
 
-type Driver struct {
+// Operator implement a ClickHouse DBOperator
+type Operator struct {
 	connConfig operator.DBConnInfo
 	dbType     operator.DBType
 	db         *sql.DB
 }
 
-func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.DBOperator, error) {
+func (op *Operator) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.DBOperator, error) {
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
 	log.Info("Connect to Clickhouse", zap.String("host", addr))
 	conn := clickhouse.OpenDB(&clickhouse.Options{
@@ -51,20 +52,20 @@ func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config o
 		},
 		DialTimeout: 10 * time.Second,
 	})
-	driver.dbType = dbName
-	driver.db = conn
+	op.dbType = dbName
+	op.db = conn
 
-	return driver, nil
+	return op, nil
 }
 
-func (driver *Driver) GetType() operator.DBType {
+func (op *Operator) GetType() operator.DBType {
 	return operator.ClickHouse
 }
 
-func (driver *Driver) Ping(ctx context.Context) error {
-	return driver.db.PingContext(ctx)
+func (op *Operator) Ping(ctx context.Context) error {
+	return op.db.PingContext(ctx)
 }
 
-func (driver *Driver) Close(ctx context.Context) error {
-	return driver.db.Close()
+func (op *Operator) Close(ctx context.Context) error {
+	return op.db.Close()
 }

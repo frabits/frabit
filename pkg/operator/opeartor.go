@@ -17,6 +17,7 @@ package operator
 
 import (
 	"context"
+	"os/exec"
 )
 
 type DBType string
@@ -44,7 +45,14 @@ type DBConnInfo struct {
 	AuthDB string
 }
 
-// DBOperator is the interface for supported database driver.
+type SSHConnInfo struct {
+	User string
+	Host string
+	Sudo bool
+	Cmd  *exec.Cmd
+}
+
+// DBOperator represents a database level operator, it executes all command directly via a tcp/http connection
 type DBOperator interface {
 	Ping(ctx context.Context) error
 	Open(ctx context.Context, dbType DBType, config DBConnInfo) (DBOperator, error)
@@ -55,7 +63,7 @@ type DBOperator interface {
 	// QueryConn(ctx context.Context, conn *sql.Conn, statement string) ([]interface{}, error)
 }
 
-// OSOperator represents an os level operator
+// OSOperator represents an os level operator, it executes all command via ssh/scp
 type OSOperator interface {
-	Executor(ctx context.Context) error
+	Executor(ctx context.Context, sshConfig SSHConnInfo) error
 }
