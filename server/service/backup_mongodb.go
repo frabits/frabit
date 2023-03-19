@@ -14,26 +14,3 @@
 // limitations under the License.
 
 package service
-
-import (
-	"context"
-)
-
-type BackupType string
-
-type BackupService interface {
-	CreateBackup(ctx context.Context) error
-	ListBackup(ctx context.Context) ([]BackupSet, error)
-	CancelBackup(ctx context.Context) error
-}
-
-type BackupSet struct {
-	Id   uint32
-	Type BackupType
-	Name string
-}
-
-const (
-	Logical  BackupType = "logical"
-	Physical BackupType = "physical"
-)

@@ -32,7 +32,7 @@ const (
 
 var (
 	version = "source"
-	commit  = ""
+	commit  = "unknown"
 )
 
 type Info struct {

@@ -1,0 +1,14 @@
+version: "2.1.2"
+services:
+  Database:
+    image: "mysql"
+    container_name: "database"
+    environment:
+      MYSQL_USER: frabit
+      MYSQL_PASSWORD: Frabit_123456
+      MYSQL_DATABASE: frabit
+      MYSQL_ROOT_PASSWORD: Frabit_123456
+    ports:
+      - "3306:3306"
+  Web:
+
