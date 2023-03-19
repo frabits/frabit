@@ -18,10 +18,9 @@ package redisctl
 import (
 	"context"
 	"fmt"
+	"github.com/frabits/frabit/pkg/operator"
 
 	"github.com/redis/go-redis/v9"
-
-	"github.com/frabits/frabit/operator"
 )
 
 type RedisMode string
@@ -41,7 +40,7 @@ type Driver struct {
 	Client *redis.Client
 }
 
-func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.Driver, error) {
+func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.DBOperator, error) {
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
 	redis := redis.NewClient(&redis.Options{
 		Addr:     addr,

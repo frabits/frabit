@@ -44,13 +44,18 @@ type DBConnInfo struct {
 	AuthDB string
 }
 
-// Driver is the interface for supported database driver.
-type Driver interface {
+// DBOperator is the interface for supported database driver.
+type DBOperator interface {
 	Ping(ctx context.Context) error
-	Open(ctx context.Context, dbType DBType, config DBConnInfo) (Driver, error)
+	Open(ctx context.Context, dbType DBType, config DBConnInfo) (DBOperator, error)
 	Close(ctx context.Context) error
 	GetType() DBType
 	// GetDBConn(ctx context.Context) (*sql.DB, error)
 	// Execute(ctx context.Context, statement string, createDatabase bool) (int64, error)
 	// QueryConn(ctx context.Context, conn *sql.Conn, statement string) ([]interface{}, error)
+}
+
+// OSOperator represents an os level operator
+type OSOperator interface {
+	Executor(ctx context.Context) error
 }

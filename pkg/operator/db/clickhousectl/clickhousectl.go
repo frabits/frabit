@@ -19,13 +19,13 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/frabits/frabit/pkg/operator"
 	"time"
 
 	"github.com/ClickHouse/clickhouse-go/v2"
 	"go.uber.org/zap"
 
 	"github.com/frabits/frabit/common/log"
-	"github.com/frabits/frabit/operator"
 )
 
 type Driver struct {
@@ -34,7 +34,7 @@ type Driver struct {
 	db         *sql.DB
 }
 
-func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.Driver, error) {
+func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.DBOperator, error) {
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
 	log.Info("Connect to Clickhouse", zap.String("host", addr))
 	conn := clickhouse.OpenDB(&clickhouse.Options{

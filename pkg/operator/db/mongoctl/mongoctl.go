@@ -18,13 +18,12 @@ package mongoctl
 import (
 	"context"
 	"fmt"
+	"github.com/frabits/frabit/pkg/operator"
 	"strings"
 
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-
-	"github.com/frabits/frabit/operator"
 )
 
 type MongoType string
@@ -42,7 +41,7 @@ type Driver struct {
 	client  *mongo.Client
 }
 
-func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.Driver, error) {
+func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.DBOperator, error) {
 	connectionURI := genMongoDBConnectionURI(config)
 	opts := options.Client().ApplyURI(connectionURI)
 	client, err := mongo.Connect(ctx, opts)

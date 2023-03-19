@@ -19,9 +19,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/frabits/frabit/pkg/operator"
 	"strings"
-
-	"github.com/frabits/frabit/operator"
 )
 
 type Driver struct {
@@ -32,7 +31,7 @@ type Driver struct {
 	db     *sql.DB
 }
 
-func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.Driver, error) {
+func (driver *Driver) Open(ctx context.Context, dbName operator.DBType, config operator.DBConnInfo) (operator.DBOperator, error) {
 	protocol := "tcp"
 	if strings.HasPrefix(config.Host, "/") {
 		protocol = "unix"

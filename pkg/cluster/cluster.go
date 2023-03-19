@@ -15,7 +15,9 @@
 
 package cluster
 
-import "github.com/frabits/frabit/operator"
+import (
+	"github.com/frabits/frabit/pkg/operator"
+)
 
 type Cluster struct {
 	DB operator.DBType
