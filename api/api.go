@@ -14,3 +14,7 @@
 // limitations under the License.
 
 package api
+
+// MySQLBackup represents a backup message
+type MySQLBackup struct {
+}

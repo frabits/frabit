@@ -14,3 +14,9 @@
 // limitations under the License.
 
 package xtrabackup
+
+import "time"
+
+func (pxb *Xtrabackup) Backup() {
+	pxb.StartDatetime = time.Now()
+}

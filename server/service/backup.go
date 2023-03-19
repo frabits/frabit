@@ -52,6 +52,7 @@ func newBackupService() *BackupService {
 func (bak *BackupService) Start(ctx context.Context, bakType BackupType) error {
 	bak.Logger.Info("create BackupService")
 	bak.Type = bakType
+	bak.PXB.Backup()
 	return nil
 }
 

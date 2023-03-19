@@ -15,7 +15,34 @@
 
 package xtrabackup
 
+import (
+	"os/exec"
+	"time"
+
+	"github.com/frabits/frabit/common/constant"
+
+	"go.uber.org/zap"
+)
+
 type Xtrabackup struct {
-	Path    string
-	Version string
+	BinPath       string
+	Version       string
+	Storage       string
+	Logger        zap.Logger
+	StartDatetime time.Time
+	EndDatetime   time.Time
+}
+
+func newXtrabackup() *Xtrabackup {
+	pxb := &Xtrabackup{}
+	binPath, err := exec.LookPath(constant.XTRABACKUP)
+	if err != nil {
+		return pxb
+	}
+	pxb.BinPath = binPath
+	return pxb
+}
+
+func init() {
+	newXtrabackup()
 }
