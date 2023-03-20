@@ -14,3 +14,62 @@
 // limitations under the License.
 
 package service
+
+import (
+	"context"
+	"time"
+
+	"github.com/frabits/frabit/common/log"
+	pxb "github.com/frabits/frabit/pkg/xtrabackup"
+
+	"go.uber.org/zap"
+)
+
+// MongoBackup implement DB backup task
+type MongoBackup struct {
+	StartDatetime time.Time
+	EndDatetime   time.Time
+	PXB           pxb.Xtrabackup
+	Type          BackupType
+	Logger        *zap.Logger
+}
+
+func newMongoBackup() *MongoBackup {
+	log.Info("create BackupService")
+	return &MongoBackup{
+		Logger: log.Logger,
+	}
+}
+
+// CreateBackup a backup job
+func (bak *MongoBackup) CreateBackup(ctx context.Context) error {
+	bak.Logger.Info("create BackupService")
+	bak.PXB.Backup()
+	return nil
+}
+
+// ListBackup a backup job
+func (bak *MongoBackup) ListBackup(ctx context.Context) ([]BackupSet, error) {
+	bak.Logger.Info("create BackupService")
+	bak.PXB.Backup()
+	bs := make([]BackupSet, 0)
+	return bs, nil
+}
+
+// CancelBackup a backup job
+func (bak *MongoBackup) CancelBackup(ctx context.Context) error {
+	bak.Logger.Info("create BackupService")
+	bak.PXB.Backup()
+	return nil
+}
+
+// PurgeBackup a backup job
+func (bak *MongoBackup) PurgeBackup(ctx context.Context) error {
+	bak.Logger.Info("create BackupService")
+	bak.PXB.Backup()
+	return nil
+}
+
+func init() {
+	newMongoBackup()
+}

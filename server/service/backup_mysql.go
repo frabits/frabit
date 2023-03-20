@@ -25,8 +25,8 @@ import (
 	"go.uber.org/zap"
 )
 
-// MySQLBackupService implement DB backup task
-type MySQLBackupService struct {
+// MySQLBackup implement DB backup task
+type MySQLBackup struct {
 	StartDatetime time.Time
 	EndDatetime   time.Time
 	PXB           pxb.Xtrabackup
@@ -34,31 +34,42 @@ type MySQLBackupService struct {
 	Logger        *zap.Logger
 }
 
-func newBackupService() *MySQLBackupService {
+func newMySQLBackup() *MySQLBackup {
 	log.Info("create BackupService")
-	return &MySQLBackupService{
+	return &MySQLBackup{
 		Logger: log.Logger,
 	}
 }
 
-// Start a backup job
-func (bak *MySQLBackupService) Start(ctx context.Context, bakType BackupType) error {
+// CreateBackup a backup job
+func (bak *MySQLBackup) CreateBackup(ctx context.Context) error {
 	bak.Logger.Info("create BackupService")
-	bak.Type = bakType
 	bak.PXB.Backup()
 	return nil
 }
 
-func (bak *MySQLBackupService) Stop() error {
+// ListBackup a backup job
+func (bak *MySQLBackup) ListBackup(ctx context.Context) ([]BackupSet, error) {
+	bak.Logger.Info("create BackupService")
+	bak.PXB.Backup()
+	bs := make([]BackupSet, 0)
+	return bs, nil
+}
 
+// CancelBackup a backup job
+func (bak *MySQLBackup) CancelBackup(ctx context.Context) error {
+	bak.Logger.Info("create BackupService")
+	bak.PXB.Backup()
 	return nil
 }
 
-func (bak *MySQLBackupService) Cancel() error {
-
+// PurgeBackup a backup job
+func (bak *MySQLBackup) PurgeBackup(ctx context.Context) error {
+	bak.Logger.Info("create BackupService")
+	bak.PXB.Backup()
 	return nil
 }
 
 func init() {
-	newBackupService()
+	newMySQLBackup()
 }

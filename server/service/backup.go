@@ -25,6 +25,7 @@ type BackupService interface {
 	CreateBackup(ctx context.Context) error
 	ListBackup(ctx context.Context) ([]BackupSet, error)
 	CancelBackup(ctx context.Context) error
+	PurgeBackup(ctx context.Context) error
 }
 
 type BackupSet struct {
