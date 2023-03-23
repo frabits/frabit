@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "generated-go/v1";
+
+service BackupService {
+  rpc createBackup(backupRequest) returns (backupResponce);
+
+}
+
+message backupRequest{
+
+}
+
+message backupResponce{
+
+}
