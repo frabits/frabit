@@ -12,10 +12,6 @@ builds:
     goarch:
       - amd64
       - arm64
-    ldflags:
-      - -s -w
-      - -X github.com/frabits/frabit/common/version.version={{ .Version }}
-      - -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
   - id: frabit-agent
     main: ./agent
     binary: frabit-agent
@@ -25,10 +21,6 @@ builds:
     goarch:
       - amd64
       - arm64
-    ldflags:
-      - -s -w
-      - -X github.com/frabits/frabit/common/version.version={{ .Version }}
-      - -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
   - id: frabit-admin
     main: ./admin
     binary: frabit-admin
@@ -38,10 +30,6 @@ builds:
     goarch:
       - amd64
       - arm64
-    ldflags:
-      - -s -w
-      - -X github.com/frabits/frabit/common/version.version={{ .Version }}
-      - -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
 archives:
 
 nfpms:
@@ -72,61 +60,24 @@ nfpms:
 
     # Section.
     section: default
-
-    # Custom configuration applied only to the RPM packager.
     rpm:
       # RPM specific scripts.
       scripts:
-        # The pretrans script runs before all RPM package transactions / stages.
-        # pretrans: ./scripts/pretrans.sh
-        # The posttrans script runs after all RPM package transactions / stages.
-        # posttrans: ./scripts/posttrans.sh
-
-      # The package summary. This is, by default, the first line of the
-      # description, but can be explicitly provided here.
-      # Defaults to the first line of the description.
-      summary: Explicit Summary for Sample Package
-
-      # The package group. This option is deprecated by most distros
-      # but required by old distros like CentOS 5 / EL 5 and earlier.
+      summary: The next-generation database automatic operation platform
       group: Unspecified
       compression: lzma
 
     deb:
       scripts:
-        # Deb rules script.
-        # rules: foo.sh
-        # Deb templates file, when using debconf.
-        # templates: templates
       triggers:
-        # register interest on a trigger activated by another package
-        # (also available: interest_await, interest_noawait)
         interest:
           - some-trigger-name
-        # activate a trigger for another package
-        # (also available: activate_await, activate_noawait)
         activate:
           - another-trigger-name
-
-      # Packages which would break if this package would be installed.
-      # The installation of this package is blocked if `some-package`
-      # is already installed.
       breaks:
         - some-package
 
-      # The package is signed if a key_file is set
       signature:
-        # Template to the PGP secret key file path (can also be ASCII-armored).
-        # The passphrase is taken from the environment variable
-        # `$NFPM_ID_DEB_PASSPHRASE` with a fallback to `$NFPM_ID_PASSPHRASE`,
-        # where ID is the id of the current nfpm config.
-        # The id will be transformed to uppercase.
-        # E.g. If your nfpm id is 'default' then the deb-specific passphrase
-        # should be set as `$NFPM_DEFAULT_DEB_PASSPHRASE`
-        # key_file: '{{ .Env.GPG_KEY_PATH }}'
-
-        # The type describes the signers role, possible values are "origin",
-        # "maint" and "archive". If unset, the type defaults to "origin".
         type: origin
   - id: frabit-agent
     package_name: frabit-agent
@@ -137,16 +88,12 @@ nfpms:
     homepage: https://github.com/frabits/frabit
     maintainer: Blylei <blylei.info@gmail.com>
     description: |-
-      Drum rolls installer package.
-      Software to create fast and easy drum rolls.
+      The next-generation database automatic operation platform
     license: GPLv3
     formats:
       - deb
       - rpm
     bindir: /usr/bin
-    # epoch: 2
-
-    # Section.
     section: default
 
     # Priority.
@@ -155,47 +102,20 @@ nfpms:
 
     rpm:
       scripts:
-      # The pretrans script runs before all RPM package transactions / stages.
-      # pretrans: ./scripts/pretrans.sh
-      # The posttrans script runs after all RPM package transactions / stages.
-      # posttrans: ./scripts/posttrans.sh
-
-      # The package summary. This is, by default, the first line of the
-      # description, but can be explicitly provided here.
-      # Defaults to the first line of the description.
-      summary: Explicit Summary for Sample Package
-      group: Unspecified
+      summary: The next-generation database automatic operation platform
+      group: Database
       compression: lzma
 
     deb:
       scripts:
-      # Deb rules script.
-      # rules: foo.sh
-      # Deb templates file, when using debconf.
-      # templates: templates
       triggers:
         interest:
           - some-trigger-name
-        # activate a trigger for another package
-        # (also available: activate_await, activate_noawait)
         activate:
           - another-trigger-name
       breaks:
         - some-package
-
-      # The package is signed if a key_file is set
       signature:
-        # Template to the PGP secret key file path (can also be ASCII-armored).
-        # The passphrase is taken from the environment variable
-        # `$NFPM_ID_DEB_PASSPHRASE` with a fallback to `$NFPM_ID_PASSPHRASE`,
-        # where ID is the id of the current nfpm config.
-        # The id will be transformed to uppercase.
-        # E.g. If your nfpm id is 'default' then the deb-specific passphrase
-        # should be set as `$NFPM_DEFAULT_DEB_PASSPHRASE`
-        # key_file: '{{ .Env.GPG_KEY_PATH }}'
-
-        # The type describes the signers role, possible values are "origin",
-        # "maint" and "archive". If unset, the type defaults to "origin".
         type: origin
 brews:
   -
