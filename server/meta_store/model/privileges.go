@@ -14,3 +14,62 @@
 // limitations under the License.
 
 package model
+
+import "github.com/frabits/frabit/common/constant"
+
+type WorkspaceLevel struct {
+	Id        uint32
+	Workspace string
+	User      string
+	Admin     bool
+	Editor    bool
+	Viewer    bool
+}
+
+type ProjectLevel struct {
+	Id        uint32
+	Workspace string
+	Project   string
+	User      string
+	Admin     bool
+	Editor    bool
+	Viewer    bool
+}
+
+type DatabaseLevel struct {
+	Id        uint32
+	Workspace string
+	Project   string
+	Database  string
+	User      string
+	Admin     bool
+	Editor    bool
+	Viewer    bool
+}
+
+type GeneralLevel struct {
+	Id        uint32
+	Workspace string
+	Project   string
+	Database  string
+	User      string
+	Admin     bool
+	Editor    bool
+	Viewer    bool
+}
+
+// IsVisible determine the visible for a user based
+func IsVisible(level constant.PrivilegeLevel, role constant.Role, user string) bool {
+	switch level {
+	case constant.GLOBAL:
+		return true
+	case constant.WORKSPACE:
+		return true
+	case constant.PROJECT:
+		return true
+	case constant.DATABASE:
+		return true
+	default:
+		return false
+	}
+}

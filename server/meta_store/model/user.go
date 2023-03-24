@@ -20,4 +20,9 @@ type User struct {
 	Username string
 	RealName string
 	Email    string
+
+	// for global permission
+	Admin  bool
+	Editor bool
+	Viewer bool
 }

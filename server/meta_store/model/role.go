@@ -14,3 +14,18 @@
 // limitations under the License.
 
 package model
+
+import "github.com/frabits/frabit/common/constant"
+
+type Role struct {
+	id    uint32
+	Name  constant.Role
+	Level constant.PrivilegeLevel
+}
+
+/*
+
+role
+
+
+*/

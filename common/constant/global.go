@@ -14,3 +14,18 @@
 // limitations under the License.
 
 package constant
+
+type PrivilegeLevel string
+type Role string
+
+const (
+	GLOBAL    PrivilegeLevel = "global"
+	WORKSPACE PrivilegeLevel = "workspace"
+	PROJECT   PrivilegeLevel = "project"
+	DATABASE  PrivilegeLevel = "database"
+	GENERAl   PrivilegeLevel = "general"
+
+	ADMIN  Role = "admin"
+	EDITOR Role = "editor"
+	VIEWER Role = "viewer"
+)
