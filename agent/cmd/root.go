@@ -50,5 +50,4 @@ func init() {
 
 func runAgent(cmd *cobra.Command, args []string) {
 	fmt.Printf("%s\n", version.InfoStr.String())
-	fmt.Printf("%s", version.InfoStr.BuildInfo())
 }
