@@ -16,6 +16,7 @@
 package model
 
 type Project struct {
-	ID   uint32
-	Name string
+	ID       uint32
+	Name     string
+	Database string
 }

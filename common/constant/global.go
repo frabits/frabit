@@ -28,4 +28,6 @@ const (
 	ADMIN  Role = "admin"
 	EDITOR Role = "editor"
 	VIEWER Role = "viewer"
+	// FRABIT is the default metadata schema name if not provide a dbname via config file
+	FRABIT = "frabit"
 )
