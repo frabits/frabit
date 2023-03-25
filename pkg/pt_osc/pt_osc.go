@@ -15,8 +15,12 @@
 
 package pt_osc
 
-import "os/exec"
+import (
+	"os/exec"
+	"time"
+)
 
 type PTOSC struct {
-	cmd exec.Cmd
+	cmd       exec.Cmd
+	StartTime time.Time
 }
