@@ -18,9 +18,47 @@ package pt_osc
 import (
 	"os/exec"
 	"time"
+
+	"github.com/frabits/frabit/common/constant"
+	"github.com/frabits/frabit/common/log"
+
+	"go.uber.org/zap"
 )
 
+// PTOSC represent a pt-online-schema-change provided by Percona LLC
 type PTOSC struct {
-	cmd       exec.Cmd
+	cmd       string
 	StartTime time.Time
+	opt       ptoscOpt
+	logger    *zap.Logger
+}
+
+type ptoscOpt struct {
+	user     string
+	password string
+	host     string
+	port     uint32
+
+	alterStatement string
+}
+
+func NewPTOSC() *PTOSC {
+	cmdPT, err := exec.LookPath(constant.PTOSC)
+	if err != nil {
+		log.Info("pt-osc not in you path environment")
+	}
+	return &PTOSC{
+		cmd:    cmdPT,
+		logger: log.Logger,
+	}
+}
+
+func init() {
+	NewPTOSC()
+}
+
+func (pt *PTOSC) Run() error {
+	pt.StartTime = time.Now()
+	cmd := exec.Cmd{Path: pt.cmd}
+	return cmd.Run()
 }

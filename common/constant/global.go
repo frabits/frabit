@@ -30,4 +30,5 @@ const (
 	VIEWER Role = "viewer"
 	// FRABIT is the default metadata schema name if not provide a dbname via config file
 	FRABIT = "frabit"
+	PTOSC  = "pt-online-schema-change"
 )

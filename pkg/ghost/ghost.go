@@ -15,8 +15,19 @@
 
 package ghost
 
-import "os/exec"
+/*
+import (
+	"os/exec"
+
+	"github.com/github/gh-ost/go/base"
+	_ "github.com/github/gh-ost/go/logic"
+	_ "github.com/github/gh-ost/go/sql"
+)
 
 type Ghost struct {
-	ghCmd exec.Cmd
+	ghCmd           exec.Cmd
+	migratorConteat base.MigrationContext
 }
+
+
+*/
