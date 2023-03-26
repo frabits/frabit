@@ -13,4 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package common
+package feature
+
+import (
+	"github.com/frabits/frabit/common/constant"
+)
+
+// FeatureMatrix is a map from the particular feature to the respective enablement of a particular
+var FeatureMatrix = map[constant.FeatureType][3]bool{
+	// Admin & Security
+	constant.FeatureWatermark: {false, false, true},
+	constant.FeatureAuditLog:  {false, false, true},
+}
