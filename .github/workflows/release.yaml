@@ -1,4 +1,6 @@
 name: release
+env_files:
+  github_token: ./github_token
 
 on:
   push:
@@ -29,5 +31,5 @@ jobs:
         uses: goreleaser/goreleaser-action@v2
         with:
           version: latest
-          args: release --rm-dist
+          args: release --clean
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}

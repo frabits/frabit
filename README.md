@@ -69,19 +69,15 @@ Currently, we provide support for following platform and architecture
 
 ### Linux
 
-#### 1、Build from source code
-Clone source code from GitHub
+#### 1、Install binary file 
 
-```bash
-git clone https://github.com/frabits/frabit.git
+##### 1.1、Linux/MacOS
+- Brew
+```bash 
+brew install frabits/tap/frabit
 ```
 
-Change directory to frabit and perform below command
-```bash
-cd frabit && bash scripts/build.sh
-```
-
-#### 2、rpm or deb package
+#### 1.2、rpm or deb package
 
 ```bash
 version="2.0.10"
@@ -91,8 +87,7 @@ yum  install -y https://github.com/frabits/frabit/releases/download/v${version}/
 yum  install -y https://github.com/frabits/frabit/releases/download/${version}/frabit-agent-${version}.${arch}.rpm
 ````
 
-#### 3、install binary file
-
+#### 1.3、Archiver file
 Yeah,we also provide executable files, you can download the archiver files enter below commands:
 ```bash
 version="2.0.10" 
@@ -107,13 +102,6 @@ cp -r * /usr/local/frabit
 ```
 
 ### MacOS
-
-#### 1、Brew
-```bash
-brew install frabits/tap/frabit
-```
-
-#### 2、Binary file
 ```bash
 version="2.0.10" 
 # for X86-64
@@ -126,9 +114,21 @@ sudo mkdir -p /usr/local/frabit
 cp -r * /usr/local/frabit
 ```
 
-#### 3、Build from source code
-
-Assume your already install Golang and git
 ```bash
 git clone https://github.com/frabits/frabit.git
+```
+
+Change directory to frabit and perform below command
+```bash
+cd frabit && bash scripts/build.sh
+```
+ 
+
+#### 2、Build from source code
+
+Assume your already install Golang and git, Change directory to frabit and perform below command
+```bash
+git clone https://github.com/frabits/frabit.git 
+cd frabit && bash scripts/build.sh
+```
 ```
