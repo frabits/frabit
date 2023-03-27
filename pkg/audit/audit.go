@@ -28,3 +28,7 @@ type Auditor struct {
 	IP       string
 	Datetime time.Time
 }
+
+func NewAuditor() *Auditor {
+	return &Auditor{}
+}
