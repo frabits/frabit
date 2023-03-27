@@ -13,21 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package ghost
+package onlineddl
 
-/*
-import (
-	"os/exec"
+type DDLType string
 
-	"github.com/github/gh-ost/go/base"
-	_ "github.com/github/gh-ost/go/logic"
-	_ "github.com/github/gh-ost/go/sql"
+const (
+	// Direct represent directly execute statemet via "alter table"
+	Direct DDLType = "direct"
+	// Native represent MySQL native online DDL
+	Native DDLType = "native"
+	// Ghost represent gh-ost to take none-lock schema change
+	Ghost DDLType = "gh-ost"
+	// PtOSC represent pt-online-schema-change which provided by Percona
+	PtOSC DDLType = "pt-osc"
 )
 
-type Ghost struct {
-	ghCmd           exec.Cmd
-	migratorConteat base.MigrationContext
+type OnlineDDL struct {
+	Type DDLType
 }
-
-
-*/
