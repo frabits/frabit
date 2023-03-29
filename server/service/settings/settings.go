@@ -13,30 +13,4 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package auth
-
-import (
-	"time"
-
-	"github.com/frabits/frabit/common/utils"
-)
-
-const apiKeyLength int = 32
-
-type ApiKey struct {
-	Prefix      string
-	PublicAuth  string
-	PrivateAuth string
-	CreateAt    time.Time
-	LastSeen    time.Time
-}
-
-func NewAPIKey() *ApiKey {
-	return &ApiKey{
-		Prefix:      "frabit_tkn",
-		PublicAuth:  utils.NewToken(apiKeyLength).Hash,
-		PrivateAuth: utils.NewToken(apiKeyLength).Hash,
-		CreateAt:    time.Now(),
-		LastSeen:    time.Now(),
-	}
-}
+package settings

@@ -26,13 +26,15 @@ import (
 	store "github.com/frabits/frabit/server/meta_store"
 	"github.com/frabits/frabit/server/router"
 	"github.com/frabits/frabit/server/service"
+	"github.com/frabits/frabit/server/service/backup"
+	"github.com/frabits/frabit/server/service/deploy"
 )
 
 type Server struct {
 	startedTs      int64
-	BackupService  service.BackupService
+	BackupService  backup.BackupService
 	RestoreService service.RestoreService
-	DeployService  service.DeployService
+	DeployService  deploy.DeployService
 	UpgradeService service.UpgradeService
 	config         config.Config
 	g              router.Router

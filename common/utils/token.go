@@ -13,30 +13,42 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package auth
+package utils
 
 import (
+	"crypto/rand"
+	"encoding/hex"
+	mrand "math/rand"
 	"time"
-
-	"github.com/frabits/frabit/common/utils"
 )
 
-const apiKeyLength int = 32
-
-type ApiKey struct {
-	Prefix      string
-	PublicAuth  string
-	PrivateAuth string
-	CreateAt    time.Time
-	LastSeen    time.Time
+func RandomHex(n int) (string, error) {
+	bytes := make([]byte, n)
+	if _, err := rand.Read(bytes); err != nil {
+		return "", nil
+	}
+	return hex.EncodeToString(bytes), nil
 }
 
-func NewAPIKey() *ApiKey {
-	return &ApiKey{
-		Prefix:      "frabit_tkn",
-		PublicAuth:  utils.NewToken(apiKeyLength).Hash,
-		PrivateAuth: utils.NewToken(apiKeyLength).Hash,
-		CreateAt:    time.Now(),
-		LastSeen:    time.Now(),
+func GenRandom(num int) string {
+	metaStr := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	Str := []byte(metaStr)
+	targetStr := []byte{}
+	r := mrand.New(mrand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < num; i++ {
+		targetStr = append(targetStr, Str[r.Intn(len(Str))])
+	}
+	return string(targetStr)
+
+}
+
+type Token struct {
+	Hash string
+}
+
+func NewToken(n int) *Token {
+	newHash := GenRandom(n)
+	return &Token{
+		Hash: newHash,
 	}
 }
