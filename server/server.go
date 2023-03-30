@@ -19,13 +19,13 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
+
+	"github.com/frabits/frabit/common/log"
 	"github.com/frabits/frabit/pkg/service"
 	"github.com/frabits/frabit/pkg/service/backup"
 	"github.com/frabits/frabit/pkg/service/deploy"
 	"github.com/frabits/frabit/pkg/service/upgrade"
-	"time"
-
-	"github.com/frabits/frabit/common/log"
 	"github.com/frabits/frabit/server/config"
 	store "github.com/frabits/frabit/server/meta_store"
 	"github.com/frabits/frabit/server/router"
