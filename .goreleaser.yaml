@@ -12,6 +12,9 @@ builds:
     goarch:
       - amd64
       - arm64
+    env:
+      - CGO_ENABLED=0
+
   - id: frabit-agent
     main: ./agent
     binary: frabit-agent
@@ -21,6 +24,9 @@ builds:
     goarch:
       - amd64
       - arm64
+    env:
+      - CGO_ENABLED=0
+
   - id: frabit-admin
     main: ./admin
     binary: frabit-admin
@@ -30,6 +36,9 @@ builds:
     goarch:
       - amd64
       - arm64
+    env:
+      - CGO_ENABLED=0
+
 archives:
 
 nfpms:
