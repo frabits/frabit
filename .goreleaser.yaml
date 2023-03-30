@@ -14,7 +14,8 @@ builds:
       - arm64
     env:
       - CGO_ENABLED=0
-
+  - ldflags:
+      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
   - id: frabit-agent
     main: ./agent
     binary: frabit-agent
@@ -26,7 +27,8 @@ builds:
       - arm64
     env:
       - CGO_ENABLED=0
-
+  - ldflags:
+      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
   - id: frabit-admin
     main: ./admin
     binary: frabit-admin
@@ -38,7 +40,8 @@ builds:
       - arm64
     env:
       - CGO_ENABLED=0
-
+  - ldflags:
+      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
 archives:
 
 nfpms:
