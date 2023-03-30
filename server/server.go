@@ -19,15 +19,16 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/frabits/frabit/pkg/service"
+	"github.com/frabits/frabit/pkg/service/backup"
+	"github.com/frabits/frabit/pkg/service/deploy"
+	"github.com/frabits/frabit/pkg/service/upgrade"
 	"time"
 
 	"github.com/frabits/frabit/common/log"
 	"github.com/frabits/frabit/server/config"
 	store "github.com/frabits/frabit/server/meta_store"
 	"github.com/frabits/frabit/server/router"
-	"github.com/frabits/frabit/server/service"
-	"github.com/frabits/frabit/server/service/backup"
-	"github.com/frabits/frabit/server/service/deploy"
 )
 
 type Server struct {
@@ -35,7 +36,7 @@ type Server struct {
 	BackupService  backup.BackupService
 	RestoreService service.RestoreService
 	DeployService  deploy.DeployService
-	UpgradeService service.UpgradeService
+	UpgradeService upgrade.UpgradeService
 	config         config.Config
 	g              router.Router
 	db             *sql.DB

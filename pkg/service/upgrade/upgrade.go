@@ -13,4 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package service
+package upgrade
+
+type UpgradeService struct {
+	Id int
+}
