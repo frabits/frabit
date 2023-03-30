@@ -19,8 +19,6 @@ import (
 	"fmt"
 	"time"
 
-	_ "github.com/frabits/frabit/server/service"
-
 	"github.com/gin-gonic/gin"
 )
 
