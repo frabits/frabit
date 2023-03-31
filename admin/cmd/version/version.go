@@ -13,4 +13,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package version
+
+import (
+	"fmt"
+	"github.com/frabits/frabit/common/version"
+
+	"github.com/spf13/cobra"
+)
+
+var CmdVersion = &cobra.Command{
+	Use:   "version",
+	Short: "Display frabit-admin component version information",
+	Run:   runVersion,
+}
+
+func runVersion(cmd *cobra.Command, args []string) {
+	fmt.Printf("%s\n", version.InfoStr.String())
+}
+
+func init() {
+	// cmd.rootCmd.AddCommand(newVersionCmd)
+}

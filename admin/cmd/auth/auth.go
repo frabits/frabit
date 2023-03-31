@@ -13,18 +13,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cmd
+package auth
 
 import (
 	"fmt"
-
 	"github.com/frabits/frabit/common/version"
 
 	"github.com/spf13/cobra"
 )
 
-var newVersionCmd = &cobra.Command{
-	Use:   "version",
+var CmdAuth = &cobra.Command{
+	Use:   "auth",
 	Short: "Display frabit-admin component version information",
 	Run:   runVersion,
 }
@@ -34,5 +33,5 @@ func runVersion(cmd *cobra.Command, args []string) {
 }
 
 func init() {
-	rootCmd.AddCommand(newVersionCmd)
+	// cmd.rootCmd.AddCommand(newVersionCmd)
 }

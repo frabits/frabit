@@ -16,9 +16,9 @@
 package main
 
 import (
-	"github.com/frabits/frabit/admin/cmd"
+	"github.com/frabits/frabit/admin/cmd/root"
 )
 
 func main() {
-	cmd.Execute()
+	root.Execute()
 }

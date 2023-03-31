@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cmd
+package restore
 
 import (
 	"fmt"
@@ -21,9 +21,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// innodbClusterCmd represents the innodbCluster command
-var innodbClusterCmd = &cobra.Command{
-	Use:   "innodbCluster",
+// CmdRestore represents the restore command
+var CmdRestore = &cobra.Command{
+	Use:   "restore",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -32,20 +32,23 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("innodbCluster called")
+		fmt.Println("restore called")
 	},
 }
 
 func init() {
-	mysqlCmd.AddCommand(innodbClusterCmd)
-
+	// cmd.rootCmd.AddCommand(restoreCmd)
+	CmdRestore.AddCommand(mysqlCmd)
+	CmdRestore.AddCommand(clickhouseCmd)
+	CmdRestore.AddCommand(redisCmd)
+	CmdRestore.AddCommand(mongodbCmd)
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// innodbClusterCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// restoreCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// innodbClusterCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// restoreCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

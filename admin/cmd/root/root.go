@@ -13,12 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cmd
+package root
 
 import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/frabits/frabit/admin/cmd/auth"
+	"github.com/frabits/frabit/admin/cmd/backup"
+	"github.com/frabits/frabit/admin/cmd/deploy"
+	"github.com/frabits/frabit/admin/cmd/plugin"
+	"github.com/frabits/frabit/admin/cmd/restore"
+	"github.com/frabits/frabit/admin/cmd/upgrade"
+	"github.com/frabits/frabit/admin/cmd/version"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -37,5 +45,13 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	rootCmd.AddCommand(backup.CmdBackup)
+	rootCmd.AddCommand(restore.CmdRestore)
+	rootCmd.AddCommand(deploy.CmdDeploy)
+	rootCmd.AddCommand(upgrade.CmdUpgrade)
+	rootCmd.AddCommand(version.CmdVersion)
+	rootCmd.AddCommand(plugin.CmdPlugin)
+	rootCmd.AddCommand(auth.CmdAuth)
+
 }

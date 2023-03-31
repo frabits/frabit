@@ -13,15 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cmd
+package plugin
 
 import (
 	"fmt"
 	"github.com/spf13/cobra"
 )
 
-// pluginCmd represents the plugin command
-var pluginCmd = &cobra.Command{
+// CmdPlugin represents the plugin command
+var CmdPlugin = &cobra.Command{
 	Use:   "plugin",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
@@ -93,10 +93,9 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	rootCmd.AddCommand(pluginCmd)
-	pluginCmd.AddCommand(listCmd)
-	pluginCmd.AddCommand(installCmd)
-	pluginCmd.AddCommand(uninstallCmd)
-	pluginCmd.AddCommand(updateCmd)
-	// pluginCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	CmdPlugin.AddCommand(listCmd)
+	CmdPlugin.AddCommand(installCmd)
+	CmdPlugin.AddCommand(uninstallCmd)
+	CmdPlugin.AddCommand(updateCmd)
+	// CmdPlugin.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
