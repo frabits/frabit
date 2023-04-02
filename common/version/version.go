@@ -73,7 +73,6 @@ func newVersion() Version {
 			Major: strings.Split(version, ".")[0],
 			Minor: strings.Split(version, ".")[1],
 			Patch: strings.Split(version, ".")[2],
-			Dist:  Dist,
 		}
 	}
 
@@ -99,7 +98,7 @@ func (v Version) versionString() string {
 }
 
 func (b Build) buildString() string {
-	str := fmt.Sprintf("Hash: %s\nDate: %s\nArch: %s\n", b.GitHash, b.Date, b.Arch)
+	str := fmt.Sprintf("Hash: %s\nDate: %s\nArch: %s", b.GitHash, b.Date, b.Arch)
 	return str
 }
 

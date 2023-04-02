@@ -23,20 +23,23 @@ import (
 
 const apiKeyLength int = 32
 
-type ApiKey struct {
+type APIKey struct {
 	Prefix      string
 	PublicAuth  string
 	PrivateAuth string
+	VerifyAuth  string
 	CreateAt    time.Time
 	LastSeen    time.Time
 }
 
-func NewAPIKey() *ApiKey {
-	return &ApiKey{
+func NewAPIKey() *APIKey {
+	return &APIKey{
 		Prefix:      "frabit_tkn",
 		PublicAuth:  utils.NewToken(apiKeyLength).Hash,
 		PrivateAuth: utils.NewToken(apiKeyLength).Hash,
-		CreateAt:    time.Now(),
-		LastSeen:    time.Now(),
+		// hash(PublicAuth:PrivateAuth)
+		VerifyAuth: "",
+		CreateAt:   time.Now(),
+		LastSeen:   time.Now(),
 	}
 }

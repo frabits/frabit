@@ -35,7 +35,6 @@ type MySQLBackup struct {
 }
 
 func newMySQLBackup() *MySQLBackup {
-	log.Info("create BackupService")
 	return &MySQLBackup{
 		Logger: log.Logger,
 	}
@@ -43,14 +42,14 @@ func newMySQLBackup() *MySQLBackup {
 
 // CreateBackup a backup job
 func (bak *MySQLBackup) CreateBackup(ctx context.Context) error {
-	bak.Logger.Info("create BackupService")
+	bak.Logger.Info("Create BackupService")
 	bak.PXB.Backup()
 	return nil
 }
 
 // ListBackup a backup job
 func (bak *MySQLBackup) ListBackup(ctx context.Context) ([]BackupSet, error) {
-	bak.Logger.Info("create BackupService")
+	bak.Logger.Info("list BackupService")
 	bak.PXB.Backup()
 	bs := make([]BackupSet, 0)
 	return bs, nil
@@ -58,14 +57,14 @@ func (bak *MySQLBackup) ListBackup(ctx context.Context) ([]BackupSet, error) {
 
 // CancelBackup a backup job
 func (bak *MySQLBackup) CancelBackup(ctx context.Context) error {
-	bak.Logger.Info("create BackupService")
+	bak.Logger.Info("Cancel BackupService")
 	bak.PXB.Backup()
 	return nil
 }
 
 // PurgeBackup a backup job
 func (bak *MySQLBackup) PurgeBackup(ctx context.Context) error {
-	bak.Logger.Info("create BackupService")
+	bak.Logger.Info("Purge BackupService")
 	bak.PXB.Backup()
 	return nil
 }

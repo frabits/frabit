@@ -16,6 +16,8 @@
 package deploy
 
 import (
+	"fmt"
+	"github.com/frabits/frabit/common/version"
 	"github.com/spf13/cobra"
 )
 
@@ -32,14 +34,26 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
+	mysqlCmd.AddCommand(cmdStandalone)
+	mysqlCmd.AddCommand(cmdReplicate)
+}
 
-	// Here you will define your flags and configuration settings.
+var cmdStandalone = &cobra.Command{
+	Use:   "standalone",
+	Short: "Deploy a standalone mysql instance",
+	Run:   runStandalone,
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// mysqlCmd.PersistentFlags().String("foo", "", "A help for foo")
+var cmdReplicate = &cobra.Command{
+	Use:   "replication",
+	Short: "Deploy a mysql replication topology",
+	Run:   runReplicate,
+}
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// mysqlCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+func runStandalone(cmd *cobra.Command, args []string) {
+	fmt.Printf("%s\n", version.InfoStr.String())
+}
+
+func runReplicate(cmd *cobra.Command, args []string) {
+	fmt.Printf("%s\n", version.InfoStr.String())
 }

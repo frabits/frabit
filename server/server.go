@@ -22,9 +22,9 @@ import (
 	"time"
 
 	"github.com/frabits/frabit/common/log"
-	"github.com/frabits/frabit/pkg/service"
 	"github.com/frabits/frabit/pkg/service/backup"
 	"github.com/frabits/frabit/pkg/service/deploy"
+	"github.com/frabits/frabit/pkg/service/restore"
 	"github.com/frabits/frabit/pkg/service/upgrade"
 	"github.com/frabits/frabit/server/config"
 	store "github.com/frabits/frabit/server/meta_store"
@@ -32,14 +32,16 @@ import (
 )
 
 type Server struct {
-	startedTs      int64
+	startedTs int64
+
 	BackupService  backup.BackupService
-	RestoreService service.RestoreService
+	RestoreService restore.RestoreService
 	DeployService  deploy.DeployService
 	UpgradeService upgrade.UpgradeService
-	config         config.Config
-	g              router.Router
-	db             *sql.DB
+
+	config config.Config
+	g      router.Router
+	db     *sql.DB
 }
 
 func NewServer(cfg config.Config) *Server {
