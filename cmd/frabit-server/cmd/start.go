@@ -13,19 +13,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package auth
+package cmd
 
 import (
+	"context"
+
+	"github.com/frabits/frabit/server"
+	"github.com/frabits/frabit/server/config"
+
 	"github.com/spf13/cobra"
 )
 
-var CmdAuth = &cobra.Command{
-	Use:   "auth <subcommand> [flag]",
-	Short: "frabit auth manager",
+// startCmd represents the start command
+var startCmd = &cobra.Command{
+	Use:   "start",
+	Short: "Start frabit-server within daemon mode",
+	Run: func(cmd *cobra.Command, args []string) {
+		start()
+
+	},
 }
 
 func init() {
-	CmdAuth.AddCommand(CmdLogin)
-	CmdAuth.AddCommand(CmdLogout)
-	CmdAuth.AddCommand(CmdStatus)
+	rootCmd.AddCommand(startCmd)
+}
+
+func start() {
+	ctx := context.Background()
+	cfg := config.Conf
+	srv := server.NewServer(cfg)
+	srv.Run(ctx)
 }

@@ -29,6 +29,10 @@ import (
 	"github.com/frabits/frabit/admin/cmd/version"
 )
 
+type rootOpt struct {
+	help bool
+}
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "frabit-admin",
@@ -45,7 +49,6 @@ func Execute() {
 }
 
 func init() {
-
 	rootCmd.AddCommand(backup.CmdBackup)
 	rootCmd.AddCommand(restore.CmdRestore)
 	rootCmd.AddCommand(deploy.CmdDeploy)
@@ -53,5 +56,7 @@ func init() {
 	rootCmd.AddCommand(version.CmdVersion)
 	rootCmd.AddCommand(plugin.CmdPlugin)
 	rootCmd.AddCommand(auth.CmdAuth)
+
+	// rootCmd.PersistentFlags().BoolVar(&rootOpt.help, "help", false, "Show help information for each command")
 
 }

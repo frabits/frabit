@@ -16,30 +16,19 @@
 package cmd
 
 import (
-	"context"
-
-	"github.com/frabits/frabit/server"
-	"github.com/frabits/frabit/server/config"
+	"fmt"
 	"github.com/spf13/cobra"
 )
 
-// runCmd represents the run command
-var runCmd = &cobra.Command{
-	Use:   "run",
-	Short: "Start frabit-server within daemon mode",
+// statusCmd represents the status command
+var statusCmd = &cobra.Command{
+	Use:   "status",
+	Short: "Display frabit-server running status",
 	Run: func(cmd *cobra.Command, args []string) {
-		start()
-
+		fmt.Println("status called")
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(runCmd)
-}
-
-func start() {
-	ctx := context.Background()
-	cfg := config.Conf
-	srv := server.NewServer(cfg)
-	srv.Run(ctx)
+	rootCmd.AddCommand(statusCmd)
 }

@@ -13,33 +13,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cmd
+package auth
 
 import (
 	"fmt"
-
+	"github.com/frabits/frabit/common/version"
 	"github.com/spf13/cobra"
 )
 
-// runCmd represents the run command
-var runCmd = &cobra.Command{
-	Use:   "run",
-	Short: "Start frabit-agent at remote node within daemon mode",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("run called")
-	},
+var CmdStatus = &cobra.Command{
+	Use:   "status [flag]",
+	Short: "Display frabit-admin component version information",
+	Run:   runStatus,
+}
+
+func runStatus(cmd *cobra.Command, args []string) {
+	fmt.Printf("%s\n", version.InfoStr.String())
 }
 
 func init() {
-	rootCmd.AddCommand(runCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// runCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// runCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// cmd.rootCmd.AddCommand(newVersionCmd)
 }

@@ -21,8 +21,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// mysqlCmd represents the mysql command
-var mysqlCmd = &cobra.Command{
+// CmdMysql represents the mysql command
+var CmdMysql = &cobra.Command{
 	Use:   "mysql",
 	Short: "Deploy a mysql database based on provide topology",
 	Long: `A longer description that spans multiple lines and likely contains examples
@@ -34,8 +34,8 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	mysqlCmd.AddCommand(cmdStandalone)
-	mysqlCmd.AddCommand(cmdReplicate)
+	CmdMysql.AddCommand(cmdStandalone)
+	CmdMysql.AddCommand(cmdReplicate)
 }
 
 var cmdStandalone = &cobra.Command{

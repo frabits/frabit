@@ -13,19 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package auth
+package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
-var CmdAuth = &cobra.Command{
-	Use:   "auth <subcommand> [flag]",
-	Short: "frabit auth manager",
+// statusCmd represents the status command
+var statusCmd = &cobra.Command{
+	Use:   "status",
+	Short: "Display frabit-agent running status",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("run called")
+	},
 }
 
 func init() {
-	CmdAuth.AddCommand(CmdLogin)
-	CmdAuth.AddCommand(CmdLogout)
-	CmdAuth.AddCommand(CmdStatus)
+	rootCmd.AddCommand(startCmd)
 }

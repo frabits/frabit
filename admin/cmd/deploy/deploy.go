@@ -36,7 +36,7 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	CmdDeploy.AddCommand(mysqlCmd)
+	CmdDeploy.AddCommand(CmdMysql)
 	CmdDeploy.AddCommand(clickhouseCmd)
 	CmdDeploy.AddCommand(redisCmd)
 	CmdDeploy.AddCommand(mongodbCmd)

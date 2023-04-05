@@ -16,16 +16,21 @@
 package auth
 
 import (
+	"fmt"
+	"github.com/frabits/frabit/common/version"
 	"github.com/spf13/cobra"
 )
 
-var CmdAuth = &cobra.Command{
-	Use:   "auth <subcommand> [flag]",
-	Short: "frabit auth manager",
+var CmdLogout = &cobra.Command{
+	Use:   "logout [flag]",
+	Short: "Display frabit-admin component version information",
+	Run:   runLogout,
+}
+
+func runLogout(cmd *cobra.Command, args []string) {
+	fmt.Printf("%s\n", version.InfoStr.String())
 }
 
 func init() {
-	CmdAuth.AddCommand(CmdLogin)
-	CmdAuth.AddCommand(CmdLogout)
-	CmdAuth.AddCommand(CmdStatus)
+	// cmd.rootCmd.AddCommand(newVersionCmd)
 }

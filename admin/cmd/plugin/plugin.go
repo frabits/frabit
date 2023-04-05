@@ -97,5 +97,6 @@ func init() {
 	CmdPlugin.AddCommand(installCmd)
 	CmdPlugin.AddCommand(uninstallCmd)
 	CmdPlugin.AddCommand(updateCmd)
-	// CmdPlugin.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	//CmdPlugin.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

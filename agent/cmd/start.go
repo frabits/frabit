@@ -13,19 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package auth
+package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
-var CmdAuth = &cobra.Command{
-	Use:   "auth <subcommand> [flag]",
-	Short: "frabit auth manager",
+// startCmd represents the start command
+var startCmd = &cobra.Command{
+	Use:   "start",
+	Short: "Start frabit-agent at remote node within daemon mode",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("run called")
+	},
 }
 
 func init() {
-	CmdAuth.AddCommand(CmdLogin)
-	CmdAuth.AddCommand(CmdLogout)
-	CmdAuth.AddCommand(CmdStatus)
+	rootCmd.AddCommand(startCmd)
 }
