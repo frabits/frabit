@@ -27,25 +27,6 @@ type Config struct {
 	KeyringDir string
 }
 
-/*
-service := "my-app"
-user := "anon"
-password := "secret"
-
-// set password
-err := keyring.Set(service, user, password)
-if err != nil {
-log.Fatal(err)
-}
-
-// get password
-secret, err := keyring.Get(service, user)
-if err != nil {
-log.Fatal(err)
-}
-log.Println(secret)
-*/
-
 func (cfg *Config) HasTokenFromEnv() bool {
 
 	return true
