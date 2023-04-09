@@ -17,6 +17,8 @@ package config
 
 import (
 	"os"
+
+	"github.com/zalando/go-keyring"
 )
 
 type Config struct {
