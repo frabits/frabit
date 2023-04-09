@@ -32,7 +32,9 @@ func DisableAuthCheck(cmd *cobra.Command) {
 
 // CheckAuth if a command already been auth via a token
 func CheckAuth(cfg config.Config) bool {
-	if ok := cfg.HasToken(); ok {
+	if ok := cfg.HasTokenFromEnv(); ok {
+		return true
+	} else if ok := cfg.HasTokenFromKeyring(); ok {
 		return true
 	}
 	return false
