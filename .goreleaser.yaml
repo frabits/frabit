@@ -15,7 +15,9 @@ builds:
     env:
       - CGO_ENABLED=0
     ldflags:
-      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
+      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }}
+      - -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
+      - -X github.com/frabits/frabit/common/version.buildDate={{ .CommitDate }}
   - id: frabit-agent
     main: ./agent
     binary: frabit-agent
@@ -28,7 +30,9 @@ builds:
     env:
       - CGO_ENABLED=0
     ldflags:
-      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
+      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }}
+      - -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
+      - -X github.com/frabits/frabit/common/version.buildDate={{ .CommitDate }}
   - id: frabit-admin
     main: ./admin
     binary: frabit-admin
@@ -41,7 +45,9 @@ builds:
     env:
       - CGO_ENABLED=0
     ldflags:
-      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }} -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
+      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }}
+      - -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
+      - -X github.com/frabits/frabit/common/version.buildDate={{ .CommitDate }}
 archives:
 
 nfpms:

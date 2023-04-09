@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"runtime"
 	"strings"
-	"time"
 )
 
 // initial version
@@ -31,8 +30,9 @@ const (
 )
 
 var (
-	version = "source"
-	commit  = "unknown"
+	version   = "source"
+	buildDate = "unknown"
+	commit    = "unknown"
 )
 
 type Info struct {
@@ -87,7 +87,7 @@ func newVersion() Version {
 func newBuild() Build {
 	return Build{
 		GitHash: commit,
-		Date:    time.Now().Format(time.RFC3339),
+		Date:    buildDate,
 		Arch:    runtime.GOARCH,
 	}
 }
