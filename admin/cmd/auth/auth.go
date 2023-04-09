@@ -19,12 +19,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// CmdAuth authenticate frabit-admin and frabit-server via token
 var CmdAuth = &cobra.Command{
 	Use:   "auth <subcommand> [flag]",
 	Short: "frabit auth manager",
 }
 
 func init() {
+
 	CmdAuth.AddCommand(CmdLogin)
 	CmdAuth.AddCommand(CmdLogout)
 	CmdAuth.AddCommand(CmdStatus)

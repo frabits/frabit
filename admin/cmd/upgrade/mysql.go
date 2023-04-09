@@ -22,7 +22,7 @@ import (
 // mysqlCmd represents the mysql command
 var mysqlCmd = &cobra.Command{
 	Use:   "mysql",
-	Short: "Deploy a mysql database based on provide topology",
+	Short: "Upgrade a mysql instance",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 

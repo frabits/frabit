@@ -22,7 +22,7 @@ import (
 // clickhouseCmd represents the clickhouse command
 var clickhouseCmd = &cobra.Command{
 	Use:   "clickhouse",
-	Short: "A brief description of your command",
+	Short: "Upgrade a ClickHouse instance",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 

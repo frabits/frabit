@@ -17,7 +17,9 @@ package auth
 
 import (
 	"fmt"
+
 	"github.com/frabits/frabit/common/version"
+
 	"github.com/spf13/cobra"
 )
 
@@ -27,9 +29,10 @@ type loginOpt struct {
 	token    string
 }
 
+// CmdLogin authenticate frabit-admin to frabit-server via token
 var CmdLogin = &cobra.Command{
 	Use:   "login [flag]",
-	Short: "Login frabit via a token or username",
+	Short: "Login frabit-admin to frabit-server via token",
 	Long: `
 frabit-admin auth login
 `,

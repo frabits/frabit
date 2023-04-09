@@ -23,7 +23,7 @@ import (
 
 var CmdLogout = &cobra.Command{
 	Use:   "logout [flag]",
-	Short: "Display frabit-admin component version information",
+	Short: "Logout frabit-admin from frabit-server,remove token from keyring/env ",
 	Run:   runLogout,
 }
 

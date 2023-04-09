@@ -23,7 +23,7 @@ import (
 
 var CmdStatus = &cobra.Command{
 	Use:   "status [flag]",
-	Short: "Display frabit-admin component version information",
+	Short: "Show current auth status",
 	Run:   runStatus,
 }
 

@@ -22,7 +22,7 @@ import (
 // redisCmd represents the redis command
 var redisCmd = &cobra.Command{
 	Use:   "redis",
-	Short: "A brief description of your command",
+	Short: "Upgrade a Redis instance",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
