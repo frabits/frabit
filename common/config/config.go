@@ -13,34 +13,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package version
+package config
 
-import (
-	"fmt"
-
-	"github.com/frabits/frabit/common/cmdutil"
-	"github.com/frabits/frabit/common/version"
-
-	"github.com/spf13/cobra"
-)
-
-// NewVersionCmd represent a version command which can be invoked directly without any arguments
-func NewVersionCmd() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "version",
-		Short: "Display frabit-admin component version information",
-		Run:   runVersion,
-		Args:  cobra.NoArgs,
-	}
-	cmdutil.DisableAuthCheck(cmd)
-
-	return cmd
+type Config struct {
+	fbToken string
 }
 
-func runVersion(cmd *cobra.Command, args []string) {
-	fmt.Printf("%s\n", version.InfoStr.String())
+func (cfg *Config) HasTokenFromEnv() bool {
+
+	return true
 }
 
-func init() {
-	// cmd.rootCmd.AddCommand(newVersionCmd)
+func (cfg *Config) HasTokenFromKeyring() bool {
+
+	return true
 }

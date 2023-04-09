@@ -17,13 +17,14 @@ package upgrade
 
 import (
 	"fmt"
+	"github.com/frabits/frabit/common/cmdutil"
 	"github.com/spf13/cobra"
 )
 
 // CmdUpgrade represents the backup command
 var CmdUpgrade = &cobra.Command{
-	Use:   "deploy",
-	Short: "A brief description of your command",
+	Use:   "upgrade <command>",
+	Short: "Upgrade manager",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -31,15 +32,12 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("backup called")
+		fmt.Println("upgrade called")
 	},
 }
 
 func init() {
-	CmdUpgrade.AddCommand(mysqlCmd)
-	CmdUpgrade.AddCommand(clickhouseCmd)
-	CmdUpgrade.AddCommand(redisCmd)
-	CmdUpgrade.AddCommand(mongodbCmd)
+	cmdutil.AddGroup(CmdUpgrade, "Upgrade commands", mysqlCmd, clickhouseCmd, redisCmd, mongodbCmd)
 
 	// Here you will define your flags and configuration settings.
 

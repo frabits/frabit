@@ -16,8 +16,10 @@
 package root
 
 import (
+	"fmt"
 	"os"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
 	"github.com/frabits/frabit/admin/cmd/auth"
@@ -27,6 +29,8 @@ import (
 	"github.com/frabits/frabit/admin/cmd/restore"
 	"github.com/frabits/frabit/admin/cmd/upgrade"
 	"github.com/frabits/frabit/admin/cmd/version"
+	"github.com/frabits/frabit/common/cmdutil"
+	"github.com/frabits/frabit/common/config"
 )
 
 type rootOpt struct {
@@ -37,6 +41,17 @@ type rootOpt struct {
 var rootCmd = &cobra.Command{
 	Use:   "frabit-admin",
 	Short: "A CLI application to directly send API request to frabit-server",
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		if cmdutil.IsAuthCheckEnabled(cmd) && !cmdutil.CheckAuth(config.Config{}) {
+			fmt.Fprint(os.Stderr, authHelp())
+			return errors.New("authError")
+		}
+		return nil
+	},
+}
+
+func authHelp() string {
+	return "frabit: To use frabit-admin CLI in automation, set the FB_TOKEN environment variable"
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -53,7 +68,7 @@ func init() {
 	rootCmd.AddCommand(restore.CmdRestore)
 	rootCmd.AddCommand(deploy.CmdDeploy)
 	rootCmd.AddCommand(upgrade.CmdUpgrade)
-	rootCmd.AddCommand(version.CmdVersion)
+	rootCmd.AddCommand(version.NewVersionCmd())
 	rootCmd.AddCommand(plugin.CmdPlugin)
 	rootCmd.AddCommand(auth.CmdAuth)
 

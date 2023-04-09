@@ -18,6 +18,8 @@ package utils
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	mrand "math/rand"
 	"time"
 )
@@ -33,7 +35,7 @@ func RandomHex(n int) (string, error) {
 func GenRandom(num int) string {
 	metaStr := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	Str := []byte(metaStr)
-	targetStr := []byte{}
+	var targetStr []byte
 	r := mrand.New(mrand.NewSource(time.Now().UnixNano()))
 	for i := 0; i < num; i++ {
 		targetStr = append(targetStr, Str[r.Intn(len(Str))])
@@ -51,4 +53,13 @@ func NewToken(n int) *Token {
 	return &Token{
 		Hash: newHash,
 	}
+}
+
+func GenHash(publicAuth, privateAuth string) string {
+	hashRaw := fmt.Sprintf("%s:%s", publicAuth, privateAuth)
+	hash, err := bcrypt.GenerateFromPassword([]byte(hashRaw), 32)
+	if err != nil {
+		return ""
+	}
+	return string(hash)
 }

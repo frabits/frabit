@@ -16,6 +16,7 @@
 package auth
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/frabits/frabit/common/utils"
@@ -33,13 +34,25 @@ type APIKey struct {
 }
 
 func NewAPIKey() *APIKey {
+	pubAuth := utils.NewToken(apiKeyLength).Hash
+	priAuth := utils.NewToken(apiKeyLength).Hash
 	return &APIKey{
 		Prefix:      "frabit_tkn",
-		PublicAuth:  utils.NewToken(apiKeyLength).Hash,
-		PrivateAuth: utils.NewToken(apiKeyLength).Hash,
-		// hash(PublicAuth:PrivateAuth)
-		VerifyAuth: "",
-		CreateAt:   time.Now(),
-		LastSeen:   time.Now(),
+		PublicAuth:  pubAuth,
+		PrivateAuth: priAuth,
+		VerifyAuth:  utils.GenHash(pubAuth, priAuth),
+		CreateAt:    time.Now(),
+		LastSeen:    time.Now(),
 	}
+}
+
+func (key *APIKey) IsValid(pubAuth, priAuth string) bool {
+	if ok := key.VerifyAuth == utils.GenHash(pubAuth, priAuth); ok {
+		return true
+	}
+	return false
+}
+
+func (key *APIKey) PublicKey() string {
+	return fmt.Sprintf("%s_%s", key.Prefix, key.PublicAuth)
 }
