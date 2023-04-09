@@ -93,8 +93,13 @@ func newBuild() Build {
 }
 
 func (v Version) versionString() string {
-	str := fmt.Sprintf("%s.%s.%s-%s", v.Major, v.Minor, v.Patch, v.Dist)
-	return str
+	var versionStr string
+	if v.Dist == "" {
+		versionStr = fmt.Sprintf("Version: %s.%s.%s", v.Major, v.Minor, v.Patch)
+	} else {
+		versionStr = fmt.Sprintf("Version: %s.%s.%s-%s", v.Major, v.Minor, v.Patch, v.Dist)
+	}
+	return versionStr
 }
 
 func (b Build) buildString() string {
