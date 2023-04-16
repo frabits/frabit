@@ -67,6 +67,10 @@ Currently, we provide support for following platform and architecture
 
 ## Install
 
+One-liner for any platform
+```bash
+/bin/bash -c "$(curl -fsSL https://github.com/frabits/frabit/raw/main/scripts/install.sh)"
+```
 ### Linux
 
 #### 1、Install binary file 
