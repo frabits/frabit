@@ -32,8 +32,8 @@ prepare_dir(){
 }
 
 get_latest(){
-  latestURL=$apiURL"/releases/latest"
-  version=$(curl "$latestURL" | grep "tag_name" | awk -F":" '{print #2}')
+  local latestURL=$apiURL"/releases/latest"
+  local version=$(curl -sX GET "$latestURL" | awk '/tag_name/{print $4;exit}' FS='[""]')
   echo "$version"
   reture 0
 }
