@@ -135,4 +135,8 @@ Assume your already install Golang and git, Change directory to frabit and perfo
 git clone https://github.com/frabits/frabit.git 
 cd frabit && bash scripts/build.sh
 ```
-```
+
+## License
+
+Unless otherwise noted, the Vitess source files are distributed under the GNU GENERAL PUBLIC LICENSE
+Version 3 license found in the LICENSE file.
