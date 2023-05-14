@@ -16,7 +16,8 @@
 package template
 
 var Template = map[string]string{
-	"mysql":   MySQLTemplate,
-	"redis":   RedisTemplate,
-	"mongodb": MongoTemplate,
+	"mysql":      MySQLTemplate,
+	"redis":      RedisTemplate,
+	"mongodb":    MongoTemplate,
+	"clickhouse": ClickHouseTemplate,
 }
