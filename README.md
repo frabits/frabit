@@ -138,5 +138,5 @@ cd frabit && bash scripts/build.sh
 
 ## License
 
-Unless otherwise noted, the Frabit source files are distributed under the GNU GENERAL PUBLIC LICENSE
-Version 3 license found in the LICENSE file.
+Unless otherwise noted, the Frabit source files are distributed under the [GNU GENERAL PUBLIC LICENSE
+Version 3](./LICENSE) license found in the LICENSE file.
