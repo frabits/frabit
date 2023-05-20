@@ -136,6 +136,9 @@ git clone https://github.com/frabits/frabit.git
 cd frabit && bash scripts/build.sh
 ```
 
+## Contributing
+Contributions/suggestions/requests are welcome! Feel free to [open an issue](https://github.com/frabits/frabit/issues), or ask a question on the [mailing list]((https://groups.google.com/g/frabit).
+
 ## License
 
 Unless otherwise noted, the Frabit source files are distributed under the [GNU GENERAL PUBLIC LICENSE
