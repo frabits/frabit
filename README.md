@@ -46,9 +46,9 @@ Currently, we provide support for following platform and architecture
 ## Features
 
 - [x] Web-based database cluster deployment and upgrade
-- [x] Built-in SQL Editor
+- [x] Built-in query editor
 - [x] Detailed migration history
-- [x] Online schema change based on gh-ost
+- [x] Online schema change based on gh-ost or pt-osc
 - [x] Backup and restore
 - [x] Point-in-time recovery (PITR) 
 - [x] Environment policy
