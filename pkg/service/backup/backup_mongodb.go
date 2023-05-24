@@ -35,7 +35,7 @@ type MongoBackup struct {
 }
 
 func newMongoBackup() *MongoBackup {
-	log.Info("create BackupService")
+	// log.Info("create BackupService")
 	return &MongoBackup{
 		Logger: log.Logger,
 	}
