@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: "18"
           cache: npm
-          cache-dependency-path: ""
+          # cache-dependency-path: ""
           # cache-dependency-path: "frontend/package-lock.yaml"
       - run: npm install --frozen-lockfile
         working-directory: frontend
