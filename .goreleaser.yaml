@@ -148,7 +148,6 @@ brews:
     homepage: https://www.frabit.tech/
     description: "The next-generation database automatic operation platform"
 
-
 checksum:
   name_template: 'checksum.txt'
 snapshot:
