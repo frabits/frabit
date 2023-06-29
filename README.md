@@ -3,7 +3,7 @@
 <p align="center" >
 <img src="docs/images/dblist.png" width="60%" />
 </p>
-<h1>frabit@The next-generation database automatic operation platform</h1>
+<h1>frabit@The next-gene database automatic operation platform</h1>
     
 [简体中文](https://github.com/frabits/frabit/blob/main/README_CN.md) | [English](https://github.com/frabits/frabit/blob/main/README.md)
 
