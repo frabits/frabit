@@ -1,5 +1,6 @@
 import enUS from "./en_us";
 import zhCN from "./zh_cn";
+// @ts-ignore
 import { createI18n } from "vue-i18n";
 
 const messages = {
