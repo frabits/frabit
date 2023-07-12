@@ -38,9 +38,6 @@ type rootOpt struct {
 	help bool
 }
 
-client := client.NewClient("localhost:9180")
-
-fmt.Println(client)
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "frabit-admin",
@@ -75,7 +72,7 @@ func init() {
 	rootCmd.AddCommand(version.NewVersionCmd())
 	rootCmd.AddCommand(plugin.CmdPlugin)
 	rootCmd.AddCommand(auth.CmdAuth)
-
+	_ = client.NewClient("localhost:9180")
 	// rootCmd.PersistentFlags().BoolVar(&rootOpt.help, "help", false, "Show help information for each command")
 
 }

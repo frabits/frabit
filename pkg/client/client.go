@@ -34,6 +34,7 @@ func NewClient(addr string) *Client {
 	}
 }
 
+// FrabitClient is the client interface to the API exposed by the frabit-server
 type FrabitClient interface {
 	GetVersion(ctx context.Context) (string, error)
 }
@@ -42,6 +43,7 @@ type frabitClient struct {
 	addr string
 }
 
+// GetVersion get frabit-server version
 func (fc *frabitClient) GetVersion(ctx context.Context) (string, error) {
 	endpoint := fmt.Sprintf("%s/admin/api/v1/version", fc.addr)
 	resp, err := fc.doRequest(ctx, http.MethodGet, endpoint, nil)
