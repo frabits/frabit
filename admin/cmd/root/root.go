@@ -31,12 +31,16 @@ import (
 	"github.com/frabits/frabit/admin/cmd/version"
 	"github.com/frabits/frabit/common/cmdutil"
 	"github.com/frabits/frabit/common/config"
+	"github.com/frabits/frabit/pkg/client"
 )
 
 type rootOpt struct {
 	help bool
 }
 
+client := client.NewClient("localhost:9180")
+
+fmt.Println(client)
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "frabit-admin",
