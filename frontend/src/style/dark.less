@@ -1,0 +1,108 @@
+@import 'ant-design-vue/dist/antd.dark.less';
+@primary-color: #527590;
+@error-color: #EB175D;
+@popover-background: rgb(32, 37, 46);
+
+@border-width-base: 1px;
+@border-color-split: #3E4451; // split border inside a component
+
+@body-background: #1F262E;
+@component-background: #1F262E;
+
+@layout-header-padding: 0 20px;
+@layout-header-background: rgb(33, 38, 45);
+
+@input-border-color: fade(#ffffff, 9);
+
+@menu-highlight-color: #ffffff;
+@menu-item-active-bg: #527590;
+@menu-dark-submenu-bg: #3E4451;
+@menu-bg: #1F262E;
+@menu-dark-color: #1F262E;
+
+@modal-header-bg: @popover-background;
+
+@tabs-highlight-color: #Ff9900;
+@tabs-ink-bar-color: @tabs-highlight-color;
+@tabs-hover-color: color(~`colorPalette('@{tabs-highlight-color}', 5) `);
+@tabs-active-color: color(~`colorPalette('@{tabs-highlight-color}', 7) `);
+
+@collapse-content-bg: #1F262E;
+
+@table-header-bg: #2A323D;
+@table-bg: #1F262E;
+
+@card-head-background: #2A323D;
+
+@card-background: #1F262E;
+
+.state_color {
+  color: rgb(193, 205, 214)
+}
+
+
+.total {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  white-space: nowrap;
+  color: #fff;
+  margin-top: 4px;
+  margin-bottom: 0;
+  font-size: 30px;
+  line-height: 38px;
+  height: 38px;
+}
+
+.chart-card-header {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+
+  .meta {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    color: fade(#fff, 60);
+    font-size: 14px;
+    line-height: 22px;
+  }
+}
+
+.chart-card-action {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.chart-card-footer {
+  border-top: 0.5px solid #fff;
+  padding-top: 9px;
+  margin-top: 8px;
+
+  >* {
+    position: relative;
+  }
+
+  .field {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+  }
+}
+
+.chart-card-content {
+  margin-bottom: 30px;
+  position: relative;
+  height: 46px;
+  width: 100%;
+
+  .content-fix {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+  }
+}
