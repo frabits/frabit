@@ -40,7 +40,7 @@ type rootOpt struct {
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "frabit-admin",
+	Use:   "frabit-admin [subcommand] -flag",
 	Short: "A CLI application to directly send API request to frabit-server",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		if cmdutil.IsAuthCheckEnabled(cmd) && !cmdutil.CheckAuth(config.Config{}) {
