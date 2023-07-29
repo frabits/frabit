@@ -1,0 +1,23 @@
+# This just for frabit backend database to store metadata
+database:
+  host: "127.0.0.1"
+  port: 3306
+  user: "frabit"
+  passwd: "Frabit_demo123"
+  db : "frabit"
+
+# The following config for Frabit backend
+server:
+  http_port: 9180
+  work_dir: /var/local/frabit
+  plugin_dir: /usr/local/frabit/plugins
+  debug: false
+  log_level: info
+  log_file: /var/local/frabit/frabit-server.log
+
+security:
+  admin_user: admin
+  admin_password: admin
+  admin_eamil: admin@frabit.io
+  secret_key: tsDgp0hbFugJHGWtX3GIftyaeikdpaJ9Zy2
+

@@ -1,0 +1,12 @@
+# For agent itself to listen a local port
+server:
+  http_port: 9179
+  grpc_port: 9178
+  debug: false
+  log_level: "info"
+  log_file: "/var/log/frabit-agent.log"
+
+# The following config for frabit-server backend to take requests
+remote_server:
+  addr: 127.0.0.1
+  port: 9180

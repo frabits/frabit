@@ -13,4 +13,3 @@ import { defaultLang } from "@/locales";
 locale(defaultLang);
 const lang = defaultLang === "en_US" ? enUS : zhCN;
 </script>
-

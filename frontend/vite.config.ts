@@ -10,14 +10,14 @@ export default defineConfig({
     preprocessorOptions: {
       less: {
         javascriptEnabled: true,
-        additionalData: '@root-entry-name: default;',
+        additionalData: "@root-entry-name: default;",
       },
     },
   },
   server: {
     port: 5183,
     strictPort: true,
-    hmr:{
+    hmr: {
       overlay: false,
     },
   },

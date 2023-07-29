@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import TheWelcome from "../components/TheWelcome.vue"
-import BodyLayout from "../layouts/BodyLayout.vue"
+import TheWelcome from "../components/TheWelcome.vue";
+import BodyLayout from "../layouts/BodyLayout.vue";
 </script>
 
 <template>

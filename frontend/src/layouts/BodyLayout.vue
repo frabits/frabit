@@ -89,7 +89,9 @@
       </a-layout>
     </a-layout-content>
     <a-layout-footer style="text-align: center">
-      <h4 style="text-align: center">Frabit LLC ©2022-2023 All Rights Reserved</h4>
+      <h4 style="text-align: center">
+        Frabit LLC ©2022-2023 All Rights Reserved
+      </h4>
       <span style="text-align: center"
         >Frabit is a trademark of Frabit LLC, registered in CHN. and in other
         countries.
@@ -98,8 +100,13 @@
   </a-layout>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue';
-import {SettingOutlined, LaptopOutlined, PartitionOutlined,HomeOutlined } from '@ant-design/icons-vue';
+import { ref } from "vue";
+import {
+  SettingOutlined,
+  LaptopOutlined,
+  PartitionOutlined,
+  HomeOutlined,
+} from "@ant-design/icons-vue";
 const selectedKeys1 = ref<string[]>(["2"]);
 const selectedKeys2 = ref<string[]>(["1"]);
 const openKeys = ref<string[]>(["sub1"]);
