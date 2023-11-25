@@ -1,0 +1,14 @@
+[Unit]
+Description=frabit-agent
+After=time-sync.target network.target
+
+[Service]
+EnvironmentFile=-/etc/sysconfig/frabit-agent
+Type=simple
+User=frabit
+Group=frabit
+PermissionsStartOnly=true
+ExecStart=/usr/bin/frabit-agent run
+
+[Install]
+WantedBy=multi-user.target

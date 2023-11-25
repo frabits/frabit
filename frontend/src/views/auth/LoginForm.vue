@@ -45,6 +45,8 @@ import { UnwrapRef, reactive, ref, onMounted, computed } from "vue";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import { debounce } from "lodash-es";
+import {getOIDCMetadata, LoginForm} from "@/apis/loginApis";
+
 
 const loginForm: UnwrapRef<LoginForm> = reactive({
   username: "",

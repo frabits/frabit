@@ -1,5 +1,5 @@
 // Frabit - The next-generation database automatic operation platform
-// Copyright © 2022-2023 Blylei <blylei.info@gmail.com>
+// Copyright © 2022-2023 Frabit Labs
 //
 // Licensed under the GNU General Public License, Version 3.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,11 +17,14 @@ package cmd
 
 import (
 	"context"
-
-	"github.com/frabits/frabit/server"
-	"github.com/frabits/frabit/server/config"
-
+	"fmt"
+	"github.com/frabits/frabit/pkg/config"
+	"github.com/frabits/frabit/pkg/server"
 	"github.com/spf13/cobra"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 // startCmd represents the start command
@@ -30,7 +33,6 @@ var startCmd = &cobra.Command{
 	Short: "Start frabit-server within daemon mode",
 	Run: func(cmd *cobra.Command, args []string) {
 		start()
-
 	},
 }
 
@@ -42,5 +44,28 @@ func start() {
 	ctx := context.Background()
 	cfg := config.Conf
 	srv := server.NewServer(cfg)
-	srv.Run(ctx)
+
+	go listenToSystemSignals(ctx, srv)
+	srv.Run()
+}
+
+func listenToSystemSignals(ctx context.Context, svc *server.Server) {
+	signalChan := make(chan os.Signal, 1)
+	sighupChan := make(chan os.Signal, 1)
+
+	signal.Notify(sighupChan, syscall.SIGHUP)
+	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM)
+
+	for {
+		select {
+		case <-sighupChan:
+			fmt.Println("nothing")
+		case sig := <-signalChan:
+			ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+			defer cancel()
+			if err := svc.Shutdown(ctx, fmt.Sprintf("System signal:%s", sig)); err != nil {
+				fmt.Fprintf(os.Stderr, "Timed out waiting for server to shut down")
+			}
+		}
+	}
 }

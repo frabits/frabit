@@ -1,5 +1,5 @@
 // Frabit - The next-generation database automatic operation platform
-// Copyright © 2022-2023 Blylei <blylei.info@gmail.com>
+// Copyright © 2022-2023 Frabit Labs
 //
 // Licensed under the GNU General Public License, Version 3.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@
 package cmd
 
 import (
-	"fmt"
+	"context"
+	"github.com/frabits/frabit/pkg/config"
+	"github.com/frabits/frabit/pkg/server"
 
 	"github.com/spf13/cobra"
 )
@@ -26,10 +28,17 @@ var stopCmd = &cobra.Command{
 	Use:   "stop",
 	Short: "Stop frabit-server daemon process",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("stop called")
+		stop()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(stopCmd)
+}
+
+func stop() {
+	ctx := context.Background()
+	cfg := config.Conf
+	srv := server.NewServer(cfg)
+	srv.Shutdown(ctx, "")
 }

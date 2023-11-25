@@ -62,26 +62,31 @@ nfpms:
 
     homepage: https://github.com/frabits/frabit
 
-    maintainer: Blylei <blylei.info@gmail.com>
+    maintainer: Frabit Labs
 
     description: |-
-      The next-generation database automatic operation platform.
+      The next-gene database automatic platform
 
     license: GPLv3
 
     formats:
       - deb
       - rpm
+    contents:
+      - src: ./configs/frabit-server.yaml
+        dst: /etc/frabit-server/config.yml
+        type: 'config|noreplace'
+      - src: ./packages/frabit-server.service
+        dst: /etc/systemd/system/frabit-server.service
+      scripts:
+        postinstall: ./scripts/frabit-postinstall.sh
     bindir: /usr/bin
-
-    # epoch: 2
-
-    # Section.
+ 
     section: default
     rpm:
       # RPM specific scripts.
       scripts:
-      summary: The next-generation database automatic operation platform
+      summary: The next-gene database automatic platform
       group: Unspecified
       compression: lzma
 
@@ -104,9 +109,9 @@ nfpms:
       - frabit-agent
     vendor: Frabit Inc.
     homepage: https://github.com/frabits/frabit
-    maintainer: Blylei <blylei.info@gmail.com>
+    maintainer: Frabit Labs
     description: |-
-      The next-generation database automatic operation platform
+      The next-gene database automatic platform
     license: GPLv3
     formats:
       - deb
@@ -120,7 +125,7 @@ nfpms:
 
     rpm:
       scripts:
-      summary: The next-generation database automatic operation platform
+      summary: The next-gene database automatic platform
       group: Database
       compression: lzma
 
@@ -135,6 +140,7 @@ nfpms:
         - some-package
       signature:
         type: origin
+
 brews:
   -
     name: frabit
@@ -145,8 +151,8 @@ brews:
       name: goreleaser
       email: support@frabit.io
     folder: Formula
-    homepage: https://www.frabit.tech/
-    description: "The next-generation database automatic operation platform"
+    homepage: https://www.frabit.tech
+    description: "The next-gene database automatic platform"
 
 checksum:
   name_template: 'checksum.txt'

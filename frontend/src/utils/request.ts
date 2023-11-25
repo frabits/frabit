@@ -1,5 +1,6 @@
+// @ts-ignore
 import axios,{ AxiosInstance } from "axios";
-import notification from "ant-design-vue";
+import { notification } from "ant-design-vue";
 import router from "@/router";
 import i18n from "@/locales";
 import store from "@/stores";
@@ -10,6 +11,7 @@ interface Resp<T> {
     payload:T;
 }
 
+// @ts-ignore
 const { t } = i18n.global;
 
 const ACCESS_TOKEN = sessionStorage.getItem("jwt");
@@ -23,7 +25,7 @@ const request:AxiosInstance = axios.create({
     },
 });
 
-const responseInject = (resp:Resp<never> => {
+const responseInject = (resp:Resp<never>) => {
     if (resp.text !== "" && resp.code === 1200){
         notification.info({
             message:t("common.session.state")+":1200",
@@ -36,7 +38,7 @@ const responseInject = (resp:Resp<never> => {
             description: resp.text,
         });
     }
-}) ;
+} ;
 
 const overrideHeaders = () => {
     request.defaults.headers.common["Authorization"] =

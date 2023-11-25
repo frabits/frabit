@@ -1,5 +1,5 @@
 // Frabit - The next-generation database automatic operation platform
-// Copyright © 2022-2023 Blylei <blylei.info@gmail.com>
+// Copyright © 2022-2023 Frabit Labs
 //
 // Licensed under the GNU General Public License, Version 3.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
+	"github.com/frabits/frabit/admin/cmd/admin"
 	"github.com/frabits/frabit/admin/cmd/auth"
 	"github.com/frabits/frabit/admin/cmd/backup"
 	"github.com/frabits/frabit/admin/cmd/deploy"
@@ -29,9 +30,9 @@ import (
 	"github.com/frabits/frabit/admin/cmd/restore"
 	"github.com/frabits/frabit/admin/cmd/upgrade"
 	"github.com/frabits/frabit/admin/cmd/version"
-	"github.com/frabits/frabit/common/cmdutil"
-	"github.com/frabits/frabit/common/config"
 	"github.com/frabits/frabit/pkg/client"
+	"github.com/frabits/frabit/pkg/common/cmdutil"
+	"github.com/frabits/frabit/pkg/common/config"
 )
 
 type rootOpt struct {
@@ -69,6 +70,7 @@ func init() {
 	rootCmd.AddCommand(restore.CmdRestore)
 	rootCmd.AddCommand(deploy.CmdDeploy)
 	rootCmd.AddCommand(upgrade.CmdUpgrade)
+	rootCmd.AddCommand(admin.ResetAdminPassword)
 	rootCmd.AddCommand(version.NewVersionCmd())
 	rootCmd.AddCommand(plugin.CmdPlugin)
 	rootCmd.AddCommand(auth.CmdAuth)

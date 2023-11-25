@@ -1,5 +1,5 @@
 // Frabit - The next-generation database automatic operation platform
-// Copyright © 2022-2023 Blylei <blylei.info@gmail.com>
+// Copyright © 2022-2023 Frabit Labs
 //
 // Licensed under the GNU General Public License, Version 3.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "frabit-server",
-	Short: "Frabit@The next-generation database automatic operation platform",
+	Short: "Frabit The next-generation database automatic platform",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

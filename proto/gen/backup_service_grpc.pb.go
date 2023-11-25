@@ -22,7 +22,7 @@ const (
 	BackupService_CreateBackup_FullMethodName = "/BackupService/createBackup"
 )
 
-// BackupServiceClient is the client API for BackupService service.
+// BackupServiceClient is the client API for BackupService services.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BackupServiceClient interface {
@@ -46,7 +46,7 @@ func (c *backupServiceClient) CreateBackup(ctx context.Context, in *BackupReques
 	return out, nil
 }
 
-// BackupServiceServer is the server API for BackupService service.
+// BackupServiceServer is the server API for BackupService services.
 // All implementations must embed UnimplementedBackupServiceServer
 // for forward compatibility
 type BackupServiceServer interface {
@@ -63,7 +63,7 @@ func (UnimplementedBackupServiceServer) CreateBackup(context.Context, *BackupReq
 }
 func (UnimplementedBackupServiceServer) mustEmbedUnimplementedBackupServiceServer() {}
 
-// UnsafeBackupServiceServer may be embedded to opt out of forward compatibility for this service.
+// UnsafeBackupServiceServer may be embedded to opt out of forward compatibility for this services.
 // Use of this interface is not recommended, as added methods to BackupServiceServer will
 // result in compilation errors.
 type UnsafeBackupServiceServer interface {
@@ -92,7 +92,7 @@ func _BackupService_CreateBackup_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-// BackupService_ServiceDesc is the grpc.ServiceDesc for BackupService service.
+// BackupService_ServiceDesc is the grpc.ServiceDesc for BackupService services.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var BackupService_ServiceDesc = grpc.ServiceDesc{

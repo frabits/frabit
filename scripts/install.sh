@@ -1,5 +1,5 @@
 # Frabit - The next-generation database automatic operation platform
-# Copyright © 2022-2023 Blylei <blylei.info@gmail.com>
+# Copyright © 2022-2023 Frabit Labs
 #
 # Licensed under the GNU General Public License, Version 3.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -106,12 +106,12 @@ gen_config(){
 }
 
 gen_server_service_file(){
-  # /usr/lib/systemd//frabit-server.service
+  # /usr/lib/systemd//frabit-server.services
   echo ""
 }
 
 gen_agent_service_file(){
-  # /usr/lib/systemd//frabit-agent.service
+  # /usr/lib/systemd//frabit-agent.services
   echo ""
 }
 

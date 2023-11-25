@@ -1,5 +1,5 @@
 // Frabit - The next-generation database automatic operation platform
-// Copyright © 2022-2023 Blylei <blylei.info@gmail.com>
+// Copyright © 2022-2023 Frabit Labs
 //
 // Licensed under the GNU General Public License, Version 3.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,4 +32,12 @@ var initCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(initCmd)
+
+	rootCmd.PersistentFlags().IntVar(&flag.port, "port", 80, "port. Default to 9180")
+}
+
+// genConfig generate an agent config file based server addr
+func genConfig(server string) error {
+
+	return nil
 }

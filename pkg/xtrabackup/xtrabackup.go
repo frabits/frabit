@@ -1,5 +1,5 @@
 // Frabit - The next-generation database automatic operation platform
-// Copyright © 2022-2023 Blylei <blylei.info@gmail.com>
+// Copyright © 2022-2023 Frabit Labs
 //
 // Licensed under the GNU General Public License, Version 3.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
 package xtrabackup
 
 import (
+	"github.com/frabits/frabit/pkg/common/constant"
 	"os/exec"
 	"time"
-
-	"github.com/frabits/frabit/common/constant"
 
 	"go.uber.org/zap"
 )

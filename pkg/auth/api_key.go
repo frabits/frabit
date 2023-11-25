@@ -1,5 +1,5 @@
 // Frabit - The next-generation database automatic operation platform
-// Copyright © 2022-2023 Blylei <blylei.info@gmail.com>
+// Copyright © 2022-2023 Frabit Labs
 //
 // Licensed under the GNU General Public License, Version 3.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,9 +17,8 @@ package auth
 
 import (
 	"fmt"
+	"github.com/frabits/frabit/pkg/common/utils"
 	"time"
-
-	"github.com/frabits/frabit/common/utils"
 )
 
 const apiKeyLength int = 32
