@@ -29,7 +29,7 @@ var CmdAdmin = &cobra.Command{
 	},
 }
 
-var resetAdminPassword = &cobra.Command{
+var ResetAdminPassword = &cobra.Command{
 	Use:   "reset-admin-password <new_password>",
 	Short: "Reset admin password at any time",
 	Run:   runResetAdminPassword,
@@ -40,6 +40,6 @@ func runResetAdminPassword(cmd *cobra.Command, args []string) {
 }
 
 func init() {
-	CmdAdmin.AddCommand(resetAdminPassword)
+	CmdAdmin.AddCommand(ResetAdminPassword)
 	CmdAdmin.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

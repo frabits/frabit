@@ -30,9 +30,9 @@ builds:
     env:
       - CGO_ENABLED=0
     ldflags:
-      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }}
-      - -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
-      - -X github.com/frabits/frabit/common/version.buildDate={{ .CommitDate }}
+      - -s -w -X github.com/frabits/frabit/pkg/common/version.version={{ .Version }}
+      - -X github.com/frabits/frabit/common/pkg/version.commit={{ .ShortCommit }}
+      - -X github.com/frabits/frabit/common/pkg/version.buildDate={{ .CommitDate }}
   - id: frabit-admin
     main: ./admin
     binary: frabit-admin
@@ -45,9 +45,9 @@ builds:
     env:
       - CGO_ENABLED=0
     ldflags:
-      - -s -w -X github.com/frabits/frabit/common/version.version={{ .Version }}
-      - -X github.com/frabits/frabit/common/version.commit={{ .ShortCommit }}
-      - -X github.com/frabits/frabit/common/version.buildDate={{ .CommitDate }}
+      - -s -w -X github.com/frabits/frabit/pkg/common/version.version={{ .Version }}
+      - -X github.com/frabits/frabit/common/pkg/version.commit={{ .ShortCommit }}
+      - -X github.com/frabits/frabit/common/pkg/version.buildDate={{ .CommitDate }}
 archives:
 
 nfpms:
@@ -72,14 +72,6 @@ nfpms:
     formats:
       - deb
       - rpm
-    contents:
-      - src: ./configs/frabit-server.yaml
-        dst: /etc/frabit-server/config.yml
-        type: 'config|noreplace'
-      - src: ./packages/frabit-server.service
-        dst: /etc/systemd/system/frabit-server.service
-      scripts:
-        postinstall: ./scripts/frabit-postinstall.sh
     bindir: /usr/bin
  
     section: default
