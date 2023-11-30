@@ -13,36 +13,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package xtrabackup
+package ssh
 
 import (
 	"os/exec"
-	"time"
-
-	"go.uber.org/zap"
 
 	"github.com/frabits/frabit/pkg/common/constant"
 )
 
-type Xtrabackup struct {
-	BinPath       string
-	Version       string
-	Storage       string
-	Logger        zap.Logger
-	StartDatetime time.Time
-	EndDatetime   time.Time
+type Netcat struct {
+	BinPath    string
+	DestAddr   string
+	ListenPort uint32
 }
 
-func newXtrabackup() *Xtrabackup {
-	pxb := &Xtrabackup{}
-	binPath, err := exec.LookPath(constant.XTRABACKUP)
-	if err != nil {
-		return pxb
-	}
-	pxb.BinPath = binPath
-	return pxb
-}
-
-func init() {
-	newXtrabackup()
+func NewNetcat() *Netcat {
+	nc := &Netcat{}
+	nc.BinPath = exec.LookPath(constant.NETCAT)
+	return nc
 }
