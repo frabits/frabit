@@ -17,5 +17,6 @@ package constant
 
 const (
 	XTRABACKUP = "xtrabackup"
+	XBSTREAM   = "xbstream"
 	NETCAT     = "nc"
 )

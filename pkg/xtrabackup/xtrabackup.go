@@ -16,6 +16,7 @@
 package xtrabackup
 
 import (
+	"context"
 	"os/exec"
 	"time"
 
@@ -28,6 +29,7 @@ type Xtrabackup struct {
 	BinPath       string
 	Version       string
 	Storage       string
+	pxbCtx        context.Context
 	Logger        zap.Logger
 	StartDatetime time.Time
 	EndDatetime   time.Time

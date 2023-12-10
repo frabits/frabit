@@ -15,8 +15,27 @@
 
 package xtrabackup
 
-import "time"
+import (
+	"context"
+	"os"
+	"os/exec"
+	"time"
+)
 
 func (pxb *Xtrabackup) Backup() {
 	pxb.StartDatetime = time.Now()
+	backupOpt := []string{
+		"--backup",
+	}
+	// compress,stream,
+	backupCtx, cancel := context.WithCancel(pxb.pxbCtx)
+	defer cancel()
+	backupCmd := exec.CommandContext(backupCtx, pxb.BinPath, backupOpt...)
+	backupCmd.Stderr = os.Stderr
+
+	backupCmd.Wait()
+}
+
+func getBackupName(host string) string {
+	return ""
 }
