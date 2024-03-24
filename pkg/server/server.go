@@ -123,7 +123,7 @@ func (s *Server) Run() error {
 		default:
 		}
 		s.log.Debug("Starting background service", zap.String("service", "httpserver"))
-		err := s.g.Run(":9180")
+		err := s.httpServer.Run(":9180")
 		// Do not return context.Canceled error
 		if err != nil && errors.Is(err, context.Canceled) {
 			s.log.Error("Stopped background service", zap.Error(err))
@@ -142,7 +142,7 @@ func (s *Server) Run() error {
 func (s *Server) Shutdown(ctx context.Context, reason string) error {
 	var err error
 	// firstly, shutdown httpServer to avoid new http request
-	if err = s.g.Run(); err != nil {
+	if err = s.httpServer.Shutdown(ctx); err != nil {
 		return err
 	}
 	s.shutdownOnce.Do(func() {

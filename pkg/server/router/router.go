@@ -71,10 +71,12 @@ func (hs *HttpServer) Setup(g gin.RouterGroup) {
 	fmt.Println(time.Now().Format(time.RFC3339))
 }
 
-func (hs *HttpServer) Run(addr string) {
+func (hs *HttpServer) Run(addr string) error {
 	fmt.Println(time.Now().Format(time.RFC3339))
+	return nil
 }
 
-func (hs *HttpServer) Shutdown(ctx context.Context) {
+func (hs *HttpServer) Shutdown(ctx context.Context) error {
 	fmt.Println(time.Now().Format(time.RFC3339))
+	return nil
 }
