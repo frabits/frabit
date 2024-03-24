@@ -44,16 +44,16 @@ type Info struct {
 }
 
 type Version struct {
-	Major string
-	Minor string
-	Patch string
-	Dist  string
+	Major string `json:"major"`
+	Minor string `json:"minor"`
+	Patch string `json:"patch"`
+	Dist  string `json:"dist"`
 }
 
 type Build struct {
-	GitHash string
-	Date    string
-	Arch    string
+	GitHash string `json:"git_hash"`
+	Date    string `json:"date"`
+	Arch    string `json:"arch"`
 }
 
 var InfoStr Info
@@ -76,6 +76,7 @@ func newVersion() Version {
 			Major: strings.Split(version, ".")[0],
 			Minor: strings.Split(version, ".")[1],
 			Patch: strings.Split(version, ".")[2],
+			Dist:  Dist,
 		}
 	}
 
