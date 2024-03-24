@@ -51,9 +51,9 @@ type Server struct {
 
 	backgroundServices []registry.BackgroundService
 
-	config config.Config
-	g      router.Router
-	db     *sql.DB
+	config     config.Config
+	httpServer router.HttpServer
+	db         *sql.DB
 }
 
 func (s *Server) init() error {
@@ -115,6 +115,23 @@ func (s *Server) Run() error {
 			return nil
 		})
 	}
+	// finally, start http server
+	s.childRoutines.Go(func() error {
+		select {
+		case <-s.context.Done():
+			return s.context.Err()
+		default:
+		}
+		s.log.Debug("Starting background service", zap.String("service", "httpserver"))
+		err := s.g.Run(":9180")
+		// Do not return context.Canceled error
+		if err != nil && errors.Is(err, context.Canceled) {
+			s.log.Error("Stopped background service", zap.Error(err))
+			return fmt.Errorf("%s run error:%w", "httpserver", err)
+		}
+		s.log.Debug("Stopped background service", zap.String("service", "httpserver"))
+		return nil
+	})
 	s.notifySystemd("READY=1")
 	s.log.Debug("Waiting on services...")
 	return s.childRoutines.Wait()
@@ -124,6 +141,10 @@ func (s *Server) Run() error {
 // Since Run blocks supposed to be run from a separate goroutine
 func (s *Server) Shutdown(ctx context.Context, reason string) error {
 	var err error
+	// firstly, shutdown httpServer to avoid new http request
+	if err = s.g.Run(); err != nil {
+		return err
+	}
 	s.shutdownOnce.Do(func() {
 		s.log.Info("Shutdown started", zap.String("reason", reason))
 		// revoke cancel function to stop services

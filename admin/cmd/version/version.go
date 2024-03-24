@@ -17,6 +17,7 @@ package version
 
 import (
 	"fmt"
+
 	"github.com/frabits/frabit/pkg/common/cmdutil"
 	"github.com/frabits/frabit/pkg/common/version"
 
@@ -38,6 +39,7 @@ func NewVersionCmd() *cobra.Command {
 
 func runVersion(cmd *cobra.Command, args []string) {
 	fmt.Printf("%s\n", version.InfoStr.String())
+	version.CheckLatestVersion()
 }
 
 func init() {

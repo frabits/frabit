@@ -16,9 +16,12 @@
 package version
 
 import (
+	"context"
 	"fmt"
 	"runtime"
 	"strings"
+
+	"github.com/google/go-github/v50/github"
 )
 
 // initial version
@@ -111,4 +114,29 @@ func (b Build) buildString() string {
 func (info Info) String() string {
 	str := fmt.Sprintf("%s\n%s\n", info.versionString(), info.buildString())
 	return str
+}
+
+func getLatestVersion() string {
+	ghClient := github.NewClient(nil)
+	repo, _, err := ghClient.Repositories.GetLatestRelease(context.Background(), "frabits", "frabit")
+	if err != nil {
+		fmt.Errorf("cannot get latest version:%s", err)
+		return ""
+	}
+	return *repo.TagName
+}
+
+func needToUpgrade(version, latest string) bool {
+	return latest != "" && (strings.TrimPrefix(latest, "v") != strings.TrimPrefix(version, "v"))
+}
+
+func CheckLatestVersion() {
+	if version != "source" {
+		latest := getLatestVersion()
+
+		if ok := needToUpgrade(version, latest); ok {
+			fmt.Printf("A newer version of the frabit is available,please upgrade to: %s\n", latest)
+		}
+	}
+
 }

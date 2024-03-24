@@ -1,5 +1,5 @@
 // Frabit - The next-generation database automatic operation platform
-// Copyright © 2022-2023 Frabit Labs
+// Copyright © 2022-2023 Blylei Frabit Labs
 //
 // Licensed under the GNU General Public License, Version 3.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,27 +13,4 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cmd
-
-import (
-	"fmt"
-
-	"github.com/frabits/frabit/pkg/common/version"
-
-	"github.com/spf13/cobra"
-)
-
-var newVersionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Display frabit-agent version information",
-	Run:   runVersion,
-}
-
-func runVersion(cmd *cobra.Command, args []string) {
-	fmt.Printf("%s\n", version.InfoStr.String())
-	version.CheckLatestVersion()
-}
-
-func init() {
-	rootCmd.AddCommand(newVersionCmd)
-}
+package notifications
