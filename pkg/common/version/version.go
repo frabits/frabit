@@ -132,6 +132,7 @@ func needToUpgrade(version, latest string) bool {
 }
 
 func CheckLatestVersion() {
+	fmt.Println("Check new version...")
 	if version != "source" {
 		latest := getLatestVersion()
 

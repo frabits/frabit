@@ -19,6 +19,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/frabits/frabit/pkg/log"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -27,13 +29,12 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
+	"github.com/frabits/frabit/pkg/api"
 	"github.com/frabits/frabit/pkg/config"
 	"github.com/frabits/frabit/pkg/registry"
 	"github.com/frabits/frabit/pkg/server/bg_services"
-	"github.com/frabits/frabit/pkg/server/router"
 )
 
 type Server struct {
@@ -42,17 +43,18 @@ type Server struct {
 	shutdownOnce     sync.Once
 	shutdownFinished chan struct{}
 	childRoutines    *errgroup.Group
-	log              *zap.Logger
+	log              *slog.Logger
 	mtx              sync.Mutex
 	startedTs        int64
+	License          string
 
 	pidFile string
 	version string
 
 	backgroundServices []registry.BackgroundService
 
-	config     config.Config
-	httpServer router.HttpServer
+	config     *config.Config
+	httpServer *api.HttpServer
 	db         *sql.DB
 }
 
@@ -64,22 +66,23 @@ func (s *Server) init() error {
 	return nil
 }
 
-func NewServer(cfg config.Config) *Server {
-	//meta, err := store.OpenFrabit()
-	//if err != nil {
-	//
-	//}
+func NewServer(cfg *config.Config) *Server {
 	backgroundService := bg_services.BgSvcs
 
 	rootCtx, shutdownFn := context.WithCancel(context.Background())
 	childRoutines, childCtx := errgroup.WithContext(rootCtx)
+	httpServer := api.NewHttpServer(cfg)
 	srv := &Server{
 		startedTs:          time.Now().Unix(),
 		context:            childCtx,
 		childRoutines:      childRoutines,
 		shutdownFn:         shutdownFn,
+		shutdownFinished:   make(chan struct{}),
 		backgroundServices: backgroundService.GetServices(),
 		config:             cfg,
+		log:                log.New("Server"),
+
+		httpServer: httpServer,
 		//db:                 meta,
 	}
 
@@ -104,14 +107,14 @@ func (s *Server) Run() error {
 				return s.context.Err()
 			default:
 			}
-			s.log.Debug("Starting background service", zap.String("service", serviceName))
+			s.log.Debug("Starting background service", "service", serviceName)
 			err := service.Run(s.context)
 			// Do not return context.Canceled error
 			if err != nil && errors.Is(err, context.Canceled) {
-				s.log.Error("Stopped background service", zap.Error(err))
+				s.log.Error("Stopped background service", "Error", err.Error())
 				return fmt.Errorf("%s run error:%w", serviceName, err)
 			}
-			s.log.Debug("Stopped background service", zap.String("service", serviceName))
+			s.log.Debug("Stopped background service", "service", serviceName)
 			return nil
 		})
 	}
@@ -122,18 +125,19 @@ func (s *Server) Run() error {
 			return s.context.Err()
 		default:
 		}
-		s.log.Debug("Starting background service", zap.String("service", "httpserver"))
-		err := s.httpServer.Run(":9180")
+		s.log.Debug("Starting background service", "service", "httpserver")
+		err := s.httpServer.Run(s.context)
 		// Do not return context.Canceled error
 		if err != nil && errors.Is(err, context.Canceled) {
-			s.log.Error("Stopped background service", zap.Error(err))
+			s.log.Error("Stopped background service", "Error", err.Error())
 			return fmt.Errorf("%s run error:%w", "httpserver", err)
 		}
-		s.log.Debug("Stopped background service", zap.String("service", "httpserver"))
+		s.log.Debug("Stopped background service", "service", "httpserver")
 		return nil
 	})
 	s.notifySystemd("READY=1")
-	s.log.Debug("Waiting on services...")
+	s.log.Info("Waiting on services...", "Port", s.config.Server.Port)
+	fmt.Printf("Server started at %v:%v\n", "http://localhost", s.config.Server.Port)
 	return s.childRoutines.Wait()
 }
 
@@ -146,7 +150,7 @@ func (s *Server) Shutdown(ctx context.Context, reason string) error {
 		return err
 	}
 	s.shutdownOnce.Do(func() {
-		s.log.Info("Shutdown started", zap.String("reason", reason))
+		s.log.Info("Shutdown started", "reason", reason)
 		// revoke cancel function to stop services
 		s.shutdownFn()
 
@@ -167,7 +171,7 @@ func (s *Server) initSubscription() {
 }
 
 func (s *Server) getLicense() {
-	fmt.Println("getLicense unImplement")
+	s.License = "Ultimate"
 }
 
 func (s *Server) writePIDFile() error {

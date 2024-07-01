@@ -27,3 +27,5 @@ build_with_goreleaser(){
 main(){
   build_with_goreleaser
 }
+
+main

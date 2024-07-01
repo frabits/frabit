@@ -32,8 +32,4 @@ func (bsr *BackgroundServiceRegistry) GetServices() []registry.BackgroundService
 	return bsr.services
 }
 
-var BgSvcs BackgroundServiceRegistry
-
-func init() {
-	NewBackgroundServiceRegistry(deploy.Svc)
-}
+var BgSvcs = NewBackgroundServiceRegistry(deploy.Svc)

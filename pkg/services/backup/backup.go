@@ -21,7 +21,7 @@ import (
 
 type BackupType string
 
-type BackupService interface {
+type Service interface {
 	CreateBackup(ctx context.Context) error
 	ListBackup(ctx context.Context) ([]BackupSet, error)
 	CancelBackup(ctx context.Context) error

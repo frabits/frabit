@@ -17,33 +17,34 @@ package deploy
 
 import (
 	"context"
-	"fmt"
-
-	"go.uber.org/zap"
-
-	"github.com/frabits/frabit/pkg/common/log"
+	"github.com/frabits/frabit/pkg/log"
+	"log/slog"
 )
 
 type Service struct {
 	Id     int
-	Logger *zap.Logger
+	Logger *slog.Logger
 }
 
 func NewService() *Service {
 	ds := &Service{
-		Logger: log.Logger,
+		Logger: log.New("deploy"),
 	}
 
 	return ds
 }
 
 func (ds *Service) Run(ctx context.Context) error {
-	fmt.Println("Deploy service start")
-	return nil
-}
-
-func init() {
-	NewService()
+	ds.Logger.Info("Deploy service start")
+	for {
+		select {
+		case <-ctx.Done():
+			ds.Logger.Info("shutdown service successfully")
+			return ctx.Err()
+		default:
+			ds.Logger.Info("Im working now")
+		}
+	}
 }
 
 var Svc = NewService()

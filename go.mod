@@ -1,6 +1,6 @@
 module github.com/frabits/frabit
 
-go 1.20
+go 1.22
 
 require (
 	github.com/ClickHouse/clickhouse-go/v2 v2.8.3
@@ -20,6 +20,7 @@ require (
 	google.golang.org/genproto v0.0.0-20221227171554-f9683d7f8bef
 	google.golang.org/grpc v1.52.0
 	google.golang.org/protobuf v1.31.0
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 
 require (

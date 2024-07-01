@@ -17,21 +17,26 @@ package config
 
 import (
 	_ "github.com/spf13/viper"
+	"log/slog"
 )
 
 type dbConfig struct {
-	MySQLFrabitDatabase           string
-	MySQLFrabitHost               string
-	MySQLFrabitPort               string
-	MySQLFrabitUserName           string
-	MySQLFrabitPassword           string
-	MySQLFrabitMaxPoolConnections int
-	SkipFrabitDatabaseUpdate      bool
+	Database           string
+	Host               string
+	Port               uint32
+	UserName           string
+	Password           string
+	MaxPoolConnections int
+	DatabaseUpdate     bool
 }
 
 type frabitConfig struct {
-	Port      string
-	PluginDir string
+	Port         uint32
+	PluginDir    string
+	FileName     string
+	Format       string
+	DefaultLevel slog.Level
+	MaxDay       uint
 }
 
 type Config struct {
@@ -39,16 +44,25 @@ type Config struct {
 	Server frabitConfig
 }
 
-var Conf Config
+var Conf = newConfig()
 
 func newConfig() *Config {
-	return &Config{
-		DB:     dbConfig{},
-		Server: frabitConfig{},
+	dbConf := dbConfig{
+		Database:           "frabit",
+		Host:               "127.0.0.1",
+		Port:               3306,
+		UserName:           "frabit",
+		Password:           "frabitSecurePasswd",
+		MaxPoolConnections: 20,
 	}
-
-}
-
-func init() {
-	newConfig()
+	frabitConf := frabitConfig{
+		Port:         9180,
+		FileName:     "/tmp/frabit.log",
+		Format:       "json",
+		DefaultLevel: slog.LevelInfo,
+	}
+	return &Config{
+		DB:     dbConf,
+		Server: frabitConf,
+	}
 }
