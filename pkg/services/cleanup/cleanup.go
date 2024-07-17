@@ -13,24 +13,41 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package bg_services
+package cleanup
 
 import (
-	"github.com/frabits/frabit/pkg/registry"
-	"github.com/frabits/frabit/pkg/services/cleanup"
-	"github.com/frabits/frabit/pkg/services/deploy"
+	"context"
+	"github.com/frabits/frabit/pkg/infra/log"
+	"log/slog"
+	"time"
 )
 
-type BackgroundServiceRegistry struct {
-	services []registry.BackgroundService
+type Service struct {
+	Id     int
+	Logger *slog.Logger
 }
 
-func NewBackgroundServiceRegistry(services ...registry.BackgroundService) *BackgroundServiceRegistry {
-	return &BackgroundServiceRegistry{services}
+func NewService() *Service {
+	ds := &Service{
+		Logger: log.New("cleanup"),
+	}
+
+	return ds
 }
 
-func (bsr *BackgroundServiceRegistry) GetServices() []registry.BackgroundService {
-	return bsr.services
+func (ds *Service) Run(ctx context.Context) error {
+	ds.Logger.Info("Cleanup service start")
+	tick := time.NewTicker(60 * time.Second)
+	defer tick.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			ds.Logger.Info("shutdown service successfully")
+			return ctx.Err()
+		case <-tick.C:
+			ds.Logger.Info("Im working now")
+		}
+	}
 }
 
-var BgSvcs = NewBackgroundServiceRegistry(deploy.Svc, cleanup.Svc)
+var Svc = NewService()

@@ -1,5 +1,5 @@
 // Frabit - The next-generation database automatic operation platform
-// Copyright © 2022-2023 Frabit Labs
+// Copyright © 2022-2024 Frabit Team
 //
 // Licensed under the GNU General Public License, Version 3.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,8 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package meta_store
+package event
 
-// generateSQLPatches contains DDLs for patching schema to the latest version.
-// Add new statements at the end of the list so they form a changelog.
-var generateSQLPatches = []string{}
+import "time"
+
+type CreateUser struct {
+	Username string
+	CreateAt time.Time
+}
+
+type DeleteUser struct {
+	Username string
+	CreateAt time.Time
+}
+
+type UpdateUser struct {
+	Username string
+	CreateAt time.Time
+}

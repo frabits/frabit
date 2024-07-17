@@ -30,21 +30,36 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var StartOpts struct {
+	Config  string
+	Version bool
+}
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:     "frabit-server",
 	Short:   "Frabit The next-generation database automatic platform",
-	RunE:    start,
 	Version: version.InfoStr.String(),
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	if StartOpts.Version {
+		fmt.Println(version.InfoStr.String())
+		os.Exit(0)
+	}
+
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
+}
+
+var startCmd = &cobra.Command{
+	Use:   "start",
+	Short: "Start frabit-server",
+	RunE:  start,
 }
 
 func start(cmd *cobra.Command, args []string) error {
@@ -78,6 +93,7 @@ func listenToSystemSignals(ctx context.Context, src *server.Server) {
 }
 
 func init() {
-	rootCmd.Flags().BoolP("version", "v", false, "Display frabit-server version")
-	rootCmd.Flags().String("config", "/etc/frabit/frabit-server.yml", "Specific frabit config file")
+	rootCmd.AddCommand(startCmd)
+	rootCmd.Flags().BoolVar(&StartOpts.Version, "v", false, "Display frabit-server version")
+	rootCmd.Flags().String(StartOpts.Config, "/etc/frabit/frabit-server.yml", "Specific frabit config file")
 }

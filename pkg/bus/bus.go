@@ -1,5 +1,5 @@
 // Frabit - The next-generation database automatic operation platform
-// Copyright © 2022-2023 Frabit Labs
+// Copyright © 2022-2024 Frabit Team
 //
 // Licensed under the GNU General Public License, Version 3.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,24 +13,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package bg_services
+package bus
 
-import (
-	"github.com/frabits/frabit/pkg/registry"
-	"github.com/frabits/frabit/pkg/services/cleanup"
-	"github.com/frabits/frabit/pkg/services/deploy"
-)
+import "context"
 
-type BackgroundServiceRegistry struct {
-	services []registry.BackgroundService
+type HandlerFunc any
+
+type Bus interface {
+	Publish(ctx context.Context, Msg any) error
+	AddListener(ctx context.Context, listener HandlerFunc) error
 }
 
-func NewBackgroundServiceRegistry(services ...registry.BackgroundService) *BackgroundServiceRegistry {
-	return &BackgroundServiceRegistry{services}
+type InProBus struct {
+	Listener map[string][]HandlerFunc
+	BusCh    chan any
 }
 
-func (bsr *BackgroundServiceRegistry) GetServices() []registry.BackgroundService {
-	return bsr.services
+func (i *InProBus) Publish(ctx context.Context, Msg any) error {
+	for {
+		select {
+		case <-ctx.Done():
+		default:
+			i.BusCh <- Msg
+		}
+	}
 }
 
-var BgSvcs = NewBackgroundServiceRegistry(deploy.Svc, cleanup.Svc)
+func (i *InProBus) AddListener(ctx context.Context, listener HandlerFunc) error {
+	for {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		default:
+
+			return nil
+		}
+	}
+}

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package meta_store
+package db
 
 // generateSQLBase & generateSQLPatches are lists of SQL statements required to build the frabit backend
 var generateSQLBase = []string{

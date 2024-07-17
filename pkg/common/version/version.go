@@ -18,13 +18,15 @@ package version
 import (
 	"context"
 	"fmt"
+	"github.com/briandowns/spinner"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/google/go-github/v50/github"
 )
 
-// initial version
+// initial Version
 const (
 	Major = "1"
 	Minor = "0"
@@ -33,24 +35,16 @@ const (
 )
 
 var (
-	version   = "source"
-	buildDate = "unknown"
-	commit    = "unknown"
+	Version   = "source"
+	BuildDate = "unknown"
+	Commit    = "unknown"
 )
 
 type Info struct {
-	Version
-	Build
-}
-
-type Version struct {
-	Major string `json:"major"`
-	Minor string `json:"minor"`
-	Patch string `json:"patch"`
-	Dist  string `json:"dist"`
-}
-
-type Build struct {
+	Major   string `json:"major"`
+	Minor   string `json:"minor"`
+	Patch   string `json:"patch"`
+	Dist    string `json:"dist"`
 	GitHash string `json:"git_hash"`
 	Date    string `json:"date"`
 	Arch    string `json:"arch"`
@@ -63,57 +57,45 @@ func init() {
 }
 
 func newInfo() Info {
+	var (
+		major string
+		minor string
+		patch string
+	)
+	fmt.Printf("verison:%s BuildDate:%s Commit:%s\n", Version, BuildDate, Commit)
+	if Version != "source" {
+		Version = strings.TrimPrefix(Version, "v")
+
+		major = strings.Split(Version, ".")[0]
+		minor = strings.Split(Version, ".")[1]
+		patch = strings.Split(Version, ".")[2]
+	}
 	return Info{
-		Version: newVersion(),
-		Build:   newBuild(),
-	}
-}
-
-func newVersion() Version {
-	if version != "source" {
-		version = strings.TrimPrefix(version, "v")
-		return Version{
-			Major: strings.Split(version, ".")[0],
-			Minor: strings.Split(version, ".")[1],
-			Patch: strings.Split(version, ".")[2],
-			Dist:  Dist,
-		}
-	}
-
-	return Version{
-		Major: Major,
-		Minor: Minor,
-		Patch: Patch,
-		Dist:  Dist,
-	}
-}
-
-func newBuild() Build {
-	return Build{
-		GitHash: commit,
-		Date:    buildDate,
+		Major:   major,
+		Minor:   minor,
+		Patch:   patch,
+		Dist:    Dist,
+		GitHash: Commit,
+		Date:    BuildDate,
 		Arch:    runtime.GOARCH,
 	}
 }
 
-func (v Version) versionString() string {
-	var versionStr string
-	if v.Dist == "" {
-		versionStr = fmt.Sprintf("Version: %s.%s.%s", v.Major, v.Minor, v.Patch)
-	} else {
-		versionStr = fmt.Sprintf("Version: %s.%s.%s-%s", v.Major, v.Minor, v.Patch, v.Dist)
+func (i Info) versionString() string {
+	versionStr := fmt.Sprintf("Version: %s.%s.%s", i.Major, i.Minor, i.Patch)
+	if i.Dist != "" {
+		versionStr = fmt.Sprintf("%s-%s", versionStr, i.Dist)
 	}
 	return versionStr
 }
 
-func (b Build) buildString() string {
-	str := fmt.Sprintf("Hash: %s\nDate: %s\nArch: %s", b.GitHash, b.Date, b.Arch)
-	return str
+func (i Info) buildString() string {
+	return fmt.Sprintf("Commit: %s BuildDate:%s Arch:%s", i.GitHash, i.Date, i.Arch)
 }
 
-// String display frabit version and build information
-func (info Info) String() string {
-	str := fmt.Sprintf("%s\n%s\n", info.versionString(), info.buildString())
+// String display frabit Version and build information
+func (i Info) String() string {
+	str := fmt.Sprintf("%s\n%s\n", i.versionString(), i.buildString())
 	return str
 }
 
@@ -121,7 +103,7 @@ func getLatestVersion() string {
 	ghClient := github.NewClient(nil)
 	repo, _, err := ghClient.Repositories.GetLatestRelease(context.Background(), "frabits", "frabit")
 	if err != nil {
-		fmt.Errorf("cannot get latest version:%s", err)
+		fmt.Errorf("cannot get latest Version:%s", err)
 		return ""
 	}
 	return *repo.TagName
@@ -132,12 +114,15 @@ func needToUpgrade(version, latest string) bool {
 }
 
 func CheckLatestVersion() {
-	fmt.Println("Check new version...")
-	if version != "source" {
+	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
+	defer s.Stop()
+	s.Start()
+	s.Prefix = "Check new Version..."
+	if Version != "source" {
 		latest := getLatestVersion()
 
-		if ok := needToUpgrade(version, latest); ok {
-			fmt.Printf("A newer version of the frabit is available,please upgrade to: %s\n", latest)
+		if ok := needToUpgrade(Version, latest); ok {
+			fmt.Printf("A newer Version of the frabit is available,please upgrade to: %s\n", latest)
 		}
 	}
 

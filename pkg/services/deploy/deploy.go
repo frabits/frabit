@@ -17,8 +17,9 @@ package deploy
 
 import (
 	"context"
-	"github.com/frabits/frabit/pkg/log"
+	"github.com/frabits/frabit/pkg/infra/log"
 	"log/slog"
+	"time"
 )
 
 type Service struct {
@@ -36,12 +37,14 @@ func NewService() *Service {
 
 func (ds *Service) Run(ctx context.Context) error {
 	ds.Logger.Info("Deploy service start")
+	tick := time.NewTicker(30 * time.Second)
+	defer tick.Stop()
 	for {
 		select {
 		case <-ctx.Done():
 			ds.Logger.Info("shutdown service successfully")
 			return ctx.Err()
-		default:
+		case <-tick.C:
 			ds.Logger.Info("Im working now")
 		}
 	}

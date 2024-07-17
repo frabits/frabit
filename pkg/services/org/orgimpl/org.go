@@ -17,9 +17,9 @@ package orgimpl
 
 import (
 	"context"
+	"github.com/frabits/frabit/pkg/infra/log"
 	"log/slog"
 
-	fblog "github.com/frabits/frabit/pkg/log"
 	"github.com/frabits/frabit/pkg/services/org"
 )
 
@@ -29,7 +29,7 @@ type service struct {
 }
 
 func NewService() *service {
-	log := fblog.New("org")
+	log := log.New("org")
 	return &service{
 		logger: log,
 	}

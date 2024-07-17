@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/frabits/frabit/pkg/config"
@@ -47,6 +48,10 @@ func NewLogger(conf *config.Config) *FileLogger {
 	if logfile == "" {
 		logfile = "/tmp/frabit.log"
 	}
+	if err := os.MkdirAll(filepath.Dir(logfile), 0744); err != nil {
+		fmt.Printf("log dir create filed:%s\n", err.Error())
+	}
+
 	if strings.ToLower(logFormat) == "" {
 		logFormat = "json"
 	}

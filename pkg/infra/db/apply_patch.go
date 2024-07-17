@@ -13,24 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package bg_services
+package db
 
-import (
-	"github.com/frabits/frabit/pkg/registry"
-	"github.com/frabits/frabit/pkg/services/cleanup"
-	"github.com/frabits/frabit/pkg/services/deploy"
-)
-
-type BackgroundServiceRegistry struct {
-	services []registry.BackgroundService
-}
-
-func NewBackgroundServiceRegistry(services ...registry.BackgroundService) *BackgroundServiceRegistry {
-	return &BackgroundServiceRegistry{services}
-}
-
-func (bsr *BackgroundServiceRegistry) GetServices() []registry.BackgroundService {
-	return bsr.services
-}
-
-var BgSvcs = NewBackgroundServiceRegistry(deploy.Svc, cleanup.Svc)
+// generateSQLPatches contains DDLs for patching schema to the latest version.
+// Add new statements at the end of the list so they form a changelog.
+var generateSQLPatches = []string{}

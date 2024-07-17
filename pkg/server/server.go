@@ -19,7 +19,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/frabits/frabit/pkg/log"
+	"github.com/frabits/frabit/pkg/infra/db"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -33,6 +33,7 @@ import (
 
 	"github.com/frabits/frabit/pkg/api"
 	"github.com/frabits/frabit/pkg/config"
+	"github.com/frabits/frabit/pkg/infra/log"
 	"github.com/frabits/frabit/pkg/registry"
 	"github.com/frabits/frabit/pkg/server/bg_services"
 )
@@ -62,6 +63,7 @@ func (s *Server) init() error {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 	s.initSubscription()
+	s.writePIDFile()
 
 	return nil
 }
@@ -72,6 +74,8 @@ func NewServer(cfg *config.Config) *Server {
 	rootCtx, shutdownFn := context.WithCancel(context.Background())
 	childRoutines, childCtx := errgroup.WithContext(rootCtx)
 	httpServer := api.NewHttpServer(cfg)
+	metaStore, _ := db.New(cfg)
+	stdDB, _ := metaStore.OpenFrabit()
 	srv := &Server{
 		startedTs:          time.Now().Unix(),
 		context:            childCtx,
@@ -83,7 +87,7 @@ func NewServer(cfg *config.Config) *Server {
 		log:                log.New("Server"),
 
 		httpServer: httpServer,
-		//db:                 meta,
+		db:         stdDB,
 	}
 
 	return srv

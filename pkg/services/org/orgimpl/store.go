@@ -17,6 +17,7 @@ package orgimpl
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/frabits/frabit/pkg/services/org"
 )
@@ -24,4 +25,8 @@ import (
 type store interface {
 	Get(context.Context, int64) (*org.Org, error)
 	Insert(context.Context, *org.Org) (int64, error)
+}
+
+type dbStore struct {
+	DB *sql.DB
 }

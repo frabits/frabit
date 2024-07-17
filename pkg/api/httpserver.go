@@ -17,13 +17,13 @@ package api
 
 import (
 	"context"
+	"github.com/frabits/frabit/pkg/infra/log"
 	"log/slog"
 	"net/http"
 	"time"
 
 	"github.com/frabits/frabit/pkg/common/version"
 	"github.com/frabits/frabit/pkg/config"
-	"github.com/frabits/frabit/pkg/log"
 	"github.com/frabits/frabit/pkg/services/backup"
 	"github.com/frabits/frabit/pkg/services/deploy"
 
