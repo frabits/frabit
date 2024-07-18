@@ -21,7 +21,10 @@ import (
 	"log/slog"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/frabits/frabit/pkg/common/constant"
+	"github.com/frabits/frabit/pkg/common/utils"
 	"github.com/frabits/frabit/pkg/config"
 	"github.com/frabits/frabit/pkg/infra/log"
 
@@ -31,6 +34,7 @@ import (
 )
 
 type MetaStore struct {
+	cfg *config.Config
 	log *slog.Logger
 	DB  *sql.DB
 }
@@ -39,6 +43,7 @@ var DB *gorm.DB
 
 func New(conf *config.Config) (*MetaStore, error) {
 	ms := &MetaStore{
+		cfg: conf,
 		log: log.New("meta.store"),
 	}
 	dsn := dsn.DSN{
@@ -56,6 +61,8 @@ func New(conf *config.Config) (*MetaStore, error) {
 		return ms, err
 	}
 	DB = db
+	stdDb, err := db.DB()
+	ms.DB = stdDb
 
 	return ms, nil
 }
@@ -64,11 +71,11 @@ func New(conf *config.Config) (*MetaStore, error) {
 func (ms *MetaStore) OpenFrabit() (db *sql.DB, err error) {
 	// first time ever we talk to MySQL
 	query := fmt.Sprintf("create database if not exists %s", config.Conf.DB.Database)
-	if _, err := db.Exec(query); err != nil {
+	if _, err := ms.DB.Exec(query); err != nil {
 		return db, err
 	}
-	if !config.Conf.DB.DatabaseUpdate {
-		err := ms.initFrabitDB(db)
+	if !config.Conf.DB.SkipDatabaseUpdate && !ms.alreadyDeployed() {
+		err := ms.initFrabitDB(ms.DB)
 		if err != nil {
 			return nil, err
 		}
@@ -78,8 +85,8 @@ func (ms *MetaStore) OpenFrabit() (db *sql.DB, err error) {
 		maxIdleConns = 10
 	}
 	ms.log.Info("Connecting to backend metastore", "host", config.Conf.DB.Host, "port", config.Conf.DB.Port, "maxConnections", config.Conf.DB.MaxPoolConnections)
-	db.SetMaxIdleConns(maxIdleConns)
-	return db, err
+	ms.DB.SetMaxIdleConns(maxIdleConns)
+	return ms.DB, err
 }
 
 // initFrabitDB attempts to create/upgrade the frabit backend database. It is created once in the
@@ -91,7 +98,49 @@ func (ms *MetaStore) initFrabitDB(db *sql.DB) error {
 	if err := ms.deployStatements(db, generateSQLPatches); err != nil {
 		return err
 	}
+	initSQL := ms.genInitialData()
+	if err := ms.deployStatements(db, initSQL); err != nil {
+		return err
+	}
 	return nil
+}
+
+func (ms *MetaStore) genInitialData() []string {
+	initDatetime := time.Now().Format(time.DateTime)
+	initData := make([]string, 0)
+	license := fmt.Sprintf(`insert into license(license_level,current_license,last_license,create_at,update_at) values("%s","%s","%s","%s","%s")`, constant.Community, "", "", initDatetime, initDatetime)
+
+	initPasswd := utils.GenRandom(32)
+	hashPassword := utils.GeneratePassword(initPasswd)
+	ms.log.Info("InitPassword generated", "Username", "admin", "Password", initPasswd, "HashPassword", hashPassword)
+	adminAccount := fmt.Sprintf(`insert into user(username,email,password,is_disabled) values("%s","%s","%s",%d)`, constant.ADMIN, "admin@frabit.com", hashPassword, 0)
+	version := "v2.2.2"
+	initVersion := fmt.Sprintf(`insert into version(version,create_at,update_at) values("%s","%s","%s")`, version, initDatetime, initDatetime)
+	initData = append(initData, license, adminAccount, initVersion)
+	return initData
+}
+
+// alreadyDeployed check tables
+func (ms *MetaStore) alreadyDeployed() bool {
+	query := fmt.Sprintf(`select count(*) table_num from information_schema.tables where table_schema="%s";`, ms.cfg.DB.Database)
+	rows, err := ms.DB.Query(query)
+	defer rows.Close()
+	if err != nil {
+		ms.log.Error("can not detect table number", "Error", err.Error())
+		return true
+	}
+	for rows.Next() {
+		var tableNum uint
+		if err := rows.Scan(&tableNum); err != nil {
+			ms.log.Error("can not detect table num", "Error", err.Error())
+			return true
+		}
+		if tableNum > 0 {
+			ms.log.Info("table already created")
+			return false
+		}
+	}
+	return false
 }
 
 // deployStatements will issue given sql queries that are not already known to be deployed.

@@ -19,7 +19,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/frabits/frabit/pkg/infra/db"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -33,6 +32,7 @@ import (
 
 	"github.com/frabits/frabit/pkg/api"
 	"github.com/frabits/frabit/pkg/config"
+	"github.com/frabits/frabit/pkg/infra/db"
 	"github.com/frabits/frabit/pkg/infra/log"
 	"github.com/frabits/frabit/pkg/registry"
 	"github.com/frabits/frabit/pkg/server/bg_services"
@@ -74,8 +74,16 @@ func NewServer(cfg *config.Config) *Server {
 	rootCtx, shutdownFn := context.WithCancel(context.Background())
 	childRoutines, childCtx := errgroup.WithContext(rootCtx)
 	httpServer := api.NewHttpServer(cfg)
-	metaStore, _ := db.New(cfg)
-	stdDB, _ := metaStore.OpenFrabit()
+	metaStore, err := db.New(cfg)
+	if err != nil {
+		fmt.Println("Create metastore failed", err.Error())
+		os.Exit(1)
+	}
+	stdDB, err := metaStore.OpenFrabit()
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
 	srv := &Server{
 		startedTs:          time.Now().Unix(),
 		context:            childCtx,

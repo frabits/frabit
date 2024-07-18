@@ -29,6 +29,8 @@ import (
 
 var globalLogger *slog.Logger
 
+var Logger *slog.Logger
+
 type FileLogger struct {
 	fileName     string
 	format       string
@@ -99,4 +101,5 @@ func (fl *FileLogger) StartLogger() {
 func init() {
 	logger := NewLogger(config.Conf)
 	logger.StartLogger()
+	Logger = New("default")
 }

@@ -27,7 +27,7 @@ type dbConfig struct {
 	UserName           string
 	Password           string
 	MaxPoolConnections int
-	DatabaseUpdate     bool
+	SkipDatabaseUpdate bool
 }
 
 type frabitConfig struct {
@@ -49,11 +49,12 @@ var Conf = newConfig()
 func newConfig() *Config {
 	dbConf := dbConfig{
 		Database:           "frabit",
-		Host:               "127.0.0.1",
+		Host:               "192.168.1.8",
 		Port:               3306,
 		UserName:           "frabit",
-		Password:           "frabitSecurePasswd",
+		Password:           "frabitSecure_1Passwd",
 		MaxPoolConnections: 20,
+		SkipDatabaseUpdate: false,
 	}
 	frabitConf := frabitConfig{
 		Port:         9180,

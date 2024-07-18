@@ -22,6 +22,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	mrand "math/rand"
 	"time"
+
+	"github.com/frabits/frabit/pkg/infra/log"
 )
 
 func RandomHex(n int) (string, error) {
@@ -57,9 +59,27 @@ func NewToken(n int) *Token {
 
 func GenHash(publicAuth, privateAuth string) string {
 	hashRaw := fmt.Sprintf("%s:%s", publicAuth, privateAuth)
-	hash, err := bcrypt.GenerateFromPassword([]byte(hashRaw), 32)
+	hash, err := bcrypt.GenerateFromPassword([]byte(hashRaw), 31)
 	if err != nil {
 		return ""
 	}
 	return string(hash)
+}
+
+func GeneratePassword(password string) string {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), 4)
+	if err != nil {
+		log.Logger.Error("Generate password failed", "Error", err.Error())
+		return ""
+	}
+	return string(hash)
+}
+
+func ComparePassword(password, hashPassword string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(password))
+	if err != nil {
+		log.Logger.Error("Generate password failed", "Error", err.Error())
+		return false
+	}
+	return true
 }

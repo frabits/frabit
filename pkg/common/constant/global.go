@@ -19,6 +19,7 @@ type PrivilegeLevel string
 type Role string
 type AuditEvent string
 type FeatureType string
+type License string
 
 const (
 	GLOBAL    PrivilegeLevel = "global"
@@ -30,12 +31,11 @@ const (
 	ADMIN  Role = "admin"
 	EDITOR Role = "editor"
 	VIEWER Role = "viewer"
-	// FRABIT is the default metadata schema name if not provide a dbname via config file
-	FRABIT = "frabit"
-	PTOSC  = "pt-online-schema-change"
-
-	CREATE_DATABASE AuditEvent = "Create database"
+	PTOSC       = "pt-online-schema-change"
 
 	FeatureAuditLog  FeatureType = "fb.feature.audit-log"
 	FeatureWatermark FeatureType = "fb.feature.water-mark"
+	Community        License     = "community"
+	Enterprise       License     = "enterprise"
+	Ultimate         License     = "ultimate"
 )
