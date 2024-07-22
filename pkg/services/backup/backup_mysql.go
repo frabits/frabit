@@ -17,12 +17,11 @@ package backup
 
 import (
 	"context"
-	"github.com/frabits/frabit/pkg/common/log"
+	"log/slog"
 	"time"
 
+	"github.com/frabits/frabit/pkg/infra/log"
 	pxb "github.com/frabits/frabit/pkg/xtrabackup"
-
-	"go.uber.org/zap"
 )
 
 // MySQLBackup implement DB backup task
@@ -31,12 +30,12 @@ type MySQLBackup struct {
 	EndDatetime   time.Time
 	PXB           pxb.Xtrabackup
 	Type          BackupType
-	Logger        *zap.Logger
+	Logger        *slog.Logger
 }
 
 func newMySQLBackup() *MySQLBackup {
 	return &MySQLBackup{
-		Logger: log.Logger,
+		Logger: log.New("backup.mysql"),
 	}
 }
 

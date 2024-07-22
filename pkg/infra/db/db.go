@@ -24,11 +24,11 @@ import (
 	"time"
 
 	"github.com/frabits/frabit/pkg/common/constant"
+	dc "github.com/frabits/frabit/pkg/common/db_connector"
 	"github.com/frabits/frabit/pkg/common/utils"
 	"github.com/frabits/frabit/pkg/config"
 	"github.com/frabits/frabit/pkg/infra/log"
 
-	"github.com/percona/go-mysql/dsn"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -39,32 +39,44 @@ type MetaStore struct {
 	DB  *sql.DB
 }
 
-var DB *gorm.DB
+var metaStore *gorm.DB
 
 func New(conf *config.Config) (*MetaStore, error) {
 	ms := &MetaStore{
 		cfg: conf,
 		log: log.New("meta.store"),
 	}
-	dsn := dsn.DSN{
+	dbConnectConfig := dc.MysqlConnectionCfg{
 		Username:  conf.DB.UserName,
 		Password:  conf.DB.Password,
 		Hostname:  conf.DB.Host,
 		Port:      strconv.Itoa(int(conf.DB.Port)),
 		DefaultDb: conf.DB.Database,
+		Params:    []string{"timeout=5s", "charset=utf8mb4", "parseTime=True", "loc=Local", "readTimeout=30s"},
 	}
-	db, err := gorm.Open(mysql.Open(dsn.String()), &gorm.Config{
+
+	dsn := dbConnectConfig.String()
+	ms.log.Info("generate a dsn", "dsn", dsn)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: true,
 	})
 
 	if err != nil {
+		ms.log.Error("backend metaStore not ready", "Error", err.Error())
 		return ms, err
 	}
-	DB = db
+	metaStore = db
 	stdDb, err := db.DB()
 	ms.DB = stdDb
+	stdDb.SetConnMaxLifetime(10 * time.Minute)
+	stdDb.SetMaxIdleConns(50)
+	stdDb.SetMaxOpenConns(10)
 
 	return ms, nil
+}
+
+func DB() *gorm.DB {
+	return metaStore
 }
 
 // OpenFrabit returns the DB instance for the frabit backed database
@@ -75,13 +87,17 @@ func (ms *MetaStore) OpenFrabit() (db *sql.DB, err error) {
 		return db, err
 	}
 	if !config.Conf.DB.SkipDatabaseUpdate && !ms.alreadyDeployed() {
+		ms.log.Info("Start initiate backend metaStore")
 		err := ms.initFrabitDB(ms.DB)
 		if err != nil {
+			ms.log.Error("Initiate backend metaStore failed", "Error", err.Error())
 			return nil, err
 		}
+		ms.log.Info("Successfully create all tables")
 	}
 	maxIdleConns := int(100)
 	if maxIdleConns < 10 {
+		ms.log.Warn("MaxIdleConnections less than 10,already reset to 10")
 		maxIdleConns = 10
 	}
 	ms.log.Info("Connecting to backend metastore", "host", config.Conf.DB.Host, "port", config.Conf.DB.Port, "maxConnections", config.Conf.DB.MaxPoolConnections)
@@ -108,15 +124,17 @@ func (ms *MetaStore) initFrabitDB(db *sql.DB) error {
 func (ms *MetaStore) genInitialData() []string {
 	initDatetime := time.Now().Format(time.DateTime)
 	initData := make([]string, 0)
-	license := fmt.Sprintf(`insert into license(license_level,current_license,last_license,create_at,update_at) values("%s","%s","%s","%s","%s")`, constant.Community, "", "", initDatetime, initDatetime)
+	license := fmt.Sprintf(`insert into license(license_level,current_license,last_license,created_at,updated_at) values("%s","%s","%s","%s","%s")`, constant.Community, "", "", initDatetime, initDatetime)
 
 	initPasswd := utils.GenRandom(32)
+	rands := utils.GenRandom(12)
 	hashPassword := utils.GeneratePassword(initPasswd)
-	ms.log.Info("InitPassword generated", "Username", "admin", "Password", initPasswd, "HashPassword", hashPassword)
-	adminAccount := fmt.Sprintf(`insert into user(username,email,password,is_disabled) values("%s","%s","%s",%d)`, constant.ADMIN, "admin@frabit.com", hashPassword, 0)
+	ms.log.Info("InitPassword generated", "Username", "admin", "Password", initPasswd)
+	adminAccount := fmt.Sprintf(`insert into user(username,email,password,created_at,updated_at,rands,is_disabled,is_external) values("%s","%s","%s","%s","%s","%s",%d,%d)`, constant.ADMIN, "admin@frabit.com", hashPassword, initDatetime, initDatetime, rands, 0, 0)
+	org := fmt.Sprintf(`insert into org(name,description,created_at,updated_at) values("%s","%s","%s","%s")`, constant.MainOrg, "Default org", initDatetime, initDatetime)
 	version := "v2.2.2"
-	initVersion := fmt.Sprintf(`insert into version(version,create_at,update_at) values("%s","%s","%s")`, version, initDatetime, initDatetime)
-	initData = append(initData, license, adminAccount, initVersion)
+	initVersion := fmt.Sprintf(`insert into version(version,created_at,updated_at) values("%s","%s","%s")`, version, initDatetime, initDatetime)
+	initData = append(initData, license, adminAccount, org, initVersion)
 	return initData
 }
 

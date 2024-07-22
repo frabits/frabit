@@ -14,3 +14,9 @@
 // limitations under the License.
 
 package auth
+
+import "context"
+
+type UserAuth interface {
+	CreateToken(ctx context.Context)
+}

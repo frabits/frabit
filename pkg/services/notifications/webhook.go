@@ -14,3 +14,7 @@
 // limitations under the License.
 
 package notifications
+
+type WebHook struct {
+	Body string `json:"body"`
+}

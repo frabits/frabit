@@ -35,6 +35,7 @@ type frabitConfig struct {
 	PluginDir    string
 	FileName     string
 	Format       string
+	Security     string
 	DefaultLevel slog.Level
 	MaxDay       uint
 }

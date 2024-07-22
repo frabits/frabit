@@ -18,6 +18,7 @@ package utils
 import (
 	"archive/tar"
 	"compress/gzip"
+	"github.com/google/uuid"
 	"io"
 	"os"
 	"path"
@@ -108,4 +109,13 @@ func extractTar(r io.Reader, targetDir string) error {
 	}
 
 	return nil
+}
+
+func createUUID() string {
+	return uuid.NewString()
+}
+
+func CreateUUIDWithDelimiter(delimiter string) string {
+	rawUUID := createUUID()
+	return strings.Replace(rawUUID, "-", delimiter, 0)
 }

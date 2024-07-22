@@ -13,13 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package user
+package login
 
 import "context"
 
 type Service interface {
-	CreateUser(ctx context.Context) error
-	UpdateUser(ctx context.Context) error
-	GetUserById(ctx context.Context) error
-	GetUserByName(ctx context.Context) error
+	Authenticator(ctx context.Context) error
 }

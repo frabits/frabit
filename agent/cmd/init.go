@@ -33,7 +33,7 @@ var initCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(initCmd)
 
-	rootCmd.PersistentFlags().IntVar(&flag.port, "port", 80, "port. Default to 9180")
+	rootCmd.PersistentFlags().String(flag.path, "/etc/frabit", "config path. Default to /etc/frabit")
 }
 
 // genConfig generate an agent config file based server addr

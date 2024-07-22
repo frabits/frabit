@@ -21,11 +21,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func applyBackup(group *gin.RouterGroup) {
+func (hs *HttpServer) applyBackup(group *gin.RouterGroup) {
 	backup := group.Group("/backup")
-	backup.GET("/mysql", backupMysql)
+	backup.GET("/mysql", hs.backupMysql)
 }
 
-func backupMysql(c *gin.Context) {
+func (hs *HttpServer) backupMysql(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, "get mysql backup")
 }

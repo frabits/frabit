@@ -69,16 +69,17 @@ func (s *Server) init() error {
 }
 
 func NewServer(cfg *config.Config) *Server {
-	backgroundService := bg_services.BgSvcs
+	backgroundService := bg_services.BgServices
 
 	rootCtx, shutdownFn := context.WithCancel(context.Background())
 	childRoutines, childCtx := errgroup.WithContext(rootCtx)
-	httpServer := api.NewHttpServer(cfg)
 	metaStore, err := db.New(cfg)
 	if err != nil {
 		fmt.Println("Create metastore failed", err.Error())
 		os.Exit(1)
 	}
+	httpServer := api.NewHttpServer(cfg)
+
 	stdDB, err := metaStore.OpenFrabit()
 	if err != nil {
 		fmt.Println(err.Error())
@@ -150,6 +151,7 @@ func (s *Server) Run() error {
 	s.notifySystemd("READY=1")
 	s.log.Info("Waiting on services...", "Port", s.config.Server.Port)
 	fmt.Printf("Server started at %v:%v\n", "http://localhost", s.config.Server.Port)
+	fmt.Printf("API Base URL is %v:%v/api/v2\n", "https://frabit.com", s.config.Server.Port)
 	return s.childRoutines.Wait()
 }
 
@@ -175,6 +177,9 @@ func (s *Server) Shutdown(ctx context.Context, reason string) error {
 			err = fmt.Errorf("timeout waiting for shutdown")
 		}
 	})
+	if err := os.RemoveAll(s.pidFile); err != nil {
+		s.log.Error("Remove pid file failed", "Error", err.Error())
+	}
 	return err
 }
 
@@ -188,7 +193,7 @@ func (s *Server) getLicense() {
 
 func (s *Server) writePIDFile() error {
 	if s.pidFile == "" {
-		s.pidFile = "/var/run/frabit-server.pid"
+		s.pidFile = "/var/run/frabit/frabit-server.pid"
 	}
 
 	err := os.MkdirAll(filepath.Dir(s.pidFile), 0700)
@@ -201,7 +206,7 @@ func (s *Server) writePIDFile() error {
 	pid := strconv.Itoa(os.Getpid())
 
 	if err := os.WriteFile(s.pidFile, []byte(pid), 0644); err != nil {
-		s.log.Error("Failed to write pidfile")
+		s.log.Error("Failed to write pid file", "Error", err.Error())
 		return fmt.Errorf("failed to write pidfile:%s", err)
 	}
 	s.log.Info("Write PID file")

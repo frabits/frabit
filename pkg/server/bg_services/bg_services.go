@@ -19,6 +19,7 @@ import (
 	"github.com/frabits/frabit/pkg/registry"
 	"github.com/frabits/frabit/pkg/services/cleanup"
 	"github.com/frabits/frabit/pkg/services/deploy"
+	ns "github.com/frabits/frabit/pkg/services/notifications"
 )
 
 type BackgroundServiceRegistry struct {
@@ -33,4 +34,4 @@ func (bsr *BackgroundServiceRegistry) GetServices() []registry.BackgroundService
 	return bsr.services
 }
 
-var BgSvcs = NewBackgroundServiceRegistry(deploy.Svc, cleanup.Svc)
+var BgServices = NewBackgroundServiceRegistry(deploy.Svc, cleanup.Svc, ns.Svc)

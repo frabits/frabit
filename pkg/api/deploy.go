@@ -21,12 +21,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func applyDeploy(group *gin.RouterGroup) {
+func (hs *HttpServer) applyDeploy(group *gin.RouterGroup) {
 	backup := group.Group("/deploy")
-	backup.GET("/mysql", deployMysql)
-	backup.POST("/mysql", deployMysql)
+	backup.GET("/mysql", hs.deployMysql)
+	backup.POST("/mysql", hs.deployMysql)
 }
 
-func deployMysql(c *gin.Context) {
+func (hs *HttpServer) deployMysql(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, "get mysql deploy")
 }

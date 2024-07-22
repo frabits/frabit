@@ -67,3 +67,8 @@ type DBOperator interface {
 type OSOperator interface {
 	Executor(ctx context.Context, sshConfig SSHConnInfo) error
 }
+
+// CloudOperator represents a cloud provider operator
+type CloudOperator interface {
+	Executor(ctx context.Context, sshConfig SSHConnInfo) error
+}

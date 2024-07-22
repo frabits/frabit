@@ -13,22 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package user
+package login
 
-import "time"
-
-type Login struct {
-	Id            uint32    `json:"id"`
-	Username      string    `json:"username"`
-	Password      string    `json:"password"`
-	Rands         string    `json:"rands"`
-	Email         string    `json:"email"`
-	IsAdmin       bool      `json:"is_admin"`
-	Disabled      bool      `json:"disable"`
-	EmailVerified bool      `json:"email_verified"`
-	Theme         string    `json:"theme"`
-	OrgId         uint32    `json:"org_id"`
-	CreateAt      time.Time `json:"create_at"`
-	UpdateAt      time.Time `json:"update_at"`
-	LastSeenAt    time.Time `json:"last_seen_at"`
+type UserAuth struct {
 }

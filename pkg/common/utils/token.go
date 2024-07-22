@@ -19,9 +19,10 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
-	"golang.org/x/crypto/bcrypt"
 	mrand "math/rand"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/frabits/frabit/pkg/infra/log"
 )

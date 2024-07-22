@@ -16,9 +16,14 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
+	"github.com/frabits/frabit/pkg/agent"
 	"github.com/frabits/frabit/pkg/common/version"
 
 	"github.com/spf13/cobra"
@@ -33,6 +38,7 @@ var rootCmd = &cobra.Command{
 
 var flag struct {
 	port int
+	path string
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -45,9 +51,37 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().IntVar(&flag.port, "port", 80, "port. Default to 9180")
+	rootCmd.PersistentFlags().IntVar(&flag.port, "port", 19180, "port. Default to 19180")
 }
 
 func runAgent(cmd *cobra.Command, args []string) {
-	fmt.Printf("%s\n", version.InfoStr.String())
+	ctx := context.Background()
+	a := agent.New(nil)
+	if err := a.RunAgent(ctx); err != nil {
+		a.Log.Error("Agent failed", "Error", err.Error())
+		os.Exit(1)
+	}
+	listenToSystemSignals(ctx, a)
+	a.RunAgent(ctx)
+}
+
+func listenToSystemSignals(ctx context.Context, agent *agent.Agent) {
+	signalChan := make(chan os.Signal, 1)
+	sighupChan := make(chan os.Signal, 1)
+
+	signal.Notify(sighupChan, syscall.SIGHUP)
+	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM)
+
+	for {
+		select {
+		case <-sighupChan:
+			fmt.Println("nothing,maybe reload config in the future")
+		case sig := <-signalChan:
+			ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+			defer cancel()
+			if err := agent.Shutdown(ctx, fmt.Sprintf("System signal:%s", sig)); err != nil {
+				fmt.Fprintf(os.Stderr, "Timed out waiting for server to shut down")
+			}
+		}
+	}
 }

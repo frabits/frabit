@@ -17,12 +17,12 @@ package backup
 
 import (
 	"context"
-	"github.com/frabits/frabit/pkg/common/log"
+	"log/slog"
+
 	"time"
 
+	"github.com/frabits/frabit/pkg/infra/log"
 	pxb "github.com/frabits/frabit/pkg/xtrabackup"
-
-	"go.uber.org/zap"
 )
 
 // MongoBackup implement DB backup task
@@ -31,13 +31,12 @@ type MongoBackup struct {
 	EndDatetime   time.Time
 	PXB           pxb.Xtrabackup
 	Type          BackupType
-	Logger        *zap.Logger
+	Logger        *slog.Logger
 }
 
 func newMongoBackup() *MongoBackup {
-	// log.Info("create BackupService")
 	return &MongoBackup{
-		Logger: log.Logger,
+		Logger: log.New("backup.mongo"),
 	}
 }
 

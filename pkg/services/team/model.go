@@ -26,6 +26,6 @@ type Team struct {
 }
 
 type CreateTeamReq struct {
-	Id   uint32
-	Name string
+	Id   uint32 `json:"id"`
+	Name string `json:"name"`
 }

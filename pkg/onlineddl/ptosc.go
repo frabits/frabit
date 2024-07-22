@@ -16,12 +16,12 @@
 package onlineddl
 
 import (
-	"github.com/frabits/frabit/pkg/common/constant"
-	"github.com/frabits/frabit/pkg/common/log"
+	"log/slog"
 	"os/exec"
 	"time"
 
-	"go.uber.org/zap"
+	"github.com/frabits/frabit/pkg/common/constant"
+	"github.com/frabits/frabit/pkg/infra/log"
 )
 
 // PTOSC represent a pt-online-schema-change provided by Percona LLC
@@ -29,7 +29,7 @@ type PTOSC struct {
 	cmd       string
 	StartTime time.Time
 	opt       ptoscOpt
-	logger    *zap.Logger
+	log       *slog.Logger
 }
 
 type ptoscOpt struct {
@@ -44,11 +44,11 @@ type ptoscOpt struct {
 func NewPTOSC() *PTOSC {
 	cmdPT, err := exec.LookPath(constant.PTOSC)
 	if err != nil {
-		log.Info("pt-osc not in you path environment")
+		log.Logger.Info("pt-osc not in you path environment")
 	}
 	return &PTOSC{
-		cmd:    cmdPT,
-		logger: log.Logger,
+		cmd: cmdPT,
+		log: log.New("pt-osc"),
 	}
 }
 

@@ -17,33 +17,40 @@ package notifications
 
 import (
 	"context"
-	"fmt"
+	"log/slog"
 
-	"go.uber.org/zap"
-
-	"github.com/frabits/frabit/pkg/common/log"
+	"github.com/frabits/frabit/pkg/infra/log"
 )
 
 type Service struct {
-	Id     int
-	Logger *zap.Logger
+	EmailQueen   chan interface{}
+	WebHookQueen chan interface{}
+	Logger       *slog.Logger
 }
 
 func NewService() *Service {
 	ds := &Service{
-		Logger: log.Logger,
+		Logger: log.New("notifications"),
 	}
 
 	return ds
 }
 
-func (ds *Service) Run(ctx context.Context) error {
-	fmt.Println("Deploy service start")
-	return nil
-}
-
-func init() {
-	NewService()
+func (s *Service) Run(ctx context.Context) error {
+	s.Logger.Info("Notification service started")
+	for {
+		select {
+		case <-ctx.Done():
+			s.Logger.Info("Notification service shutdown")
+			return ctx.Err()
+		case Email := <-s.EmailQueen:
+			s.Logger.Info("Send email", "Email", Email)
+			return nil
+		case WebHook := <-s.WebHookQueen:
+			s.Logger.Info("Execute webHook", "WebHook", WebHook)
+			return nil
+		}
+	}
 }
 
 var Svc = NewService()

@@ -14,3 +14,7 @@
 // limitations under the License.
 
 package notifications
+
+type Email struct {
+	Body string `json:"body"`
+}
