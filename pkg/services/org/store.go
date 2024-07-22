@@ -17,14 +17,42 @@ package org
 
 import (
 	"context"
-	"database/sql"
+	"gorm.io/gorm"
 )
 
 type store interface {
-	Get(context.Context, int64) (*Org, error)
-	Insert(context.Context, *Org) (int64, error)
+	GetOrgs(context.Context) ([]Org, error)
+	GetOrgByName(context.Context, string) (Org, error)
+	Update(context.Context, *Org) error
+	CreateOrg(context.Context, *Org) (int64, error)
 }
 
-type dbStore struct {
-	DB *sql.DB
+type storeImpl struct {
+	DB *gorm.DB
+}
+
+func NewStoreImpl(db *gorm.DB) *storeImpl {
+	return &storeImpl{db}
+}
+
+func (s *storeImpl) GetOrgs(ctx context.Context) ([]Org, error) {
+	var orgs []Org
+	s.DB.Model(Org{}).Find(&orgs)
+	return orgs, nil
+}
+
+func (s *storeImpl) GetOrgByName(ctx context.Context, name string) (Org, error) {
+	var org Org
+	s.DB.Model(Org{}).Where("name = ?", name).First(&org)
+	return org, nil
+}
+
+func (s *storeImpl) Update(ctx context.Context, org *Org) error {
+	s.DB.Create(org)
+	return nil
+}
+
+func (s *storeImpl) CreateOrg(ctx context.Context, org *Org) (int64, error) {
+	s.DB.Create(org)
+	return 0, nil
 }

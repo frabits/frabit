@@ -15,8 +15,15 @@
 
 package org
 
-import "context"
+import (
+	"context"
+
+	fb "github.com/frabits/frabit-go-sdk/frabit"
+)
 
 type Service interface {
-	CreateOrg(ctx context.Context) error
+	GetOrgs(context.Context) ([]Org, error)
+	GetOrgByName(context.Context, string) (Org, error)
+	CreateOrg(ctx context.Context, req fb.OrgCreateRequest) (int64, error)
+	UpdateOrg(ctx context.Context, req fb.OrgUpdateRequest) error
 }

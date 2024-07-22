@@ -104,6 +104,7 @@ var generateSQLBase = []string{
 	      id bigint NOT NULL auto_increment,
 	      name varchar(100) NOT NULL default "" comment "org name", 
           description varchar(200) NOT NULL default "",
+          country varchar(200) NOT NULL default "",
           created_at varchar(50) not null default "",
           updated_at varchar(50) not null default "",
 	      PRIMARY KEY (id),

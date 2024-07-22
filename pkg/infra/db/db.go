@@ -56,7 +56,6 @@ func New(conf *config.Config) (*MetaStore, error) {
 	}
 
 	dsn := dbConnectConfig.String()
-	ms.log.Info("generate a dsn", "dsn", dsn)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: true,
 	})
@@ -155,7 +154,7 @@ func (ms *MetaStore) alreadyDeployed() bool {
 		}
 		if tableNum > 0 {
 			ms.log.Info("table already created")
-			return false
+			return true
 		}
 	}
 	return false

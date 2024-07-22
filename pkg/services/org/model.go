@@ -15,15 +15,15 @@
 
 package org
 
-import "time"
-
 type Org struct {
-	Id      uint64
-	Name    string
-	Addr    string
-	City    string
-	Country string
+	Id          uint32 `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
+	Name        string `gorm:"type:varchar(50);not null;unique:uniq_name" json:"dame"`
+	Description string `gorm:"type:varchar(200);not null" json:"description"`
+	Country     string `gorm:"type:varchar(200);not null" json:"country"`
+	CreatedAt   string `gorm:"type:varchar(50);not null" json:"created_at"`
+	UpdatedAt   string `gorm:"type:varchar(50);not null" json:"updated_at"`
+}
 
-	CreateAt time.Time
-	UpdateAt time.Time
+func (a Org) TableName() string {
+	return "org"
 }

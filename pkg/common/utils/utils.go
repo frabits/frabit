@@ -24,6 +24,7 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/xi2/xz"
@@ -118,4 +119,8 @@ func createUUID() string {
 func CreateUUIDWithDelimiter(delimiter string) string {
 	rawUUID := createUUID()
 	return strings.Replace(rawUUID, "-", delimiter, 0)
+}
+
+func NowDatetime() string {
+	return time.Now().Format(time.DateTime)
 }

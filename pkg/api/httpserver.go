@@ -69,6 +69,7 @@ func NewHttpServer(cnf *config.Config) *HttpServer {
 	}
 
 	agentService := agent.NewAgentService(config.Conf)
+	orgService := org.NewService(config.Conf)
 	loginService := login.NewLoginNative(config.Conf)
 
 	hs := &HttpServer{
@@ -77,6 +78,7 @@ func NewHttpServer(cnf *config.Config) *HttpServer {
 		Port:   port,
 		router: router,
 
+		org:   orgService,
 		agent: agentService,
 		login: loginService,
 	}
@@ -90,6 +92,7 @@ func (hs *HttpServer) setup(engine *gin.Engine) {
 	engine.GET("/info", hs.info)
 	engine.POST("/login", hs.info)
 	apiV2 := engine.Group("/api/v2")
+	hs.applyOrg(apiV2)
 	hs.applyAgent(apiV2)
 	hs.applyBackup(apiV2)
 	hs.applyDeploy(apiV2)

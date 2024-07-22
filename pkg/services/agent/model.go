@@ -15,6 +15,8 @@
 
 package agent
 
+import fb "github.com/frabits/frabit-go-sdk/frabit"
+
 type Agent struct {
 	Id        uint32 `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
 	Hostname  string `gorm:"type:varchar(100);not null;unique:uniq_hostname" json:"hostname"`
@@ -30,11 +32,11 @@ func (a Agent) TableName() string {
 }
 
 type Heartbeat struct {
-	Id        uint32 `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
-	AgentId   string `gorm:"type:varchar(50);not null;unique:uniq_agent_id" json:"agent_id"`
-	Status    string `gorm:"type:varchar(30);not null" json:"status"`
-	CreatedAt string `gorm:"type:varchar(50);not null" json:"created_at"`
-	UpdatedAt string `gorm:"type:varchar(50);not null" json:"updated_at"`
+	Id        uint32         `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
+	AgentId   string         `gorm:"type:varchar(50);not null;unique:uniq_agent_id" json:"agent_id"`
+	Status    fb.AgentStatus `gorm:"type:varchar(30);not null" json:"status"`
+	CreatedAt string         `gorm:"type:varchar(50);not null" json:"created_at"`
+	UpdatedAt string         `gorm:"type:varchar(50);not null" json:"updated_at"`
 }
 
 func (a Heartbeat) TableName() string {
