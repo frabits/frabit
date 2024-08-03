@@ -15,17 +15,27 @@
 
 package team
 
-import "time"
-
 type Team struct {
-	Id   uint32
-	Name string
-
-	CreateAt time.Time
-	UpdateAt time.Time
+	Id          uint32 `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
+	Name        string `gorm:"type:varchar(50);not null;unique:uniq_name" json:"name"`
+	Description string `gorm:"type:varchar(200);not null" json:"description"`
+	Owner       string `gorm:"type:varchar(30);not null" json:"owner"`
+	CreatedAt   string `gorm:"type:varchar(50);not null" json:"created_at"`
+	UpdatedAt   string `gorm:"type:varchar(50);not null" json:"updated_at"`
 }
 
-type CreateTeamReq struct {
-	Id   uint32 `json:"id"`
-	Name string `json:"name"`
+func (a Team) TableName() string {
+	return "team"
+}
+
+type TeamMember struct {
+	Id        uint32 `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
+	Name      string `gorm:"type:varchar(50);not null;unique:uniq_name" json:"name"`
+	Role      string `gorm:"type:varchar(30);not null" json:"role"`
+	CreatedAt string `gorm:"type:varchar(50);not null" json:"created_at"`
+	UpdatedAt string `gorm:"type:varchar(50);not null" json:"updated_at"`
+}
+
+func (a TeamMember) TableName() string {
+	return "team_member"
 }

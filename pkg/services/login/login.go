@@ -18,5 +18,5 @@ package login
 import "context"
 
 type Service interface {
-	Authenticator(ctx context.Context) error
+	Authenticator(ctx context.Context, authInfo AuthPasswd) error
 }

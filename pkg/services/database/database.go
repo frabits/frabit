@@ -1,5 +1,5 @@
 // Frabit - The next-generation database automatic operation platform
-// Copyright © 2022-2023 Frabit Labs
+// Copyright © 2022-2024 Frabit Team
 //
 // Licensed under the GNU General Public License, Version 3.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,4 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package auth_impl
+package database
+
+import "context"
+
+type Service interface {
+	CreateDatabase(ctx context.Context) error
+	UpdateDatabase(ctx context.Context) error
+	DeleteDatabaseByName(ctx context.Context, name string) error
+	GetDatabaseByName(ctx context.Context, name string) error
+}

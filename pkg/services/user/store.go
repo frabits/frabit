@@ -15,11 +15,53 @@
 
 package user
 
-import "context"
+import (
+	"context"
+	"github.com/frabits/frabit/pkg/common/utils"
+
+	"gorm.io/gorm"
+)
 
 type Store interface {
-	CreateUser(ctx context.Context) error
-	UpdateUser(ctx context.Context) error
-	GetUserById(ctx context.Context) error
-	GetUserByName(ctx context.Context) error
+	CreateUser(ctx context.Context, user *User) (uint32, error)
+	GetUsers(ctx context.Context) ([]User, error)
+	GetUserByLogin(context.Context, string) (User, error)
+	DeleteUser(context.Context, string) error
+	UpdateUser(context.Context, string) error
+}
+
+type storeImpl struct {
+	DB *gorm.DB
+}
+
+func NewStoreImpl(db *gorm.DB) *storeImpl {
+	return &storeImpl{db}
+}
+
+func (s *storeImpl) CreateUser(ctx context.Context, user *User) (uint32, error) {
+	s.DB.Create(user)
+	return 0, nil
+}
+
+func (s *storeImpl) DeleteUser(ctx context.Context, login string) error {
+	var user User
+	s.DB.Where("login=?", login).Delete(user)
+	return nil
+}
+
+func (s *storeImpl) UpdateUser(ctx context.Context, login string) error {
+	s.DB.Model(&User{}).Where("login=?", login).Update("last_seen_at", utils.NowDatetime())
+	return nil
+}
+
+func (s *storeImpl) GetUsers(ctx context.Context) ([]User, error) {
+	var users []User
+	s.DB.Model(User{}).Find(&users)
+	return users, nil
+}
+
+func (s *storeImpl) GetUserByLogin(ctx context.Context, login string) (User, error) {
+	var user User
+	s.DB.Model(User{}).Where("login=?", login).First(&user)
+	return user, nil
 }

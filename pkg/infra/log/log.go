@@ -44,9 +44,9 @@ func New(name string) *slog.Logger {
 	return globalLogger.With("logger", name)
 }
 
-func NewLogger(conf *config.Config) *FileLogger {
-	logfile := conf.Server.FileName
-	logFormat := conf.Server.Format
+func NewLogger(conf config.LoggerConfig) *FileLogger {
+	logfile := conf.FileName
+	logFormat := conf.Format
 	if logfile == "" {
 		logfile = "/tmp/frabit.log"
 	}
@@ -61,7 +61,7 @@ func NewLogger(conf *config.Config) *FileLogger {
 	logger := &FileLogger{
 		fileName:     logfile,
 		format:       logFormat,
-		defaultLevel: conf.Server.DefaultLevel,
+		defaultLevel: conf.DefaultLevel,
 		maxDay:       3,
 	}
 
@@ -99,7 +99,7 @@ func (fl *FileLogger) StartLogger() {
 }
 
 func init() {
-	logger := NewLogger(config.Conf)
+	logger := NewLogger(config.Logger)
 	logger.StartLogger()
 	Logger = New("default")
 }

@@ -15,19 +15,8 @@
 
 package event
 
-import "time"
+type EventType string
 
-type CreateUser struct {
-	Username string
-	CreateAt time.Time
-}
-
-type DeleteUser struct {
-	Username string
-	CreateAt time.Time
-}
-
-type UpdateUser struct {
-	Username string
-	CreateAt time.Time
-}
+const (
+	EvtCreateUser EventType = "user.create"
+)

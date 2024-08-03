@@ -28,7 +28,7 @@ type Service struct {
 	Logger       *slog.Logger
 }
 
-func NewService() *Service {
+func ProviderService() *Service {
 	ds := &Service{
 		Logger: log.New("notifications"),
 	}
@@ -52,5 +52,3 @@ func (s *Service) Run(ctx context.Context) error {
 		}
 	}
 }
-
-var Svc = NewService()

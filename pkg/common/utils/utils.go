@@ -18,7 +18,6 @@ package utils
 import (
 	"archive/tar"
 	"compress/gzip"
-	"github.com/google/uuid"
 	"io"
 	"os"
 	"path"
@@ -26,6 +25,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/xi2/xz"
 )

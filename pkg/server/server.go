@@ -35,7 +35,6 @@ import (
 	"github.com/frabits/frabit/pkg/infra/db"
 	"github.com/frabits/frabit/pkg/infra/log"
 	"github.com/frabits/frabit/pkg/registry"
-	"github.com/frabits/frabit/pkg/server/bg_services"
 )
 
 type Server struct {
@@ -68,17 +67,10 @@ func (s *Server) init() error {
 	return nil
 }
 
-func NewServer(cfg *config.Config) *Server {
-	backgroundService := bg_services.BgServices
+func NewServer(cfg *config.Config, httpServer *api.HttpServer, backgroundService registry.BackgroundServiceRegistry, metaStore *db.MetaStore) *Server {
 
 	rootCtx, shutdownFn := context.WithCancel(context.Background())
 	childRoutines, childCtx := errgroup.WithContext(rootCtx)
-	metaStore, err := db.New(cfg)
-	if err != nil {
-		fmt.Println("Create metastore failed", err.Error())
-		os.Exit(1)
-	}
-	httpServer := api.NewHttpServer(cfg)
 
 	stdDB, err := metaStore.OpenFrabit()
 	if err != nil {

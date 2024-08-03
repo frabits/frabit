@@ -57,12 +57,11 @@ func init() {
 func runAgent(cmd *cobra.Command, args []string) {
 	ctx := context.Background()
 	a := agent.New(nil)
+	listenToSystemSignals(ctx, a)
 	if err := a.RunAgent(ctx); err != nil {
 		a.Log.Error("Agent failed", "Error", err.Error())
 		os.Exit(1)
 	}
-	listenToSystemSignals(ctx, a)
-	a.RunAgent(ctx)
 }
 
 func listenToSystemSignals(ctx context.Context, agent *agent.Agent) {

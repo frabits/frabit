@@ -15,8 +15,17 @@
 
 package auth
 
-import "context"
+import (
+	"context"
+)
 
-type UserAuth interface {
-	CreateToken(ctx context.Context)
+type Service interface {
+	CreateToken(ctx context.Context, auth *CreateUserAuth) (string, error)
+	LookupToken(ctx context.Context, unhashedToken string) (*UserAuth, error)
+	TryRotateToken(ctx context.Context, token *UserAuth, auth *CreateUserAuth) (bool, *UserAuth, error)
+	RevokeToken(ctx context.Context, token *UserAuth, soft bool) error
+	RevokeAllUserTokens(ctx context.Context, userId int64) error
+	GetUserToken(ctx context.Context, userId, userTokenId int64) (*UserAuth, error)
+	GetUserTokens(ctx context.Context, userId int64) ([]*UserAuth, error)
+	GetUserRevokedTokens(ctx context.Context, userId int64) ([]*UserAuth, error)
 }

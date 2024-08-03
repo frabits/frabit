@@ -73,11 +73,12 @@ func GeneratePassword(password string) string {
 		log.Logger.Error("Generate password failed", "Error", err.Error())
 		return ""
 	}
-	return string(hash)
+	return hex.EncodeToString(hash)
 }
 
 func ComparePassword(password, hashPassword string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(password))
+	hashedPassword, _ := hex.DecodeString(hashPassword)
+	err := bcrypt.CompareHashAndPassword(hashedPassword, []byte(password))
 	if err != nil {
 		log.Logger.Error("Generate password failed", "Error", err.Error())
 		return false

@@ -14,3 +14,45 @@
 // limitations under the License.
 
 package api
+
+import (
+	"github.com/frabits/frabit/pkg/services/auth"
+	"net/http"
+
+	"github.com/frabits/frabit/pkg/services/login"
+
+	"github.com/gin-gonic/gin"
+)
+
+func (hs *HttpServer) Login(c *gin.Context) {
+	// 1.SSO: github、google、OIDC
+	// 2.native
+	// 3.ldap
+	var authInfo login.AuthPasswd
+	if err := c.ShouldBindJSON(&authInfo); err != nil {
+		hs.Logger.Error("Bind agent info failed", "Error", err.Error())
+	}
+
+	err := hs.login.Authenticator(hs.ctx, authInfo)
+	if err != nil {
+		hs.Logger.Error("Login failed", "Error", err.Error())
+		c.IndentedJSON(http.StatusUnauthorized, err.Error())
+	} else {
+		// create a session token
+		userSession := &auth.CreateUserAuth{
+			Login:     authInfo.Login,
+			ClientIP:  c.ClientIP(),
+			UserAgent: c.Request.UserAgent(),
+		}
+		session, err := hs.authUser.CreateToken(hs.ctx, userSession)
+		if err != nil {
+			hs.Logger.Error("create session token failed", "Error", err.Error())
+		}
+		c.Request.Header.Set("frabit", session)
+		result := login.LoginDTO{
+			Msg:   "Login successfully",
+			Token: session,
+		}
+		c.IndentedJSON(http.StatusOK, result)
+	}
+}

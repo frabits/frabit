@@ -17,6 +17,7 @@ package api
 
 import (
 	"context"
+	"github.com/frabits/frabit/pkg/services/audit"
 	"log/slog"
 	"net/http"
 	"os"
@@ -26,6 +27,7 @@ import (
 	"github.com/frabits/frabit/pkg/config"
 	"github.com/frabits/frabit/pkg/infra/log"
 	"github.com/frabits/frabit/pkg/services/agent"
+	"github.com/frabits/frabit/pkg/services/auth"
 	"github.com/frabits/frabit/pkg/services/backup"
 	"github.com/frabits/frabit/pkg/services/deploy"
 	"github.com/frabits/frabit/pkg/services/login"
@@ -43,16 +45,19 @@ type HttpServer struct {
 	router *gin.Engine
 	Port   uint32
 
-	backup backup.Service
-	deploy deploy.Service
-	agent  agent.Service
-	login  login.Service
-	org    org.Service
-	team   team.Service
-	user   user.Service
+	authUser auth.Service
+	audit    audit.Service
+	backup   backup.Service
+	deploy   deploy.Service
+	agent    agent.Service
+	login    login.Service
+	org      org.Service
+	team     team.Service
+	user     user.Service
 }
 
-func NewHttpServer(cnf *config.Config) *HttpServer {
+func ProviderHTTPServer(cnf *config.Config, auth auth.Service, backup backup.Service, deploy deploy.Service, agent agent.Service,
+	login login.Service, org org.Service, team team.Service, user user.Service, audit audit.Service) *HttpServer {
 	var port uint32
 
 	if cnf.Server.Port != 0 {
@@ -61,16 +66,12 @@ func NewHttpServer(cnf *config.Config) *HttpServer {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.Use(gin.Recovery())
-	logfile, _ := os.OpenFile(cnf.Server.FileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0744)
+	logfile, _ := os.OpenFile(cnf.Logger.FileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0744)
 	router.Use(gin.LoggerWithWriter(logfile))
 	srv := &http.Server{
 		Addr:    ":9180",
 		Handler: router.Handler(),
 	}
-
-	agentService := agent.NewAgentService(config.Conf)
-	orgService := org.NewService(config.Conf)
-	loginService := login.NewLoginNative(config.Conf)
 
 	hs := &HttpServer{
 		Logger: log.New("http.server"),
@@ -78,9 +79,15 @@ func NewHttpServer(cnf *config.Config) *HttpServer {
 		Port:   port,
 		router: router,
 
-		org:   orgService,
-		agent: agentService,
-		login: loginService,
+		authUser: auth,
+		audit:    audit,
+		backup:   backup,
+		deploy:   deploy,
+		org:      org,
+		team:     team,
+		user:     user,
+		agent:    agent,
+		login:    login,
 	}
 
 	return hs
@@ -90,9 +97,12 @@ func NewHttpServer(cnf *config.Config) *HttpServer {
 func (hs *HttpServer) setup(engine *gin.Engine) {
 	engine.GET("/health", hs.health)
 	engine.GET("/info", hs.info)
-	engine.POST("/login", hs.info)
+	engine.POST("/login", hs.Login)
 	apiV2 := engine.Group("/api/v2")
+	hs.applyAudit(apiV2)
 	hs.applyOrg(apiV2)
+	hs.applyTeam(apiV2)
+	hs.applyUser(apiV2)
 	hs.applyAgent(apiV2)
 	hs.applyBackup(apiV2)
 	hs.applyDeploy(apiV2)

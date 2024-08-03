@@ -34,7 +34,7 @@ type MongoBackup struct {
 	Logger        *slog.Logger
 }
 
-func newMongoBackup() *MongoBackup {
+func ProviderMongoBackup() Service {
 	return &MongoBackup{
 		Logger: log.New("backup.mongo"),
 	}
@@ -67,8 +67,4 @@ func (bak *MongoBackup) PurgeBackup(ctx context.Context) error {
 	bak.Logger.Info("create BackupService")
 	bak.PXB.Backup()
 	return nil
-}
-
-func init() {
-	newMongoBackup()
 }

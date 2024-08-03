@@ -13,4 +13,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package login
+package api
+
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
+
+func (hs *HttpServer) applyAudit(group *gin.RouterGroup) {
+	subRouter := group.Group("/audits")
+	subRouter.GET("/list", hs.GetAudit)
+}
+
+func (hs *HttpServer) GetAudit(c *gin.Context) {
+	audits, err := hs.audit.GetAuditEvent(hs.ctx)
+	if err != nil {
+		hs.Logger.Error("query agent list failed", "Error", err.Error())
+		c.IndentedJSON(http.StatusBadGateway, "get audit list failed")
+	}
+	c.IndentedJSON(http.StatusOK, audits)
+}

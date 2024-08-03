@@ -19,11 +19,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/briandowns/spinner"
+	"github.com/google/go-github/v50/github"
+	"github.com/pkg/errors"
 	"runtime"
 	"strings"
 	"time"
-
-	"github.com/google/go-github/v50/github"
 )
 
 // initial Version
@@ -113,17 +113,19 @@ func needToUpgrade(version, latest string) bool {
 	return latest != "" && (strings.TrimPrefix(latest, "v") != strings.TrimPrefix(version, "v"))
 }
 
-func CheckLatestVersion() {
-	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
-	defer s.Stop()
-	s.Start()
-	s.Prefix = "Check new Version..."
+func CheckLatestVersion(isCli bool) error {
+	if isCli {
+		s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
+		defer s.Stop()
+		s.Start()
+		s.Prefix = "Check new Version..."
+	}
 	if Version != "source" {
 		latest := getLatestVersion()
 
 		if ok := needToUpgrade(Version, latest); ok {
-			fmt.Printf("A newer Version of the frabit is available,please upgrade to: %s\n", latest)
+			return errors.New(fmt.Sprintf("A newer Version of the frabit is available,please upgrade to: %s\n", latest))
 		}
 	}
-
+	return nil
 }

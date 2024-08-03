@@ -16,8 +16,13 @@
 package config
 
 import (
-	_ "github.com/spf13/viper"
 	"log/slog"
+	"time"
+)
+
+var (
+	Security string
+	Logger   LoggerConfig
 )
 
 type dbConfig struct {
@@ -30,9 +35,7 @@ type dbConfig struct {
 	SkipDatabaseUpdate bool
 }
 
-type frabitConfig struct {
-	Port         uint32
-	PluginDir    string
+type LoggerConfig struct {
 	FileName     string
 	Format       string
 	Security     string
@@ -40,31 +43,45 @@ type frabitConfig struct {
 	MaxDay       uint
 }
 
+type frabitConfig struct {
+	Port                     uint32
+	PluginDir                string
+	SecureKey                string
+	LoginMaxInactiveLifetime time.Duration
+	LoginMaxLifetime         time.Duration
+}
+
 type Config struct {
 	DB     dbConfig
 	Server frabitConfig
+	Logger LoggerConfig
 }
 
-var Conf = newConfig()
-
-func newConfig() *Config {
+func ProviderConfig() *Config {
 	dbConf := dbConfig{
 		Database:           "frabit",
-		Host:               "192.168.1.8",
+		Host:               "192.168.1.7",
 		Port:               3306,
 		UserName:           "frabit",
 		Password:           "frabitSecure_1Passwd",
 		MaxPoolConnections: 20,
 		SkipDatabaseUpdate: false,
 	}
-	frabitConf := frabitConfig{
-		Port:         9180,
+
+	Logger = LoggerConfig{
 		FileName:     "/tmp/frabit.log",
 		Format:       "json",
 		DefaultLevel: slog.LevelInfo,
 	}
+	Security = "2xWkMhUhF96IVtawQ7mRHuU6uYB"
+	frabitConf := frabitConfig{
+		Port:      9180,
+		SecureKey: Security,
+	}
+
 	return &Config{
 		DB:     dbConf,
 		Server: frabitConf,
+		Logger: Logger,
 	}
 }

@@ -37,6 +37,7 @@ type MetaStore struct {
 	cfg *config.Config
 	log *slog.Logger
 	DB  *sql.DB
+	Gdb *gorm.DB
 }
 
 var metaStore *gorm.DB
@@ -64,7 +65,7 @@ func New(conf *config.Config) (*MetaStore, error) {
 		ms.log.Error("backend metaStore not ready", "Error", err.Error())
 		return ms, err
 	}
-	metaStore = db
+	ms.Gdb = db
 	stdDb, err := db.DB()
 	ms.DB = stdDb
 	stdDb.SetConnMaxLifetime(10 * time.Minute)
@@ -81,11 +82,11 @@ func DB() *gorm.DB {
 // OpenFrabit returns the DB instance for the frabit backed database
 func (ms *MetaStore) OpenFrabit() (db *sql.DB, err error) {
 	// first time ever we talk to MySQL
-	query := fmt.Sprintf("create database if not exists %s", config.Conf.DB.Database)
+	query := fmt.Sprintf("create database if not exists %s", ms.cfg.DB.Database)
 	if _, err := ms.DB.Exec(query); err != nil {
 		return db, err
 	}
-	if !config.Conf.DB.SkipDatabaseUpdate && !ms.alreadyDeployed() {
+	if !ms.cfg.DB.SkipDatabaseUpdate && !ms.alreadyDeployed() {
 		ms.log.Info("Start initiate backend metaStore")
 		err := ms.initFrabitDB(ms.DB)
 		if err != nil {
@@ -99,7 +100,7 @@ func (ms *MetaStore) OpenFrabit() (db *sql.DB, err error) {
 		ms.log.Warn("MaxIdleConnections less than 10,already reset to 10")
 		maxIdleConns = 10
 	}
-	ms.log.Info("Connecting to backend metastore", "host", config.Conf.DB.Host, "port", config.Conf.DB.Port, "maxConnections", config.Conf.DB.MaxPoolConnections)
+	ms.log.Info("Connecting to backend metastore", "host", ms.cfg.DB.Host, "port", ms.cfg.DB.Port, "maxConnections", ms.cfg.DB.MaxPoolConnections)
 	ms.DB.SetMaxIdleConns(maxIdleConns)
 	return ms.DB, err
 }
@@ -129,7 +130,7 @@ func (ms *MetaStore) genInitialData() []string {
 	rands := utils.GenRandom(12)
 	hashPassword := utils.GeneratePassword(initPasswd)
 	ms.log.Info("InitPassword generated", "Username", "admin", "Password", initPasswd)
-	adminAccount := fmt.Sprintf(`insert into user(username,email,password,created_at,updated_at,rands,is_disabled,is_external) values("%s","%s","%s","%s","%s","%s",%d,%d)`, constant.ADMIN, "admin@frabit.com", hashPassword, initDatetime, initDatetime, rands, 0, 0)
+	adminAccount := fmt.Sprintf(`insert into user(login,username,email,password,rands,is_admin,is_disabled,is_external,is_email_verified,theme,org_id,created_at,updated_at,last_seen_at) values("%s","%s","%s","%s","%s",%d,%d,%d,%d,"%s",%d,"%s","%s","%s")`, constant.ADMIN, constant.ADMIN, "admin@frabit.com", hashPassword, rands, 1, 0, 0, 1, constant.Dark, 1, initDatetime, initDatetime, initDatetime)
 	org := fmt.Sprintf(`insert into org(name,description,created_at,updated_at) values("%s","%s","%s","%s")`, constant.MainOrg, "Default org", initDatetime, initDatetime)
 	version := "v2.2.2"
 	initVersion := fmt.Sprintf(`insert into version(version,created_at,updated_at) values("%s","%s","%s")`, version, initDatetime, initDatetime)

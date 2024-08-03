@@ -23,6 +23,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/frabits/frabit/pkg/agent/executor"
 	"github.com/frabits/frabit/pkg/common/utils"
 	"github.com/frabits/frabit/pkg/config"
 	"github.com/frabits/frabit/pkg/infra/log"
@@ -34,6 +35,7 @@ type Agent struct {
 	agentId  string
 	uuidFile string
 	service  fb.AgentService
+	Executor executor.Executor
 	cfg      *config.AgentConfig
 	Log      *slog.Logger
 }
@@ -42,7 +44,7 @@ func New(cfg *config.AgentConfig) *Agent {
 	if cfg == nil {
 		cfg = config.AgentConf
 	}
-	client, err := fb.NewClient(fb.WithBaseURL(cfg.ServerURL), fb.WithUserAgent("agent"))
+	client, err := fb.NewClient(fb.WithBaseURL(cfg.Server.ServerURL), fb.WithUserAgent("Agent"))
 	if err != nil {
 		fmt.Println("agent service start failed", "Error", err.Error())
 	}
@@ -66,9 +68,23 @@ func (a *Agent) RunAgent(ctx context.Context) error {
 
 // Run initial
 func (a *Agent) Run(ctx context.Context) error {
-	a.Log.Info("start agent", "server", a.cfg.ServerURL)
+	a.Log.Info("start agent", "server", a.cfg.Server.ServerURL)
+	// if agentId file not exist,we need register is firstly
+	if _, err := os.Stat(a.uuidFile); os.IsNotExist(err) {
+		a.Log.Info("agent not registered,auto-register")
+		if err := a.register(ctx); err != nil {
+			a.Log.Error("register agent failed", "Error", err.Error())
+			return err
+		}
+	}
+	if err := a.readAgentID(); err != nil {
+		a.Log.Error("read agent id failed", "Error", err.Error())
+		return err
+	}
+
+	// health check via send heartbeat to server
 	go func() {
-		tick := time.NewTimer(10 * time.Second)
+		tick := time.NewTicker(10 * time.Second)
 		defer tick.Stop()
 		for {
 			select {
@@ -84,7 +100,7 @@ func (a *Agent) Run(ctx context.Context) error {
 }
 
 func (a *Agent) Shutdown(ctx context.Context, reason string) error {
-	a.Log.Info("shutdown agent", "server", a.cfg.ServerURL)
+	a.Log.Info("shutdown agent", "server", a.cfg.Server.ServerURL)
 	return nil
 }
 
@@ -92,16 +108,20 @@ func (a *Agent) register(ctx context.Context) error {
 	agentId := utils.CreateUUIDWithDelimiter("")
 	agent := fb.CreateAgentRequest{
 		AgentID: agentId,
-		Name:    "dbatest",
+		Name:    "dbaDest" + time.Now().Format("200601021504"),
 		Status:  "",
 	}
+	a.Log.Info("agent info", "Agent", agent)
 	if err := a.service.Register(ctx, agent); err != nil {
-		a.Log.Error("register agent failed", "Error", err.Error())
+		a.Log.Error("register agent failed via sdk", "Error", err.Error())
 		return err
 	}
 	a.agentId = agentId
 	a.Log.Info("add agent", "name", agent.Name, "agent_id", agent.AgentID)
-	a.writeAgentID()
+	if err := a.writeAgentID(); err != nil {
+		a.Log.Error("persist agentId failed", "Error", err.Error())
+		return err
+	}
 	return nil
 }
 
@@ -122,7 +142,7 @@ func (a *Agent) writeAgentID() error {
 		return fmt.Errorf("failed to verify pid directory:%s", err)
 	}
 
-	// Get the pid and write it to file
+	// Get the agentId and write it to file
 	agentId := a.agentId
 
 	if err := os.WriteFile(a.uuidFile, []byte(agentId), 0644); err != nil {

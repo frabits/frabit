@@ -43,7 +43,7 @@ type secrets struct {
 	log *slog.Logger
 }
 
-func NewSecrets(conf *config.Config) *secrets {
+func ProviderSecrets(conf *config.Config) Service {
 	s := &secrets{
 		cfg: conf,
 		log: log.New("secrets"),
@@ -63,5 +63,3 @@ func (s *secrets) Decrypt(payload []byte) ([]byte, error) {
 	decryptData := make([]byte, 0)
 	return decryptData, nil
 }
-
-var Secrets = NewSecrets(config.Conf)

@@ -21,6 +21,7 @@ type AuditEvent string
 type FeatureType string
 type License string
 type DbType string
+type Theme string
 
 const (
 	GLOBAL    PrivilegeLevel = "global"
@@ -34,13 +35,17 @@ const (
 	VIEWER Role = "viewer"
 	PTOSC       = "pt-online-schema-change"
 
-	MainOrg = "Main.org"
+	MainOrg     = "Main.org"
+	GlobalOrgId = 1
 
 	FeatureAuditLog  FeatureType = "fb.feature.audit-log"
 	FeatureWatermark FeatureType = "fb.feature.water-mark"
 	Community        License     = "community"
 	Enterprise       License     = "enterprise"
 	Ultimate         License     = "ultimate"
+
+	Dark  Theme = "dark"
+	Light Theme = "light"
 
 	Mysql DbType = "mysql"
 )

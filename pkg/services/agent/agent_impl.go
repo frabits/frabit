@@ -33,8 +33,8 @@ type agentService struct {
 	log   *slog.Logger
 }
 
-func NewAgentService(cfg *config.Config) *agentService {
-	metaStore := newStoreImpl(db.DB())
+func ProviderAgentService(cfg *config.Config, metaDB *db.MetaStore) Service {
+	metaStore := newStoreImpl(metaDB.Gdb)
 	as := &agentService{
 		cfg:   cfg,
 		store: metaStore,
@@ -49,6 +49,7 @@ func (s *agentService) Register(ctx context.Context, agent fb.CreateAgentRequest
 	agentInstance := &Agent{
 		Hostname:  agent.Name,
 		AgentId:   agent.AgentID,
+		ClientIp:  agent.ClientIP,
 		CreatedAt: datetime,
 		UpdatedAt: datetime,
 	}

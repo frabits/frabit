@@ -33,8 +33,8 @@ type service struct {
 	log   *slog.Logger
 }
 
-func NewService(cfg *config.Config) *service {
-	metaStore := NewStoreImpl(db.DB())
+func ProviderService(cfg *config.Config, metaDB *db.MetaStore) Service {
+	metaStore := NewStoreImpl(metaDB.Gdb)
 	return &service{
 		cfg:   cfg,
 		store: metaStore,

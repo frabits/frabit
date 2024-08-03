@@ -15,8 +15,14 @@
 
 package team
 
-import "context"
+import (
+	"context"
+
+	fb "github.com/frabits/frabit-go-sdk/frabit"
+)
 
 type Service interface {
-	Create(context.Context, *Team)
+	Create(context.Context, fb.CreateTeamRequest) error
+	GetAll(context.Context) ([]Team, error)
+	GetTeamByName(context.Context, string) (Team, error)
 }

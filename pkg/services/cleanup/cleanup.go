@@ -17,9 +17,10 @@ package cleanup
 
 import (
 	"context"
-	"github.com/frabits/frabit/pkg/infra/log"
 	"log/slog"
 	"time"
+
+	"github.com/frabits/frabit/pkg/infra/log"
 )
 
 type Service struct {
@@ -27,7 +28,7 @@ type Service struct {
 	Logger *slog.Logger
 }
 
-func NewService() *Service {
+func ProviderService() *Service {
 	ds := &Service{
 		Logger: log.New("cleanup"),
 	}
@@ -49,5 +50,3 @@ func (ds *Service) Run(ctx context.Context) error {
 		}
 	}
 }
-
-var Svc = NewService()

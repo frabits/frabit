@@ -17,8 +17,37 @@ package team
 
 import (
 	"context"
+
+	"gorm.io/gorm"
 )
 
 type store interface {
 	Create(context.Context, *Team) (uint32, error)
+	GetAll(context.Context) ([]Team, error)
+	GetTeamByName(context.Context, string) (Team, error)
+}
+
+type storeImpl struct {
+	DB *gorm.DB
+}
+
+func newStoreImpl(db *gorm.DB) *storeImpl {
+	return &storeImpl{db}
+}
+
+func (s *storeImpl) Create(ctx context.Context, team *Team) (uint32, error) {
+	s.DB.Create(team)
+	return 0, nil
+}
+
+func (s *storeImpl) GetAll(ctx context.Context) ([]Team, error) {
+	var teams []Team
+	s.DB.Model(Team{}).Find(&teams)
+	return teams, nil
+}
+
+func (s *storeImpl) GetTeamByName(ctx context.Context, name string) (Team, error) {
+	var team Team
+	s.DB.Model(Team{}).Where("name=?", name).First(&team)
+	return team, nil
 }

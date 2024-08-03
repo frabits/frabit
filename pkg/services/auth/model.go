@@ -14,3 +14,25 @@
 // limitations under the License.
 
 package auth
+
+type UserAuth struct {
+	Id        uint32 `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
+	Login     string `gorm:"type:varchar(30);not null;unique:uniq_login" json:"login"`
+	ClientIP  string `gorm:"type:varchar(200);not null" json:"client_ip"`
+	UserAgent string `gorm:"type:varchar(200);not null" json:"user_agent"`
+	PrevToken string `gorm:"type:varchar(200);not null" json:"preview_token"`
+	Token     string `gorm:"type:varchar(200);not null" json:"token"`
+	CreatedAt string `gorm:"type:varchar(50);not null" json:"created_at"`
+	UpdatedAt string `gorm:"type:varchar(50);not null" json:"updated_at"`
+	RotatedAt string `gorm:"type:varchar(50);not null" json:"rotated_at"`
+}
+
+func (a UserAuth) TableName() string {
+	return "user_auth"
+}
+
+type CreateUserAuth struct {
+	Login     string `json:"login"`
+	ClientIP  string `json:"client_ip"`
+	UserAgent string `json:"user_agent"`
+}

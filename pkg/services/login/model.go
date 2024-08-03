@@ -17,3 +17,13 @@ package login
 
 type UserAuth struct {
 }
+
+type AuthPasswd struct {
+	Login    string `json:"login"`
+	Password string `json:"password"`
+}
+
+type LoginDTO struct {
+	Msg   string `json:"msg"`
+	Token string `json:"token"`
+}

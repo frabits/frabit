@@ -19,19 +19,24 @@ import (
 	"github.com/frabits/frabit/pkg/registry"
 	"github.com/frabits/frabit/pkg/services/cleanup"
 	"github.com/frabits/frabit/pkg/services/deploy"
+	"github.com/frabits/frabit/pkg/services/license"
 	ns "github.com/frabits/frabit/pkg/services/notifications"
+	uc "github.com/frabits/frabit/pkg/services/updatechecker"
 )
 
 type BackgroundServiceRegistry struct {
 	services []registry.BackgroundService
 }
 
-func NewBackgroundServiceRegistry(services ...registry.BackgroundService) *BackgroundServiceRegistry {
+func ProviderBackgroundServiceRegistry(cleanup *cleanup.Service, notifications *ns.Service, deploy deploy.Service,
+	updateChecker *uc.FrabitService, license license.Service) registry.BackgroundServiceRegistry {
+	return NewBackgroundServiceRegistry(cleanup, notifications, deploy, updateChecker, license)
+}
+
+func NewBackgroundServiceRegistry(services ...registry.BackgroundService) registry.BackgroundServiceRegistry {
 	return &BackgroundServiceRegistry{services}
 }
 
 func (bsr *BackgroundServiceRegistry) GetServices() []registry.BackgroundService {
 	return bsr.services
 }
-
-var BgServices = NewBackgroundServiceRegistry(deploy.Svc, cleanup.Svc, ns.Svc)

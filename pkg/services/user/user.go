@@ -15,11 +15,16 @@
 
 package user
 
-import "context"
+import (
+	"context"
+
+	fb "github.com/frabits/frabit-go-sdk/frabit"
+)
 
 type Service interface {
-	CreateUser(ctx context.Context, user *User) (uint32, error)
-	UpdateUser(ctx context.Context) error
-	GetUserById(ctx context.Context) error
-	GetUserByName(ctx context.Context) error
+	CreateUser(ctx context.Context, createReq fb.CreateUserRequest) (uint32, error)
+	GetUsers(ctx context.Context) ([]User, error)
+	GetUserByLogin(ctx context.Context, login string) (UserProfileDTO, error)
+	DeleteUser(ctx context.Context, login string) error
+	UpdateUserLastSeen(ctx context.Context, login string) error
 }

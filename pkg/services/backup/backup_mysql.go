@@ -33,7 +33,7 @@ type MySQLBackup struct {
 	Logger        *slog.Logger
 }
 
-func newMySQLBackup() *MySQLBackup {
+func ProviderMySQLBackup() Service {
 	return &MySQLBackup{
 		Logger: log.New("backup.mysql"),
 	}
@@ -66,8 +66,4 @@ func (bak *MySQLBackup) PurgeBackup(ctx context.Context) error {
 	bak.Logger.Info("Purge BackupService")
 	bak.PXB.Backup()
 	return nil
-}
-
-func init() {
-	newMySQLBackup()
 }

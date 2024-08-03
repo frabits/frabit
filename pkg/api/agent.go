@@ -28,7 +28,7 @@ func (hs *HttpServer) applyAgent(group *gin.RouterGroup) {
 	agentRouter.POST("", hs.Register)
 	agentRouter.DELETE("", hs.UnRegister)
 	agentRouter.GET("", hs.GetAgents)
-	agentRouter.GET("/:agent_id", hs.GetAgents)
+	agentRouter.GET("/:agent_id", hs.GetAgentById)
 	agentRouter.POST("/heartbeat", hs.Heartbeat)
 }
 
@@ -64,7 +64,7 @@ func (hs *HttpServer) GetAgents(c *gin.Context) {
 }
 
 func (hs *HttpServer) GetAgentById(c *gin.Context) {
-	agentId := c.Query("agent_id")
+	agentId := c.Param("agent_id")
 	hs.Logger.Info("query agent by agent_id", "agent_id", agentId)
 	agent, err := hs.agent.GetAgentById(hs.ctx, agentId)
 	if err != nil {

@@ -24,7 +24,6 @@ import (
 	"time"
 
 	"github.com/frabits/frabit/pkg/common/version"
-	"github.com/frabits/frabit/pkg/config"
 	"github.com/frabits/frabit/pkg/server"
 
 	"github.com/spf13/cobra"
@@ -64,8 +63,10 @@ var startCmd = &cobra.Command{
 
 func start(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
-	cfg := config.Conf
-	srv := server.NewServer(cfg)
+	srv, err := server.Initialize()
+	if err != nil {
+		return err
+	}
 
 	go listenToSystemSignals(ctx, srv)
 	return srv.Run()

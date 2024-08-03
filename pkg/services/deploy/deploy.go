@@ -17,37 +17,11 @@ package deploy
 
 import (
 	"context"
-	"github.com/frabits/frabit/pkg/infra/log"
-	"log/slog"
-	"time"
+
+	"github.com/frabits/frabit/pkg/registry"
 )
 
-type Service struct {
-	Id     int
-	Logger *slog.Logger
+type Service interface {
+	registry.BackgroundService
+	Deploy(ctx context.Context) error
 }
-
-func NewService() *Service {
-	ds := &Service{
-		Logger: log.New("deploy"),
-	}
-
-	return ds
-}
-
-func (ds *Service) Run(ctx context.Context) error {
-	ds.Logger.Info("Deploy service start")
-	tick := time.NewTicker(30 * time.Second)
-	defer tick.Stop()
-	for {
-		select {
-		case <-ctx.Done():
-			ds.Logger.Info("shutdown service successfully")
-			return ctx.Err()
-		case <-tick.C:
-			ds.Logger.Info("Im working now")
-		}
-	}
-}
-
-var Svc = NewService()

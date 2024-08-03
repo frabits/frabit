@@ -56,7 +56,7 @@ var generateSQLBase = []string{
           id bigint NOT NULL auto_increment,
           license_level varchar(15) NOT NULL default "basic" comment "valid license level include：community、enterprise and ultimate ",
           current_license varchar(500) NOT NULL DEFAULT '',
-          last_license varchar(500) NOT NULL DEFAULT '',
+          prev_license varchar(500) NOT NULL DEFAULT '',
           created_at varchar(50) not null default "",
           updated_at varchar(50) not null default "",
           PRIMARY KEY (id)
@@ -72,14 +72,33 @@ var generateSQLBase = []string{
 	`
         CREATE TABLE IF NOT EXISTS user (
 	      id bigint NOT NULL auto_increment,
-	      username varchar(100) NOT NULL default "" comment "login user name", 
+          login varchar(30) NOT NULL default "" comment "login user name", 
+	      username varchar(100) NOT NULL default "" comment "user name", 
           email varchar(100) NOT NULL default "", 
           password varchar(200) not null ,
-          created_at varchar(50) not null default "",
-          updated_at varchar(50) not null default "",
           rands varchar(20) not null default "",
+          is_admin tinyint not null default 0,
           is_disabled tinyint not null default 0,
           is_external tinyint not null default 0,
+          is_email_verified tinyint not null default 0,
+          theme  varchar(10) not null default "",
+          org_id bigint NOT NULL ,
+          created_at varchar(50) not null default "",
+          updated_at varchar(50) not null default "",
+          last_seen_at varchar(50) not null default "",
+	      PRIMARY KEY (id)
+	) ENGINE=InnoDB`,
+	`
+        CREATE TABLE IF NOT EXISTS user_auth (
+	      id bigint NOT NULL auto_increment,
+          login varchar(30) NOT NULL default "" comment "login user name",
+          client_ip varchar(100) NOT NULL default "", 
+          user_agent varchar(300) not null ,
+          prev_token varchar(200) not null default "",
+          token varchar(200) not null default "",
+          created_at varchar(50) not null default "",
+          updated_at varchar(50) not null default "",
+          rotated_at varchar(50) not null default "",
 	      PRIMARY KEY (id)
 	) ENGINE=InnoDB`,
 	`
@@ -95,6 +114,7 @@ var generateSQLBase = []string{
 	      id bigint NOT NULL auto_increment,
 	      name varchar(100) NOT NULL default "" comment "login user name", 
           description varchar(200) NOT NULL default "", 
+          owner varchar(50) NOT NULL default "", 
           created_at varchar(50) not null default "",
           updated_at varchar(50) not null default "", 
 	      PRIMARY KEY (id)

@@ -17,25 +17,30 @@ package config
 
 import "log/slog"
 
+type ServerConfig struct {
+	ServerURL string
+	Port      uint32
+}
 type AgentConfig struct {
-	ServerURL    string
-	Port         uint32
-	FileName     string
-	Format       string
-	Security     string
-	DefaultLevel slog.Level
-	MaxDay       uint
+	Server ServerConfig
+	Logger LoggerConfig
 }
 
 var AgentConf = newAgentConfig()
 
 func newAgentConfig() *AgentConfig {
-	agentConf := &AgentConfig{
-		ServerURL:    "http://localhost:9180",
-		Port:         19180,
-		FileName:     "/tmp/frabit_agent.log",
+	serverConf := ServerConfig{
+		ServerURL: "http://localhost:9180",
+		Port:      19180,
+	}
+	loggerConf := LoggerConfig{
+		FileName:     "/tmp/frabit-agent.log",
 		Format:       "json",
 		DefaultLevel: slog.LevelInfo,
+	}
+	agentConf := &AgentConfig{
+		Server: serverConf,
+		Logger: loggerConf,
 	}
 	return agentConf
 }

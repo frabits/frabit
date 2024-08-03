@@ -39,7 +39,7 @@ func NewVersionCmd() *cobra.Command {
 
 func runVersion(cmd *cobra.Command, args []string) {
 	fmt.Printf("%s\n", version.InfoStr.String())
-	version.CheckLatestVersion()
+	version.CheckLatestVersion(true)
 }
 
 func init() {
