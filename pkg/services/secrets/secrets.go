@@ -16,19 +16,27 @@
 package secrets
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
+	"crypto/sha256"
 	"encoding/base64"
+	"errors"
+	"io"
 	"log/slog"
 
 	"github.com/frabits/frabit/pkg/common/utils"
 	"github.com/frabits/frabit/pkg/config"
 	"github.com/frabits/frabit/pkg/infra/log"
+
+	"golang.org/x/crypto/pbkdf2"
 )
 
 var bk64 = base64.RawStdEncoding
 
 const (
-	PrefixLen = 6
-	Postfix   = "sec"
+	SaltLen = 6
+	AesCfb  = "aes-cfb"
 )
 
 type Service interface {
@@ -51,15 +59,75 @@ func ProviderSecrets(conf *config.Config) Service {
 	return s
 }
 
-// Encrypt encoding specific data with this format: prefixRandStr:realData:Postfix
 func (s *secrets) Encrypt(payload []byte) ([]byte, error) {
-	encryptData := make([]byte, 0)
-	Prefix := utils.GenRandom(PrefixLen)
-	copy(encryptData, Prefix)
+	encryptData := make([]byte, SaltLen+aes.BlockSize+len(payload))
+	salt := utils.GenRandom(SaltLen)
+	encryptKey, err := KeyToBytes(s.cfg.Server.SecureKey, salt)
+	if err != nil {
+		s.log.Error("create encryptKey failed", "Error", err.Error())
+		return encryptData, err
+	}
+
+	block, err := aes.NewCipher(encryptKey)
+	if err != nil {
+		return nil, err
+	}
+
+	// The IV needs to be unique, but not secure. Therefore, it's common to
+	// include it at the beginning of the ciphertext.
+
+	copy(encryptData[:SaltLen], salt)
+	iv := encryptData[SaltLen : SaltLen+aes.BlockSize]
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return nil, err
+	}
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return nil, err
+	}
+
+	stream := cipher.NewCFBEncrypter(block, iv)
+	stream.XORKeyStream(encryptData[SaltLen+aes.BlockSize:], payload)
+
 	return encryptData, nil
 }
 
 func (s *secrets) Decrypt(payload []byte) ([]byte, error) {
-	decryptData := make([]byte, 0)
-	return decryptData, nil
+	if len(payload) < SaltLen {
+		return nil, errors.New("unable to compute salt")
+	}
+
+	salt := payload[:SaltLen]
+	encryptKey, err := KeyToBytes(s.cfg.Server.SecureKey, string(salt))
+	if err != nil {
+		return nil, err
+	}
+
+	block, err := aes.NewCipher(encryptKey)
+	if err != nil {
+		return nil, err
+	}
+	return decrypt(block, payload)
+}
+
+func decrypt(block cipher.Block, payload []byte) ([]byte, error) {
+	// The IV needs to be unique, but not secure. Therefore, it's common to
+	// include it at the beginning of the ciphertext.
+	if len(payload) < aes.BlockSize {
+		return nil, errors.New("payload too short")
+	}
+
+	iv := payload[SaltLen : SaltLen+aes.BlockSize]
+	payload = payload[SaltLen+aes.BlockSize:]
+	payloadDst := make([]byte, len(payload))
+
+	stream := cipher.NewCFBDecrypter(block, iv)
+
+	// XORKeyStream can work in-place if the two arguments are the same.
+	stream.XORKeyStream(payloadDst, payload)
+	return payloadDst, nil
+}
+
+// KeyToBytes key length needs to be 32 bytes
+func KeyToBytes(secret, salt string) ([]byte, error) {
+	return pbkdf2.Key([]byte(secret), []byte(salt), 10000, 32, sha256.New), nil
 }

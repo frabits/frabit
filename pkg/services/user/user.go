@@ -25,6 +25,7 @@ type Service interface {
 	CreateUser(ctx context.Context, createReq fb.CreateUserRequest) (uint32, error)
 	GetUsers(ctx context.Context) ([]User, error)
 	GetUserByLogin(ctx context.Context, login string) (UserProfileDTO, error)
+	GetServiceAccount(ctx context.Context) ([]UserProfileDTO, error)
 	DeleteUser(ctx context.Context, login string) error
 	UpdateUserLastSeen(ctx context.Context, login string) error
 }

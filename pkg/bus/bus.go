@@ -29,6 +29,10 @@ type InProBus struct {
 	BusCh    chan any
 }
 
+func ProviderBus() Bus {
+	return &InProBus{}
+}
+
 func (i *InProBus) Publish(ctx context.Context, Msg any) error {
 	for {
 		select {

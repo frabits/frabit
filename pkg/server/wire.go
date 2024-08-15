@@ -20,10 +20,12 @@ package server
 
 import (
 	"github.com/frabits/frabit/pkg/api"
+	"github.com/frabits/frabit/pkg/bus"
 	"github.com/frabits/frabit/pkg/config"
 	"github.com/frabits/frabit/pkg/infra/db"
 	bgSrv "github.com/frabits/frabit/pkg/server/bg_services"
 	"github.com/frabits/frabit/pkg/services/agent"
+	"github.com/frabits/frabit/pkg/services/apikey"
 	"github.com/frabits/frabit/pkg/services/audit"
 	"github.com/frabits/frabit/pkg/services/auth"
 	"github.com/frabits/frabit/pkg/services/backup"
@@ -34,6 +36,8 @@ import (
 	ns "github.com/frabits/frabit/pkg/services/notifications"
 	"github.com/frabits/frabit/pkg/services/org"
 	"github.com/frabits/frabit/pkg/services/secrets"
+	sa "github.com/frabits/frabit/pkg/services/serviceaccount"
+	"github.com/frabits/frabit/pkg/services/settings"
 	"github.com/frabits/frabit/pkg/services/team"
 	uc "github.com/frabits/frabit/pkg/services/updatechecker"
 	"github.com/frabits/frabit/pkg/services/user"
@@ -43,16 +47,20 @@ import (
 
 var wireSet = wire.NewSet(
 	db.New,
+	apikey.ProviderService,
 	config.ProviderConfig,
 	agent.ProviderAgentService,
 	auth.ProviderService,
 	audit.ProviderService,
 	backup.ProviderMySQLBackup,
+	bus.ProviderBus,
 	cleanup.ProviderService,
 	deploy.ProviderService,
 	login.ProviderLoginNative,
 	license.ProviderService,
+	sa.ProviderService,
 	secrets.ProviderSecrets,
+	settings.ProviderService,
 	ns.ProviderService,
 	org.ProviderService,
 	team.ProviderService,

@@ -14,3 +14,26 @@
 // limitations under the License.
 
 package apikey
+
+import (
+	"context"
+
+	"gorm.io/gorm"
+)
+
+type Store interface {
+	AddAPIKey(ctx context.Context, key *APIKey) error
+}
+
+type storeImpl struct {
+	DB *gorm.DB
+}
+
+func NewStoreImpl(db *gorm.DB) Store {
+	return &storeImpl{DB: db}
+}
+
+func (s *storeImpl) AddAPIKey(ctx context.Context, key *APIKey) error {
+	s.DB.Create(key)
+	return nil
+}

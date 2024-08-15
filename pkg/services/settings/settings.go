@@ -14,3 +14,10 @@
 // limitations under the License.
 
 package settings
+
+import "context"
+
+type Service interface {
+	CreateSettings(ctx context.Context, cmd *CreateSettingsCmd) error
+	GetSettings(ctx context.Context) ([]SettingsSSO, error)
+}

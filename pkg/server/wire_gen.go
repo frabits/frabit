@@ -8,10 +8,12 @@ package server
 
 import (
 	"github.com/frabits/frabit/pkg/api"
+	"github.com/frabits/frabit/pkg/bus"
 	"github.com/frabits/frabit/pkg/config"
 	"github.com/frabits/frabit/pkg/infra/db"
 	"github.com/frabits/frabit/pkg/server/bg_services"
 	"github.com/frabits/frabit/pkg/services/agent"
+	"github.com/frabits/frabit/pkg/services/apikey"
 	"github.com/frabits/frabit/pkg/services/audit"
 	"github.com/frabits/frabit/pkg/services/auth"
 	"github.com/frabits/frabit/pkg/services/backup"
@@ -22,6 +24,8 @@ import (
 	"github.com/frabits/frabit/pkg/services/notifications"
 	"github.com/frabits/frabit/pkg/services/org"
 	"github.com/frabits/frabit/pkg/services/secrets"
+	"github.com/frabits/frabit/pkg/services/serviceaccount"
+	"github.com/frabits/frabit/pkg/services/settings"
 	"github.com/frabits/frabit/pkg/services/team"
 	"github.com/frabits/frabit/pkg/services/updatechecker"
 	"github.com/frabits/frabit/pkg/services/user"
@@ -44,12 +48,17 @@ func Initialize() (*Server, error) {
 	loginService := login.ProviderLoginNative(configConfig, userService)
 	orgService := org.ProviderService(configConfig, metaStore)
 	teamService := team.ProviderService(configConfig, metaStore)
-	auditService := audit.ProviderService(configConfig, metaStore)
-	httpServer := api.ProviderHTTPServer(configConfig, service, backupService, deployService, agentService, loginService, orgService, teamService, userService, auditService)
+	busBus := bus.ProviderBus()
+	auditService := audit.ProviderService(configConfig, metaStore, busBus)
+	apikeyService := apikey.ProviderService(configConfig, metaStore, userService)
+	serviceaccountService := serviceaccount.ProviderService(apikeyService, userService, orgService)
+	secretsService := secrets.ProviderSecrets(configConfig)
+	settingsService := settings.ProviderService(secretsService, metaStore)
+	licenseService := license.ProviderService(configConfig, metaStore)
+	httpServer := api.ProviderHTTPServer(configConfig, service, backupService, deployService, agentService, loginService, orgService, teamService, userService, auditService, busBus, serviceaccountService, apikeyService, settingsService, licenseService)
 	cleanupService := cleanup.ProviderService()
 	notificationsService := notifications.ProviderService()
 	frabitService := updatechecker.ProviderFrabitService()
-	licenseService := license.ProviderService(configConfig, metaStore)
 	backgroundServiceRegistry := bg_services.ProviderBackgroundServiceRegistry(cleanupService, notificationsService, deployService, frabitService, licenseService)
 	server := NewServer(configConfig, httpServer, backgroundServiceRegistry, metaStore)
 	return server, nil
@@ -57,4 +66,4 @@ func Initialize() (*Server, error) {
 
 // wire.go:
 
-var wireSet = wire.NewSet(db.New, config.ProviderConfig, agent.ProviderAgentService, auth.ProviderService, audit.ProviderService, backup.ProviderMySQLBackup, cleanup.ProviderService, deploy.ProviderService, login.ProviderLoginNative, license.ProviderService, secrets.ProviderSecrets, notifications.ProviderService, org.ProviderService, team.ProviderService, user.ProviderService, updatechecker.ProviderFrabitService, bg_services.ProviderBackgroundServiceRegistry, api.ProviderHTTPServer, NewServer)
+var wireSet = wire.NewSet(db.New, apikey.ProviderService, config.ProviderConfig, agent.ProviderAgentService, auth.ProviderService, audit.ProviderService, backup.ProviderMySQLBackup, bus.ProviderBus, cleanup.ProviderService, deploy.ProviderService, login.ProviderLoginNative, license.ProviderService, serviceaccount.ProviderService, secrets.ProviderSecrets, settings.ProviderService, notifications.ProviderService, org.ProviderService, team.ProviderService, user.ProviderService, updatechecker.ProviderFrabitService, bg_services.ProviderBackgroundServiceRegistry, api.ProviderHTTPServer, NewServer)

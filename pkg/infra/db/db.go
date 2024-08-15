@@ -53,7 +53,7 @@ func New(conf *config.Config) (*MetaStore, error) {
 		Hostname:  conf.DB.Host,
 		Port:      strconv.Itoa(int(conf.DB.Port)),
 		DefaultDb: conf.DB.Database,
-		Params:    []string{"timeout=5s", "charset=utf8mb4", "parseTime=True", "loc=Local", "readTimeout=30s"},
+		Params:    []string{"timeout=5s", "charset=utf8mb4", "collation=utf8mb4_unicode_ci", "parseTime=True", "loc=Local", "readTimeout=30s"},
 	}
 
 	dsn := dbConnectConfig.String()
@@ -124,7 +124,7 @@ func (ms *MetaStore) initFrabitDB(db *sql.DB) error {
 func (ms *MetaStore) genInitialData() []string {
 	initDatetime := time.Now().Format(time.DateTime)
 	initData := make([]string, 0)
-	license := fmt.Sprintf(`insert into license(license_level,current_license,last_license,created_at,updated_at) values("%s","%s","%s","%s","%s")`, constant.Community, "", "", initDatetime, initDatetime)
+	license := fmt.Sprintf(`insert into license(license_level,current_license,prev_license,created_at,updated_at) values("%s","%s","%s","%s","%s")`, constant.Community, "", "", initDatetime, initDatetime)
 
 	initPasswd := utils.GenRandom(32)
 	rands := utils.GenRandom(12)

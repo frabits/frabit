@@ -26,6 +26,7 @@ type Store interface {
 	CreateUser(ctx context.Context, user *User) (uint32, error)
 	GetUsers(ctx context.Context) ([]User, error)
 	GetUserByLogin(context.Context, string) (User, error)
+	GetUserServiceAccount(context.Context) ([]User, error)
 	DeleteUser(context.Context, string) error
 	UpdateUser(context.Context, string) error
 }
@@ -64,4 +65,10 @@ func (s *storeImpl) GetUserByLogin(ctx context.Context, login string) (User, err
 	var user User
 	s.DB.Model(User{}).Where("login=?", login).First(&user)
 	return user, nil
+}
+
+func (s *storeImpl) GetUserServiceAccount(context.Context) ([]User, error) {
+	var users []User
+	s.DB.Model(User{}).Where("is_service_account=?", 1).Find(&users)
+	return users, nil
 }

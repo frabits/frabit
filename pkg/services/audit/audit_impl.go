@@ -17,6 +17,7 @@ package audit
 
 import (
 	"context"
+	"github.com/frabits/frabit/pkg/bus"
 	"github.com/frabits/frabit/pkg/common/utils"
 	"github.com/frabits/frabit/pkg/infra/db"
 	"github.com/frabits/frabit/pkg/infra/log"
@@ -27,14 +28,16 @@ import (
 
 type service struct {
 	cfg   *config.Config
+	bus   bus.Bus
 	store Store
 	log   *slog.Logger
 }
 
-func ProviderService(cfg *config.Config, meta *db.MetaStore) Service {
+func ProviderService(cfg *config.Config, meta *db.MetaStore, bus bus.Bus) Service {
 	metaStore := NewStoreImpl(meta.Gdb)
 	return &service{
 		cfg:   cfg,
+		bus:   bus,
 		store: metaStore,
 		log:   log.New("audit"),
 	}

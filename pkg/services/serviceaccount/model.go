@@ -13,10 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package apikey
+package serviceaccount
 
-import "context"
+type CreateServiceAccountCmd struct {
+	OrgId uint32 `json:"org_id"`
+	Name  string `json:"name"`
+	Role  string `json:"role"`
+}
 
-type Service interface {
-	AddAPIKey(ctx context.Context, cmd *CreateAPIKeyCmd) (*APIKey, error)
+type UpdateServiceAccountCmd struct {
+	Name string `json:"name"`
+	Role string `json:"role"`
+}
+
+type ServiceAccountDTO struct {
+	OrgId     uint32 `json:"org_id"`
+	Name      string `json:"name"`
+	Role      string `json:"role"`
+	CreatedAt string `gorm:"type:varchar(50);not null" json:"created_at"`
+	UpdatedAt string `gorm:"type:varchar(50);not null" json:"updated_at"`
 }

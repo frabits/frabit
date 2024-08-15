@@ -46,20 +46,25 @@ func ProviderService(conf *config.Config, metaDB *db.MetaStore) Service {
 
 func (s *service) CreateUser(ctx context.Context, createReq fb.CreateUserRequest) (uint32, error) {
 	user := &User{
-		Login:           createReq.Login,
-		Username:        createReq.Name,
-		Email:           createReq.Email,
-		Password:        utils.GeneratePassword(createReq.Password),
-		Rands:           utils.GenRandom(12),
-		IsAdmin:         0,
-		IsDisabled:      1,
-		IsExternal:      0,
-		IsEmailVerified: 0,
-		Theme:           createReq.Theme,
-		OrgId:           constant.GlobalOrgId,
-		CreatedAt:       utils.NowDatetime(),
-		UpdatedAt:       utils.NowDatetime(),
-		LastSeenAt:      utils.NowDatetime(),
+		Login:            createReq.Login,
+		Username:         createReq.Name,
+		Email:            createReq.Email,
+		Password:         utils.GeneratePassword(createReq.Password),
+		Rands:            utils.GenRandom(12),
+		IsAdmin:          0,
+		IsDisabled:       1,
+		IsExternal:       0,
+		IsEmailVerified:  0,
+		IsServiceAccount: createReq.IsServiceAccount,
+		Theme:            createReq.Theme,
+		OrgId:            constant.GlobalOrgId,
+		CreatedAt:        utils.NowDatetime(),
+		UpdatedAt:        utils.NowDatetime(),
+		LastSeenAt:       utils.NowDatetime(),
+	}
+	// service account can be empty password
+	if user.IsServiceAccount == 1 {
+		user.Password = ""
 	}
 	uid, err := s.store.CreateUser(ctx, user)
 	if err != nil {
@@ -75,6 +80,33 @@ func (s *service) GetUsers(ctx context.Context) ([]User, error) {
 
 func (s *service) UpdateUser(ctx context.Context) error {
 	return nil
+}
+
+func (s *service) GetServiceAccount(ctx context.Context) ([]UserProfileDTO, error) {
+	var users []UserProfileDTO
+	saAccounts, err := s.store.GetUserServiceAccount(ctx)
+	if err != nil {
+		s.log.Error("query user failed", "Error", err.Error())
+	}
+	for _, account := range saAccounts {
+		user := UserProfileDTO{
+			Login:           account.Login,
+			Username:        account.Username,
+			Email:           account.Email,
+			Password:        account.Password,
+			IsAdmin:         account.IsAdmin,
+			IsDisabled:      account.IsDisabled,
+			IsExternal:      account.IsExternal,
+			IsEmailVerified: account.IsEmailVerified,
+			Theme:           account.Theme,
+			OrgId:           account.OrgId,
+			CreatedAt:       account.CreatedAt,
+			UpdatedAt:       account.UpdatedAt,
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
 }
 
 func (s *service) GetUserByLogin(ctx context.Context, login string) (UserProfileDTO, error) {

@@ -13,10 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package apikey
+package serviceaccount
 
 import "context"
 
 type Service interface {
-	AddAPIKey(ctx context.Context, cmd *CreateAPIKeyCmd) (*APIKey, error)
+	CreateServiceAccount(ctx context.Context, cmd *CreateServiceAccountCmd) error
+	DeleteServiceAccount(ctx context.Context, name string) error
+	UpdateServiceAccount(ctx context.Context, cmd *UpdateServiceAccountCmd) error
+	DisableServiceAccount(ctx context.Context, name string) error
+	GetServiceAccount(ctx context.Context) ([]*ServiceAccountDTO, error)
+	GetServiceAccountByName(ctx context.Context, name string) ([]*ServiceAccountDTO, error)
 }

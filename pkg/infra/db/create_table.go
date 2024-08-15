@@ -81,6 +81,7 @@ var generateSQLBase = []string{
           is_disabled tinyint not null default 0,
           is_external tinyint not null default 0,
           is_email_verified tinyint not null default 0,
+          is_service_account tinyint not null default 0,
           theme  varchar(10) not null default "",
           org_id bigint NOT NULL ,
           created_at varchar(50) not null default "",
@@ -192,5 +193,30 @@ var generateSQLBase = []string{
           created_at varchar(50) not null default "",
           updated_at varchar(50) not null default "",
 	      PRIMARY KEY (id) 
+	) ENGINE=InnoDB`,
+	`
+        CREATE TABLE IF NOT EXISTS settings_sso (
+	      id bigint NOT NULL auto_increment,
+          name varchar(50) not null default "" comment "event name",
+          settings text not null comment "settings",
+          created_at varchar(50) not null default "",
+          updated_at varchar(50) not null default "",
+	      PRIMARY KEY (id) 
+	) ENGINE=InnoDB`,
+	`
+        CREATE TABLE IF NOT EXISTS apikey (
+	      id bigint NOT NULL auto_increment,
+          name varchar(100) not null default "" comment "apikey name",
+          org_id bigint not null default 0 comment "org id",
+          role varchar(20) not null default "" comment "role",
+          hash_key varchar(200) not null ,
+          created_at varchar(50) not null default "",
+          updated_at varchar(50) not null default "",
+          last_used_at varchar(50) not null default "",
+          expires varchar(50) not null default "",
+          service_account_id bigint not null default 0 comment "service account id",
+          is_revoked tinyint(1) not null default 0 comment "apikey name",
+	      PRIMARY KEY (id), 
+          UNIQUE uniq_name (name) 
 	) ENGINE=InnoDB`,
 }

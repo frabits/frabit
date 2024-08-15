@@ -17,21 +17,26 @@ package api
 
 import (
 	"context"
-	"github.com/frabits/frabit/pkg/services/audit"
+	"github.com/frabits/frabit/pkg/services/apikey"
+	"github.com/frabits/frabit/pkg/services/license"
+	"github.com/frabits/frabit/pkg/services/settings"
 	"log/slog"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/frabits/frabit/pkg/bus"
 	"github.com/frabits/frabit/pkg/common/version"
 	"github.com/frabits/frabit/pkg/config"
 	"github.com/frabits/frabit/pkg/infra/log"
 	"github.com/frabits/frabit/pkg/services/agent"
+	"github.com/frabits/frabit/pkg/services/audit"
 	"github.com/frabits/frabit/pkg/services/auth"
 	"github.com/frabits/frabit/pkg/services/backup"
 	"github.com/frabits/frabit/pkg/services/deploy"
 	"github.com/frabits/frabit/pkg/services/login"
 	"github.com/frabits/frabit/pkg/services/org"
+	sa "github.com/frabits/frabit/pkg/services/serviceaccount"
 	"github.com/frabits/frabit/pkg/services/team"
 	"github.com/frabits/frabit/pkg/services/user"
 
@@ -44,20 +49,26 @@ type HttpServer struct {
 	Server *http.Server
 	router *gin.Engine
 	Port   uint32
+	Bus    bus.Bus
 
-	authUser auth.Service
-	audit    audit.Service
-	backup   backup.Service
-	deploy   deploy.Service
-	agent    agent.Service
-	login    login.Service
-	org      org.Service
-	team     team.Service
-	user     user.Service
+	apiKey         apikey.Service
+	authUser       auth.Service
+	audit          audit.Service
+	backup         backup.Service
+	deploy         deploy.Service
+	agent          agent.Service
+	login          login.Service
+	license        license.Service
+	org            org.Service
+	team           team.Service
+	user           user.Service
+	serviceAccount sa.Service
+	settings       settings.Service
 }
 
 func ProviderHTTPServer(cnf *config.Config, auth auth.Service, backup backup.Service, deploy deploy.Service, agent agent.Service,
-	login login.Service, org org.Service, team team.Service, user user.Service, audit audit.Service) *HttpServer {
+	login login.Service, org org.Service, team team.Service, user user.Service, audit audit.Service, bus bus.Bus, sa sa.Service,
+	apikey apikey.Service, settings settings.Service, license license.Service) *HttpServer {
 	var port uint32
 
 	if cnf.Server.Port != 0 {
@@ -77,17 +88,22 @@ func ProviderHTTPServer(cnf *config.Config, auth auth.Service, backup backup.Ser
 		Logger: log.New("http.server"),
 		Server: srv,
 		Port:   port,
+		Bus:    bus,
 		router: router,
 
-		authUser: auth,
-		audit:    audit,
-		backup:   backup,
-		deploy:   deploy,
-		org:      org,
-		team:     team,
-		user:     user,
-		agent:    agent,
-		login:    login,
+		apiKey:         apikey,
+		authUser:       auth,
+		audit:          audit,
+		backup:         backup,
+		deploy:         deploy,
+		license:        license,
+		org:            org,
+		team:           team,
+		user:           user,
+		agent:          agent,
+		login:          login,
+		serviceAccount: sa,
+		settings:       settings,
 	}
 
 	return hs
@@ -99,13 +115,16 @@ func (hs *HttpServer) setup(engine *gin.Engine) {
 	engine.GET("/info", hs.info)
 	engine.POST("/login", hs.Login)
 	apiV2 := engine.Group("/api/v2")
+	hs.applyAdmin(apiV2)
 	hs.applyAudit(apiV2)
+	hs.applyApiKey(apiV2)
 	hs.applyOrg(apiV2)
 	hs.applyTeam(apiV2)
 	hs.applyUser(apiV2)
 	hs.applyAgent(apiV2)
 	hs.applyBackup(apiV2)
 	hs.applyDeploy(apiV2)
+	hs.applyServiceAccount(apiV2)
 }
 
 func (hs *HttpServer) health(c *gin.Context) {

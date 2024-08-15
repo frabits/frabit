@@ -54,6 +54,7 @@ func (s *LicenseImpl) Run(ctx context.Context) error {
 	}
 }
 
+// GetLicense return a validate license from license provider
 func (s *LicenseImpl) GetLicense(ctx context.Context) error {
 	return nil
 }
