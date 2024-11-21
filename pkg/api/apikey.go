@@ -42,6 +42,7 @@ func (hs *HttpServer) CreateApiKey(c *gin.Context) {
 		hs.Logger.Error("create apikey failed", "Error", err.Error())
 		c.IndentedJSON(http.StatusBadGateway, "create apikey failed")
 	}
+	// Make sure to copy your personal access token now as you will not be able to see this again.
 	result := apikey.APIKeyDTO{
 		Name:         metaKey.Name,
 		ClientSecret: newKey.ClientSecret,
