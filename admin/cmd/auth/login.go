@@ -33,7 +33,7 @@ var CmdLogin = &cobra.Command{
 	Use:   "login [flag]",
 	Short: "Login frabit-admin to frabit-server via token",
 	Long: `
-frabit-admin auth login
+frabit-admin session login
 `,
 	Run: runLogin,
 }

@@ -18,13 +18,11 @@ package login
 import (
 	"context"
 	"errors"
-	"log/slog"
-	"strings"
-
-	"github.com/frabits/frabit/pkg/common/utils"
 	"github.com/frabits/frabit/pkg/config"
+	"github.com/frabits/frabit/pkg/infra/db"
 	"github.com/frabits/frabit/pkg/infra/log"
-	"github.com/frabits/frabit/pkg/services/user"
+	"log/slog"
+	"time"
 )
 
 var (
@@ -41,35 +39,64 @@ var (
 	ErrNoAuthProvider        = errors.New("enable at least one login provider")
 )
 
-type LoginNative struct {
-	cfg         *config.Config
-	log         *slog.Logger
-	userService user.Service
-	store       Store
+type loginAttemptImpl struct {
+	cfg   *config.Config
+	log   *slog.Logger
+	store Store
 }
 
-func ProviderLoginNative(conf *config.Config, user user.Service) Service {
-	ls := &LoginNative{
-		cfg:         conf,
-		log:         log.New("login"),
-		userService: user,
+func ProviderLoginNative(conf *config.Config, metaDB *db.MetaStore) Service {
+	store := providerStore(metaDB.Gdb)
+	ls := &loginAttemptImpl{
+		cfg:   conf,
+		log:   log.New("login"),
+		store: store,
 	}
 	return ls
 }
 
-func (s *LoginNative) Authenticator(ctx context.Context, authInfo AuthPasswd) error {
-	s.log.Debug("Auth user via username and password")
-	login := strings.ToLower(authInfo.Login)
-	userInfo, err := s.userService.GetUserByLogin(ctx, login)
+func (s *loginAttemptImpl) Run(ctx context.Context) error {
+	tick := time.NewTicker(10 * time.Second)
+	for {
+		select {
+		case <-ctx.Done():
+			tick.Stop()
+			return ctx.Err()
+		case <-tick.C:
+			s.cleanup(ctx)
+		}
+	}
+}
+
+func (s *loginAttemptImpl) Add(ctx context.Context, cmd *CreateLoginAttemptCmd) error {
+	now := time.Now()
+	la := &LoginAttempt{
+		Login:     cmd.Login,
+		ClientIP:  cmd.ClientIP,
+		CreatedAt: now.Format(time.DateTime),
+	}
+	return s.store.AddRecord(ctx, la)
+}
+
+func (s *loginAttemptImpl) Reset(ctx context.Context, login string) error {
+	return s.store.DeleteLoginAttempt(ctx, login)
+}
+
+func (s *loginAttemptImpl) Validate(ctx context.Context, login string) bool {
+	if s.cfg.Server.DisableLoginProtection {
+		return true
+	}
+	loginCount, err := s.store.GetUserLoginAttemptCount(ctx, login)
 	if err != nil {
-		return err
+		return false
 	}
-	if ok := utils.ComparePassword(authInfo.Password, userInfo.Password); !ok {
-		s.log.Error(ErrInvalidCredentials.Error())
-		return ErrInvalidCredentials
+	if loginCount > s.cfg.Server.LoginMaxRetry {
+		return false
 	}
-	if err := s.userService.UpdateUserLastSeen(ctx, login); err != nil {
-		s.log.Error(ErrInvalidCredentials.Error())
-	}
-	return nil
+	return true
+}
+
+func (s *loginAttemptImpl) cleanup(ctx context.Context) {
+	olderThan := time.Now().Add(-10 * time.Minute)
+	s.store.DeleteOlderThanLoginAttempt(ctx, olderThan)
 }

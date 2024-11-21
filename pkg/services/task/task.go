@@ -13,4 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package sso
+package task
+
+import "context"
+
+type Service interface {
+	AddTask(ctx context.Context, cmd *CreateTaskCmd) error
+	UpdateTask(ctx context.Context, cmd *UpdateTaskCmd) error
+	ListTasks(ctx context.Context) ([]*Task, error)
+}

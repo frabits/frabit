@@ -18,21 +18,45 @@ package authn
 import (
 	"context"
 	"errors"
+	"github.com/frabits/frabit/pkg/infra/log"
+	"log/slog"
+	"net/http"
+
+	"github.com/frabits/frabit/pkg/services/login"
 )
 
 type Password struct {
-	clients []PasswordClient
+	log          *slog.Logger
+	loginAttempt login.Service
+	clients      []PasswordClient
 }
 
-func ProviderPassword(clients ...PasswordClient) PasswordClient {
-	return &Password{clients: clients}
+func ProviderPassword(loginAttempt login.Service, clients ...PasswordClient) PasswordClient {
+	return &Password{
+		log:          log.New("authn.client.password"),
+		loginAttempt: loginAttempt,
+		clients:      clients,
+	}
 }
 
-func (c *Password) AuthenticatePasswd(ctx context.Context, username string, password string) (*Identity, error) {
+func (c *Password) AuthenticatePasswd(ctx context.Context, req *http.Request, username string, password string) (*Identity, error) {
 	var authErrs error
+	allowedLogin := c.loginAttempt.Validate(ctx, username)
+	if !allowedLogin {
+		return nil, ErrFailedLoginTooMuch
+	}
 	for _, pdClient := range c.clients {
-		id, authErr := pdClient.AuthenticatePasswd(ctx, username, password)
+		id, authErr := pdClient.AuthenticatePasswd(ctx, req, username, password)
 		if authErr != nil {
+			if errors.Is(authErr, ErrCredential) {
+				la := &login.CreateLoginAttemptCmd{
+					Login:    username,
+					ClientIP: req.RemoteAddr,
+				}
+				if err := c.loginAttempt.Add(ctx, la); err != nil {
+					c.log.Warn("cannot add login attempt")
+				}
+			}
 			authErrs = errors.Join(authErr)
 			continue
 		}

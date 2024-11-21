@@ -30,7 +30,7 @@ func DisableAuthCheck(cmd *cobra.Command) {
 	cmd.Annotations["NeedAuthCheck"] = "false"
 }
 
-// CheckAuth if a command already been auth via a token
+// CheckAuth if a command already been session via a token
 func CheckAuth(cfg config.Config) bool {
 	if ok := cfg.HasTokenFromEnv(); ok {
 		return true

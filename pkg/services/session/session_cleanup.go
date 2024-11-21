@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package auth
+package session
 
 import (
 	"context"
@@ -43,6 +43,6 @@ func (s *service) deleteExpiredTokens(ctx context.Context, maxInactiveLifetime, 
 	createdBefore := time.Now().Add(-maxLifetime)
 	rotatedBefore := time.Now().Add(-maxInactiveLifetime)
 
-	s.log.Debug("starting cleanup of expired auth tokens", "createdBefore", createdBefore, "rotatedBefore", rotatedBefore)
-	return s.store.DeleteTokenByTime(ctx, createdBefore, rotatedBefore)
+	s.log.Debug("starting cleanup of expired session tokens", "createdBefore", createdBefore, "rotatedBefore", rotatedBefore)
+	return s.store.DeleteSessionByTime(ctx, createdBefore, rotatedBefore)
 }

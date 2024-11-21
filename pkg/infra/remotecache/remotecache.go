@@ -1,13 +1,31 @@
+// Frabit - The next-generation database automatic operation platform
+// Copyright © 2022-2024 Frabit Team
+//
+// Licensed under the GNU General Public License, Version 3.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//	https://www.gnu.org/licenses/gpl-3.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package remotecache
 
 import (
 	"context"
 	"database/sql"
+	"github.com/frabits/frabit/pkg/infra/log"
+	"log/slog"
 	"time"
 
 	"github.com/frabits/frabit/pkg/config"
 	"github.com/frabits/frabit/pkg/infra/db"
 	"github.com/frabits/frabit/pkg/registry"
+	"github.com/frabits/frabit/pkg/services/secrets"
 )
 
 const (
@@ -23,17 +41,21 @@ type CacheStorage interface {
 }
 
 type RemoteCache struct {
-	Cfg       *config.Config
-	Client    CacheStorage
-	MetaStore *db.MetaStore
+	log           *slog.Logger
+	Cfg           *config.Config
+	Client        CacheStorage
+	MetaStore     *db.MetaStore
+	secretService secrets.Service
 }
 
-func ProviderRemoteCache(cfg *config.Config, meta *db.MetaStore) *RemoteCache {
+func ProviderRemoteCache(cfg *config.Config, meta *db.MetaStore, secret secrets.Service) *RemoteCache {
 	rc := &RemoteCache{
-		Cfg:       cfg,
-		MetaStore: meta,
+		log:           log.New("remoteCache"),
+		Cfg:           cfg,
+		MetaStore:     meta,
+		secretService: secret,
 	}
-	rc.Client = newStorage(cfg, meta.DB)
+	rc.Client = newStorage(cfg, meta.DB, secret)
 	return rc
 }
 
@@ -54,21 +76,30 @@ func (rc *RemoteCache) Count(ctx context.Context, prefix string) (int64, error) 
 }
 
 func (rc *RemoteCache) Run(ctx context.Context) error {
-	bgClient, ok := rc.Client.(registry.BackgroundService)
+	cacheStorage := rc.Client
+	if encCache, ok := cacheStorage.(*encryptedCacheStorage); ok {
+		cacheStorage = encCache.cache
+	}
+	if prefixCache, ok := cacheStorage.(*prefixCacheStorage); ok {
+		cacheStorage = prefixCache.cache
+	}
+
+	bgClient, ok := cacheStorage.(registry.BackgroundService)
 	if ok {
+		rc.log.Info("start remoteCache internalGC")
 		return bgClient.Run(ctx)
 	}
 	<-ctx.Done()
 	return ctx.Err()
 }
 
-func newStorage(cfg *config.Config, db *sql.DB) CacheStorage {
+func newStorage(cfg *config.Config, db *sql.DB, secret secrets.Service) CacheStorage {
 	var cache CacheStorage
 	switch cfg.Server.CacheType {
 	case CacheRedis:
 		cache = newRedisStorage(cfg)
 	default:
-		cache = newSqlStorage(cfg, db)
+		cache = newSqlStorage(db)
 	}
 
 	if cfg.Server.CachePrefix != "" {
@@ -76,7 +107,7 @@ func newStorage(cfg *config.Config, db *sql.DB) CacheStorage {
 	}
 
 	if cfg.Server.CacheEncrypted {
-		cache = &encryptedCacheStorage{cache: cache}
+		cache = &encryptedCacheStorage{cache: cache, enc: secret}
 	}
 
 	return cache
@@ -105,12 +136,7 @@ func (pcs *prefixCacheStorage) Count(ctx context.Context, prefix string) (int64,
 
 type encryptedCacheStorage struct {
 	cache CacheStorage
-	enc   encryptSrv
-}
-
-type encryptSrv interface {
-	Encrypt(context.Context, []byte) ([]byte, error)
-	Decrypt(context.Context, []byte) ([]byte, error)
+	enc   secrets.Service
 }
 
 func (ecs *encryptedCacheStorage) Get(ctx context.Context, key string) ([]byte, error) {
@@ -118,11 +144,11 @@ func (ecs *encryptedCacheStorage) Get(ctx context.Context, key string) ([]byte, 
 	if err != nil {
 		return nil, err
 	}
-	return ecs.enc.Decrypt(ctx, rawVal)
+	return ecs.enc.Decrypt(rawVal)
 }
 
 func (ecs *encryptedCacheStorage) Set(ctx context.Context, key string, value []byte, expire time.Duration) error {
-	encValue, err := ecs.enc.Encrypt(ctx, value)
+	encValue, err := ecs.enc.Encrypt(value)
 	if err != nil {
 		return err
 	}

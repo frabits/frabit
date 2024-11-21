@@ -15,8 +15,16 @@
 
 package apikey
 
-import "context"
+import (
+	"context"
+	"errors"
+)
+
+var (
+	ErrApikeyNotExists = errors.New("api key not exists")
+)
 
 type Service interface {
 	AddAPIKey(ctx context.Context, cmd *CreateAPIKeyCmd) (*APIKey, error)
+	GetAPIKeyByHash(ctx context.Context, hash string) (*APIKey, error)
 }

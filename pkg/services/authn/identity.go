@@ -15,7 +15,10 @@
 
 package authn
 
-import "net/http"
+import (
+	"github.com/frabits/frabit/pkg/services/session"
+	"net/http"
+)
 
 type Identity struct {
 	OrgId uint32
@@ -26,8 +29,16 @@ type Identity struct {
 	IsAdmin bool
 }
 
+func (i *Identity) IdentityFromSession(s *session.Session) *Identity {
+	id := &Identity{
+		Login: s.Login,
+	}
+
+	return id
+}
+
 type AuthRequest struct {
 	HttpReq  *http.Request
-	Username string
-	Password string
+	Username string `json:"username"`
+	Password string `json:"password"`
 }

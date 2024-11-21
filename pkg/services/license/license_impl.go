@@ -56,7 +56,25 @@ func (s *LicenseImpl) Run(ctx context.Context) error {
 
 // GetLicense return a validate license from license provider
 func (s *LicenseImpl) GetLicense(ctx context.Context) error {
-	return nil
+	// config file
+	// license server
+	// default license is community level
+	license := &License{}
+	if s.cfg.Server.License != "" {
+		license.CurrentLicense = s.cfg.Server.License
+	}
+	return s.store.Create(ctx, license)
+}
+
+func (s *LicenseImpl) createLicense(ctx context.Context) error {
+	// config file
+	// license server
+	// default license is community level
+	license := &License{}
+	if s.cfg.Server.License != "" {
+		license.CurrentLicense = s.cfg.Server.License
+	}
+	return s.store.Create(ctx, license)
 }
 
 func (s *LicenseImpl) UpdateLicense(ctx context.Context) error {

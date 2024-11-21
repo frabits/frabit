@@ -15,11 +15,49 @@
 
 package login
 
-import "context"
+import (
+	"context"
+	"github.com/frabits/frabit/pkg/common/utils"
+	"gorm.io/gorm"
+	"time"
+)
 
 type Store interface {
-	CreateUser(ctx context.Context) error
-	UpdateUser(ctx context.Context) error
-	GetUserById(ctx context.Context) error
-	GetUserByName(ctx context.Context) error
+	AddRecord(ctx context.Context, cmd *LoginAttempt) error
+	DeleteLoginAttempt(ctx context.Context, login string) error
+	DeleteOlderThanLoginAttempt(ctx context.Context, olderThan time.Time) error
+	GetUserLoginAttemptCount(ctx context.Context, login string) (int64, error)
+}
+
+type storeImpl struct {
+	DB *gorm.DB
+}
+
+func providerStore(db *gorm.DB) Store {
+	return &storeImpl{DB: db}
+}
+
+func (s *storeImpl) AddRecord(ctx context.Context, cmd *LoginAttempt) error {
+	result := s.DB.Create(&LoginAttempt{
+		Login:     cmd.Login,
+		ClientIP:  cmd.ClientIP,
+		CreatedAt: cmd.CreatedAt,
+	})
+	return result.Error
+}
+
+func (s *storeImpl) DeleteLoginAttempt(ctx context.Context, login string) error {
+	s.DB.Model(&LoginAttempt{}).Where("login=?", login).Update("last_seen_at", utils.NowDatetime())
+	return nil
+}
+
+func (s *storeImpl) DeleteOlderThanLoginAttempt(ctx context.Context, olderThan time.Time) error {
+	s.DB.Where("create_at<?", olderThan).Delete(&LoginAttempt{})
+	return nil
+}
+
+func (s *storeImpl) GetUserLoginAttemptCount(ctx context.Context, login string) (int64, error) {
+	var loginCount int64
+	s.DB.Model(&LoginAttempt{}).Where("login=?", login).Count(&loginCount)
+	return loginCount, nil
 }

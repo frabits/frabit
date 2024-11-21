@@ -47,7 +47,6 @@ func (s *service) CreateSettings(ctx context.Context, cmd *CreateSettingsCmd) er
 		s.log.Error("create sso settings failed", "Error", err.Error())
 		return err
 	}
-	s.log.Info("encrypted data", "data", encSettings)
 	settings := &SettingsSSO{
 		Name:      cmd.Name,
 		Settings:  base64.RawStdEncoding.EncodeToString(encSettings),

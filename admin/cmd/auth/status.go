@@ -23,7 +23,7 @@ import (
 
 var CmdStatus = &cobra.Command{
 	Use:   "status [flag]",
-	Short: "Show current auth status",
+	Short: "Show current session status",
 	Run:   runStatus,
 }
 

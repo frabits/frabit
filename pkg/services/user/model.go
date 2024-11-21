@@ -43,6 +43,7 @@ type UserProfileDTO struct {
 	Username         string `json:"username"`
 	Email            string `json:"email"`
 	Password         string `json:"password"`
+	Rands            string `json:"rands"`
 	IsAdmin          int    `json:"is_admin"`
 	IsDisabled       int    `json:"is_disabled"`
 	IsExternal       int    `json:"is_external"`

@@ -14,3 +14,7 @@
 // limitations under the License.
 
 package social
+
+type GithubProvider struct {
+	OAuthInfo
+}

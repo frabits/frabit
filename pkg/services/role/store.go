@@ -14,3 +14,7 @@
 // limitations under the License.
 
 package role
+
+type Store interface {
+	CreateRole()
+}

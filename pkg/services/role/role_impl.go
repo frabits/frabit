@@ -14,3 +14,25 @@
 // limitations under the License.
 
 package role
+
+import (
+	"context"
+	"log/slog"
+
+	"github.com/frabits/frabit/pkg/infra/log"
+)
+
+type roleImpl struct {
+	log   *slog.Logger
+	store Store
+}
+
+func ProviderService() Service {
+	return &roleImpl{
+		log: log.New("role"),
+	}
+}
+
+func (s *roleImpl) AddRole(ctx context.Context) error {
+	return nil
+}

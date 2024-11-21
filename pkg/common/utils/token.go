@@ -80,7 +80,7 @@ func ComparePassword(password, hashPassword string) bool {
 	hashedPassword, _ := hex.DecodeString(hashPassword)
 	err := bcrypt.CompareHashAndPassword(hashedPassword, []byte(password))
 	if err != nil {
-		log.Logger.Error("Generate password failed", "Error", err.Error())
+		log.Logger.Error("Compare password failed", "Error", err.Error())
 		return false
 	}
 	return true

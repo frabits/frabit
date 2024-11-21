@@ -18,12 +18,25 @@ package authn
 import (
 	"context"
 	"fmt"
+	"github.com/pkg/errors"
+	"net/http"
+	"strings"
 )
 
 const (
 	ClientAPIKey = "authn.client.apikey"
 	ClientBasic  = "authn.client.basic"
 	ClientForm   = "authn.client.form"
+
+	BasicPrefix  = "Basic "
+	BearerPrefix = "Bearer "
+)
+
+var (
+	ErrNotFoundToken      = errors.New("not found token from current request")
+	ErrUserNotExists      = errors.New("username not exists")
+	ErrCredential         = errors.New("username or password not correct")
+	ErrFailedLoginTooMuch = errors.New("failed login too much")
 )
 
 type Authenticator interface {
@@ -37,9 +50,20 @@ type Client interface {
 }
 
 type PasswordClient interface {
-	AuthenticatePasswd(ctx context.Context, username string, password string) (*Identity, error)
+	AuthenticatePasswd(ctx context.Context, req *http.Request, username string, password string) (*Identity, error)
 }
 
 func ClientWithPrefix(name string) string {
 	return fmt.Sprintf("authn.client.%s", name)
+}
+
+func GetTokenFromRequest(req *http.Request) (string, error) {
+	header := req.Header.Get("Authorization")
+	if strings.HasPrefix(header, BearerPrefix) {
+		return strings.TrimPrefix(header, BearerPrefix), nil
+	}
+	if strings.HasPrefix(header, BasicPrefix) {
+		return strings.TrimPrefix(header, BasicPrefix), nil
+	}
+	return "", ErrNotFoundToken
 }

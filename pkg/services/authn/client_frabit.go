@@ -17,9 +17,11 @@ package authn
 
 import (
 	"context"
+	"github.com/frabits/frabit/pkg/common/utils"
 	"github.com/frabits/frabit/pkg/infra/log"
 	"github.com/frabits/frabit/pkg/services/user"
 	"log/slog"
+	"net/http"
 )
 
 type Frabit struct {
@@ -30,10 +32,24 @@ type Frabit struct {
 func ProviderFrabit(user user.Service) PasswordClient {
 	return &Frabit{
 		user: user,
-		log:  log.New("authn.client.frabit"),
+		log:  log.New("authn.client.password.frabit"),
 	}
 }
 
-func (c *Frabit) AuthenticatePasswd(ctx context.Context, username string, password string) (*Identity, error) {
-	return &Identity{}, nil
+func (c *Frabit) AuthenticatePasswd(ctx context.Context, req *http.Request, username string, password string) (*Identity, error) {
+	userInfo, err := c.user.GetUserByLogin(ctx, username)
+	if err != nil {
+		return nil, ErrUserNotExists
+	}
+	if ok := utils.ComparePassword(password, userInfo.Password); !ok {
+		return nil, ErrCredential
+	}
+	id := &Identity{
+		OrgId:   userInfo.OrgId,
+		Name:    userInfo.Username,
+		Login:   userInfo.Login,
+		Email:   userInfo.Email,
+		IsAdmin: utils.Number2Bool(userInfo.IsAdmin),
+	}
+	return id, nil
 }

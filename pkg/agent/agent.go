@@ -56,12 +56,13 @@ func New(cfg *config.AgentConfig) *Agent {
 }
 
 func (a *Agent) RunAgent(ctx context.Context) error {
+	a.Log.Info("Start agent")
 	for {
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
 		default:
-			return a.Run(ctx)
+			a.Run(ctx)
 		}
 	}
 }

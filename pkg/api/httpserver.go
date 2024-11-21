@@ -17,26 +17,33 @@ package api
 
 import (
 	"context"
-	"github.com/frabits/frabit/pkg/services/apikey"
-	"github.com/frabits/frabit/pkg/services/license"
-	"github.com/frabits/frabit/pkg/services/settings"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
+	"path"
+	"strings"
 	"time"
 
 	"github.com/frabits/frabit/pkg/bus"
 	"github.com/frabits/frabit/pkg/common/version"
 	"github.com/frabits/frabit/pkg/config"
 	"github.com/frabits/frabit/pkg/infra/log"
+	"github.com/frabits/frabit/pkg/infra/remotecache"
+	ac "github.com/frabits/frabit/pkg/services/access_control"
 	"github.com/frabits/frabit/pkg/services/agent"
+	"github.com/frabits/frabit/pkg/services/apikey"
 	"github.com/frabits/frabit/pkg/services/audit"
-	"github.com/frabits/frabit/pkg/services/auth"
+	"github.com/frabits/frabit/pkg/services/authn"
 	"github.com/frabits/frabit/pkg/services/backup"
 	"github.com/frabits/frabit/pkg/services/deploy"
+	"github.com/frabits/frabit/pkg/services/license"
 	"github.com/frabits/frabit/pkg/services/login"
 	"github.com/frabits/frabit/pkg/services/org"
+	"github.com/frabits/frabit/pkg/services/secrets"
 	sa "github.com/frabits/frabit/pkg/services/serviceaccount"
+	"github.com/frabits/frabit/pkg/services/session"
+	"github.com/frabits/frabit/pkg/services/settings"
 	"github.com/frabits/frabit/pkg/services/team"
 	"github.com/frabits/frabit/pkg/services/user"
 
@@ -51,8 +58,10 @@ type HttpServer struct {
 	Port   uint32
 	Bus    bus.Bus
 
+	accessControl  ac.AccessControl
 	apiKey         apikey.Service
-	authUser       auth.Service
+	authn          authn.Service
+	session        session.Service
 	audit          audit.Service
 	backup         backup.Service
 	deploy         deploy.Service
@@ -62,13 +71,16 @@ type HttpServer struct {
 	org            org.Service
 	team           team.Service
 	user           user.Service
+	verifier       user.Verifier
 	serviceAccount sa.Service
 	settings       settings.Service
+	secrets        secrets.Service
+	remoteCache    *remotecache.RemoteCache
 }
 
-func ProviderHTTPServer(cnf *config.Config, auth auth.Service, backup backup.Service, deploy deploy.Service, agent agent.Service,
-	login login.Service, org org.Service, team team.Service, user user.Service, audit audit.Service, bus bus.Bus, sa sa.Service,
-	apikey apikey.Service, settings settings.Service, license license.Service) *HttpServer {
+func ProviderHTTPServer(cnf *config.Config, ac ac.AccessControl, session session.Service, authn authn.Service, backup backup.Service, deploy deploy.Service, agent agent.Service,
+	login login.Service, org org.Service, team team.Service, user user.Service, verifier user.Verifier, audit audit.Service, bus bus.Bus, sa sa.Service,
+	apikey apikey.Service, settings settings.Service, secrets secrets.Service, license license.Service, remoteCache *remotecache.RemoteCache) *HttpServer {
 	var port uint32
 
 	if cnf.Server.Port != 0 {
@@ -77,7 +89,11 @@ func ProviderHTTPServer(cnf *config.Config, auth auth.Service, backup backup.Ser
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.Use(gin.Recovery())
-	logfile, _ := os.OpenFile(cnf.Logger.FileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0744)
+	logDir := path.Dir(cnf.Logger.FileName)
+	filename := path.Base(cnf.Logger.FileName)
+	filenames := strings.Split(filename, ".")
+	webLogfile := fmt.Sprintf("%s%s.web.%s", logDir, filenames[0], filenames[1])
+	logfile, _ := os.OpenFile(webLogfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0744)
 	router.Use(gin.LoggerWithWriter(logfile))
 	srv := &http.Server{
 		Addr:    ":9180",
@@ -85,14 +101,17 @@ func ProviderHTTPServer(cnf *config.Config, auth auth.Service, backup backup.Ser
 	}
 
 	hs := &HttpServer{
+		ctx:    context.Background(),
 		Logger: log.New("http.server"),
 		Server: srv,
 		Port:   port,
 		Bus:    bus,
 		router: router,
 
+		accessControl:  ac,
 		apiKey:         apikey,
-		authUser:       auth,
+		session:        session,
+		authn:          authn,
 		audit:          audit,
 		backup:         backup,
 		deploy:         deploy,
@@ -100,31 +119,16 @@ func ProviderHTTPServer(cnf *config.Config, auth auth.Service, backup backup.Ser
 		org:            org,
 		team:           team,
 		user:           user,
+		verifier:       verifier,
 		agent:          agent,
 		login:          login,
 		serviceAccount: sa,
 		settings:       settings,
+		secrets:        secrets,
+		remoteCache:    remoteCache,
 	}
 
 	return hs
-}
-
-// setup register all router
-func (hs *HttpServer) setup(engine *gin.Engine) {
-	engine.GET("/health", hs.health)
-	engine.GET("/info", hs.info)
-	engine.POST("/login", hs.Login)
-	apiV2 := engine.Group("/api/v2")
-	hs.applyAdmin(apiV2)
-	hs.applyAudit(apiV2)
-	hs.applyApiKey(apiV2)
-	hs.applyOrg(apiV2)
-	hs.applyTeam(apiV2)
-	hs.applyUser(apiV2)
-	hs.applyAgent(apiV2)
-	hs.applyBackup(apiV2)
-	hs.applyDeploy(apiV2)
-	hs.applyServiceAccount(apiV2)
 }
 
 func (hs *HttpServer) health(c *gin.Context) {

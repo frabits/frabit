@@ -35,7 +35,7 @@ func ProviderForm(client PasswordClient) Client {
 }
 
 func (c *Form) Authenticate(ctx context.Context, req *AuthRequest) (*Identity, error) {
-	return c.client.AuthenticatePasswd(ctx, req.Username, req.Password)
+	return c.client.AuthenticatePasswd(ctx, req.HttpReq, req.Username, req.Password)
 }
 
 func (c *Form) Name() string {

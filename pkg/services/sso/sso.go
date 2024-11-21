@@ -14,3 +14,14 @@
 // limitations under the License.
 
 package sso
+
+const (
+	GitHub    = "github"
+	Google    = "google"
+	Microsoft = "microsoft"
+	OIDC      = "oidc"
+)
+
+type OAuthInfo struct {
+	Name string
+}

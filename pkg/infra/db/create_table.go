@@ -111,6 +111,16 @@ var generateSQLBase = []string{
           UNIQUE uniq_ug (uid,gid)
 	) ENGINE=InnoDB`,
 	`
+        CREATE TABLE IF NOT EXISTS data_cache (
+	      id bigint NOT NULL auto_increment,
+	      data_key varchar(100) NOT NULL default "" comment "key",
+          data_value varchar(1000) NOT NULL default "" comment "key",
+          created_at datetime not null,
+          expired_at datetime not null, 
+	      PRIMARY KEY (id),
+          UNIQUE uniq_data_key(data_key)
+	) ENGINE=InnoDB`,
+	`
         CREATE TABLE IF NOT EXISTS team (
 	      id bigint NOT NULL auto_increment,
 	      name varchar(100) NOT NULL default "" comment "login user name", 
@@ -146,6 +156,15 @@ var generateSQLBase = []string{
           user_id varchar(200) NOT NULL default "",
 	      PRIMARY KEY (id),
           UNIQUE uniq_tu (team_id,user_id)
+	) ENGINE=InnoDB`,
+	`
+        CREATE TABLE IF NOT EXISTS login_attempt (
+	      id bigint NOT NULL auto_increment,
+	      login varchar(100) NOT NULL default "" comment "login username", 
+          client_ip varchar(200) NOT NULL default "",
+          created_at varchar(50) not null default "",
+	      PRIMARY KEY (id),
+          Key idx_login (login)
 	) ENGINE=InnoDB`,
 	`
         CREATE TABLE IF NOT EXISTS project (

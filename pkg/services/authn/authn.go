@@ -30,6 +30,7 @@ type Service interface {
 
 const (
 	FrabitSession = "frabit_session"
+	AuthIdentity  = "identity"
 )
 
 type Redirect struct {

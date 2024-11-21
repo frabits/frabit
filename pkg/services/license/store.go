@@ -40,7 +40,7 @@ func newStoreImpl(db *gorm.DB) Store {
 }
 
 func (s *storeImpl) Create(ctx context.Context, license *License) error {
-	//TODO implement me
+	s.DB.Create(license)
 	return nil
 }
 

@@ -16,8 +16,10 @@
 package satoken
 
 import (
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"github.com/frabits/frabit/pkg/config"
 	"github.com/pkg/errors"
 	"hash/crc32"
 	"strings"
@@ -60,8 +62,9 @@ func (pt *PrefixToken) String() string {
 }
 
 func (pt *PrefixToken) Hash() string {
-	hash := utils.GeneratePassword(pt.Secret)
-	return hash
+	hash := sha256.New()
+	hash.Write([]byte(pt.Secret + config.Security))
+	return hex.EncodeToString(hash.Sum(nil))
 }
 
 func (pt *PrefixToken) GenerateChecksum() string {

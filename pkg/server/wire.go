@@ -23,11 +23,13 @@ import (
 	"github.com/frabits/frabit/pkg/bus"
 	"github.com/frabits/frabit/pkg/config"
 	"github.com/frabits/frabit/pkg/infra/db"
+	"github.com/frabits/frabit/pkg/infra/remotecache"
 	bgSrv "github.com/frabits/frabit/pkg/server/bg_services"
+	ac "github.com/frabits/frabit/pkg/services/access_control"
 	"github.com/frabits/frabit/pkg/services/agent"
 	"github.com/frabits/frabit/pkg/services/apikey"
 	"github.com/frabits/frabit/pkg/services/audit"
-	"github.com/frabits/frabit/pkg/services/auth"
+	"github.com/frabits/frabit/pkg/services/authn"
 	"github.com/frabits/frabit/pkg/services/backup"
 	"github.com/frabits/frabit/pkg/services/cleanup"
 	"github.com/frabits/frabit/pkg/services/deploy"
@@ -35,8 +37,10 @@ import (
 	"github.com/frabits/frabit/pkg/services/login"
 	ns "github.com/frabits/frabit/pkg/services/notifications"
 	"github.com/frabits/frabit/pkg/services/org"
+	"github.com/frabits/frabit/pkg/services/role"
 	"github.com/frabits/frabit/pkg/services/secrets"
 	sa "github.com/frabits/frabit/pkg/services/serviceaccount"
+	"github.com/frabits/frabit/pkg/services/session"
 	"github.com/frabits/frabit/pkg/services/settings"
 	"github.com/frabits/frabit/pkg/services/team"
 	uc "github.com/frabits/frabit/pkg/services/updatechecker"
@@ -47,10 +51,13 @@ import (
 
 var wireSet = wire.NewSet(
 	db.New,
+	ac.ProviderAccessControl,
+	ac.ProviderService,
+	authn.ProviderService,
 	apikey.ProviderService,
 	config.ProviderConfig,
 	agent.ProviderAgentService,
-	auth.ProviderService,
+	session.ProviderService,
 	audit.ProviderService,
 	backup.ProviderMySQLBackup,
 	bus.ProviderBus,
@@ -61,10 +68,13 @@ var wireSet = wire.NewSet(
 	sa.ProviderService,
 	secrets.ProviderSecrets,
 	settings.ProviderService,
+	role.ProviderService,
+	remotecache.ProviderRemoteCache,
 	ns.ProviderService,
 	org.ProviderService,
 	team.ProviderService,
 	user.ProviderService,
+	user.ProviderVerifier,
 	uc.ProviderFrabitService,
 	bgSrv.ProviderBackgroundServiceRegistry,
 	api.ProviderHTTPServer,

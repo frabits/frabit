@@ -13,25 +13,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package login
+package access_control
 
-type LoginAttempt struct {
-	Id        uint32 `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
-	Login     string `gorm:"type:varchar(30);not null;unique:uniq_login" json:"login"`
-	ClientIP  string `gorm:"type:varchar(200);not null" json:"client_ip"`
-	CreatedAt string `gorm:"type:varchar(50);not null" json:"created_at"`
+import (
+	"context"
+	"log/slog"
+
+	"github.com/frabits/frabit/pkg/infra/db"
+	"github.com/frabits/frabit/pkg/infra/log"
+)
+
+type permissionImpl struct {
+	log   *slog.Logger
+	store Store
 }
 
-func (a LoginAttempt) TableName() string {
-	return "login_attempt"
+func ProviderService(db *db.MetaStore) Service {
+	store := providerStore(db.Gdb)
+	pi := &permissionImpl{
+		log:   log.New("permission"),
+		store: store,
+	}
+	return pi
 }
 
-type CreateLoginAttemptCmd struct {
-	Login    string `json:"login"`
-	ClientIP string `json:"client_ip"`
-}
-
-type LoginDTO struct {
-	Msg   string `json:"msg"`
-	Token string `json:"token"`
+func (s *permissionImpl) CreatePermission(ctx context.Context) error {
+	return nil
 }

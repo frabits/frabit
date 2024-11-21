@@ -16,43 +16,103 @@
 package api
 
 import (
-	"github.com/frabits/frabit/pkg/services/auth"
+	"encoding/base64"
+	"encoding/hex"
 	"net/http"
+	"time"
 
+	"github.com/frabits/frabit/pkg/services/authn"
 	"github.com/frabits/frabit/pkg/services/login"
+	"github.com/frabits/frabit/pkg/services/session"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (hs *HttpServer) Login(c *gin.Context) {
-	// 1.SSO: github、google、OIDC
-	// 2.native
-	// 3.ldap
-	var authInfo login.AuthPasswd
+	// 1.native
+	// 2.ldap
+	var authInfo authn.AuthRequest
 	if err := c.ShouldBindJSON(&authInfo); err != nil {
 		hs.Logger.Error("Bind agent info failed", "Error", err.Error())
 	}
+	if err := hs.remoteCache.Set(hs.ctx, "native_login"+authInfo.Username, []byte(authInfo.Password), 10*time.Minute); err != nil {
+		hs.Logger.Error("create remoteCache failed", "Error", err.Error())
+	}
+	authReq := &authn.AuthRequest{
+		HttpReq:  c.Request,
+		Username: authInfo.Username,
+		Password: authInfo.Password,
+	}
 
-	err := hs.login.Authenticator(hs.ctx, authInfo)
+	id, err := hs.authn.Login(hs.ctx, authn.ClientForm, authReq)
 	if err != nil {
 		hs.Logger.Error("Login failed", "Error", err.Error())
 		c.IndentedJSON(http.StatusUnauthorized, err.Error())
 	} else {
 		// create a session token
-		userSession := &auth.CreateUserAuth{
-			Login:     authInfo.Login,
+		// hs.Logger.Info("get identity", "Identity", id)
+		userSession := &session.CreateSessionCmd{
+			Login:     id.Login,
 			ClientIP:  c.ClientIP(),
 			UserAgent: c.Request.UserAgent(),
 		}
-		session, err := hs.authUser.CreateToken(hs.ctx, userSession)
+		sess, err := hs.session.CreateSession(hs.ctx, userSession)
 		if err != nil {
 			hs.Logger.Error("create session token failed", "Error", err.Error())
 		}
-		c.Request.Header.Set("frabit", session)
+		encSession, err := hs.secrets.Encrypt([]byte(sess))
+		c.Request.Header.Set("frabit", sess)
 		result := login.LoginDTO{
 			Msg:   "Login successfully",
-			Token: session,
+			Token: hex.EncodeToString(encSession),
 		}
 		c.IndentedJSON(http.StatusOK, result)
 	}
+}
+
+func (hs *HttpServer) LoginOauth(c *gin.Context) {
+	// 1.SSO: github、google、OIDC
+	client := c.Param("name")
+	authReq := &authn.AuthRequest{
+		HttpReq: c.Request,
+	}
+	id, err := hs.authn.Login(hs.ctx, authn.ClientWithPrefix(client), authReq)
+	if err != nil {
+		hs.Logger.Error("Login failed", "Error", err.Error())
+		c.IndentedJSON(http.StatusUnauthorized, err.Error())
+	} else {
+		// create a session token
+		userSession := &session.CreateSessionCmd{
+			Login:     id.Login,
+			ClientIP:  c.ClientIP(),
+			UserAgent: c.Request.UserAgent(),
+		}
+		sess, err := hs.session.CreateSession(hs.ctx, userSession)
+		if err != nil {
+			hs.Logger.Error("create session token failed", "Error", err.Error())
+		}
+		encSession, err := hs.secrets.Encrypt([]byte(sess))
+		c.Request.Header.Set("frabit", sess)
+		result := login.LoginDTO{
+			Msg:   "Login successfully",
+			Token: base64.StdEncoding.EncodeToString(encSession),
+		}
+		c.IndentedJSON(http.StatusOK, result)
+	}
+}
+
+func (hs *HttpServer) Logout(c *gin.Context) {
+	// remove session
+	// redirect to login page
+	token, err := authn.GetTokenFromRequest(c.Request)
+	if err != nil {
+		hs.Logger.Error("not found session from header", "Error", err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
+	}
+	redirect, err := hs.authn.Logout(hs.ctx, token)
+	if err != nil {
+		hs.Logger.Error("Login failed", "Error", err.Error())
+		c.IndentedJSON(http.StatusUnauthorized, err.Error())
+	}
+	c.Redirect(http.StatusPermanentRedirect, redirect.URL)
 }

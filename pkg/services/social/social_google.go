@@ -14,3 +14,7 @@
 // limitations under the License.
 
 package social
+
+type GoogleProvider struct {
+	OAuthInfo
+}

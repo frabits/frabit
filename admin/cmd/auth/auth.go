@@ -21,8 +21,8 @@ import (
 
 // CmdAuth authenticate frabit-admin and frabit-server via token
 var CmdAuth = &cobra.Command{
-	Use:   "auth <subcommand> [flag]",
-	Short: "frabit auth manager",
+	Use:   "session <subcommand> [flag]",
+	Short: "frabit session manager",
 }
 
 func init() {

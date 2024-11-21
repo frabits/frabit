@@ -13,44 +13,42 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package authn
+package task
 
 import (
 	"context"
-	"errors"
 	"log/slog"
 
+	"github.com/frabits/frabit/pkg/infra/db"
 	"github.com/frabits/frabit/pkg/infra/log"
+	"github.com/frabits/frabit/pkg/services/secrets"
 )
 
-var (
-	ErrBasic = errors.New("")
-)
-
-type Basic struct {
-	client PasswordClient
+type taskImpl struct {
 	log    *slog.Logger
+	secret secrets.Service
+	store  Store
 }
 
-func ProviderBasic(client PasswordClient) Client {
-	return &Basic{
-		client: client,
-		log:    log.New(ClientBasic),
+func ProviderService(secret secrets.Service, metaDB *db.MetaStore) Service {
+	store := providerStore(metaDB.Gdb)
+	ti := &taskImpl{
+		log:    log.New("task"),
+		secret: secret,
+		store:  store,
 	}
+
+	return ti
 }
 
-func (c *Basic) Authenticate(ctx context.Context, req *AuthRequest) (*Identity, error) {
-	username, password, ok := req.HttpReq.BasicAuth()
-	if !ok {
-		return nil, ErrBasic
-	}
-	return c.client.AuthenticatePasswd(ctx, req.HttpReq, username, password)
+func (s *taskImpl) AddTask(ctx context.Context, cmd *CreateTaskCmd) error {
+	return nil
 }
 
-func (c *Basic) Name() string {
-	return ClientBasic
+func (s *taskImpl) UpdateTask(ctx context.Context, cmd *UpdateTaskCmd) error {
+	return nil
 }
 
-func (c *Basic) IsEnable() bool {
-	return true
+func (s *taskImpl) ListTasks(ctx context.Context) ([]*Task, error) {
+	return nil, nil
 }

@@ -15,7 +15,10 @@
 
 package serviceaccount
 
-import "context"
+import (
+	"context"
+	"errors"
+)
 
 type Service interface {
 	CreateServiceAccount(ctx context.Context, cmd *CreateServiceAccountCmd) error
@@ -25,3 +28,7 @@ type Service interface {
 	GetServiceAccount(ctx context.Context) ([]*ServiceAccountDTO, error)
 	GetServiceAccountByName(ctx context.Context, name string) ([]*ServiceAccountDTO, error)
 }
+
+var (
+	ErrServiceAccountNotExists = errors.New("service account not exists")
+)

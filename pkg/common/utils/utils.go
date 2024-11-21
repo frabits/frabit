@@ -124,3 +124,10 @@ func CreateUUIDWithDelimiter(delimiter string) string {
 func NowDatetime() string {
 	return time.Now().Format(time.DateTime)
 }
+
+func Number2Bool(num int) bool {
+	if num == 1 {
+		return true
+	}
+	return false
+}

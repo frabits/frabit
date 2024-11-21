@@ -47,8 +47,20 @@ type frabitConfig struct {
 	Port                     uint32
 	PluginDir                string
 	SecureKey                string
+	AdminPassword            string
+	License                  string
 	LoginMaxInactiveLifetime time.Duration
 	LoginMaxLifetime         time.Duration
+	LoginMaxRetry            int64
+	CacheType                string
+	CachePrefix              string
+	CacheConnection          string
+	CacheEncrypted           bool
+	DisableBasic             bool
+	DisableLogin             bool
+	DisableLdap              bool
+	DisableLoginProtection   bool
+	BasicAuthStrongPolicy    bool
 }
 
 type Config struct {
@@ -60,7 +72,7 @@ type Config struct {
 func ProviderConfig() *Config {
 	dbConf := dbConfig{
 		Database:           "frabit",
-		Host:               "192.168.1.7",
+		Host:               "192.168.1.11",
 		Port:               3306,
 		UserName:           "frabit",
 		Password:           "frabitSecure_1Passwd",
@@ -71,12 +83,18 @@ func ProviderConfig() *Config {
 	Logger = LoggerConfig{
 		FileName:     "/tmp/frabit.log",
 		Format:       "json",
-		DefaultLevel: slog.LevelInfo,
+		DefaultLevel: slog.LevelDebug,
 	}
 	Security = "2xWkMhUhF96IVtawQ7mRHuU6uYB"
 	frabitConf := frabitConfig{
-		Port:      9180,
-		SecureKey: Security,
+		Port:                   9180,
+		SecureKey:              Security,
+		AdminPassword:          "MhUhF96IVtawQ7mRHuU6uYB",
+		CachePrefix:            "demo",
+		CacheEncrypted:         true,
+		LoginMaxRetry:          5,
+		DisableLoginProtection: false,
+		BasicAuthStrongPolicy:  true,
 	}
 
 	return &Config{

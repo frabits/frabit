@@ -16,7 +16,9 @@
 package bg_services
 
 import (
+	"github.com/frabits/frabit/pkg/infra/remotecache"
 	"github.com/frabits/frabit/pkg/registry"
+	"github.com/frabits/frabit/pkg/services/authn"
 	"github.com/frabits/frabit/pkg/services/cleanup"
 	"github.com/frabits/frabit/pkg/services/deploy"
 	"github.com/frabits/frabit/pkg/services/license"
@@ -29,8 +31,8 @@ type BackgroundServiceRegistry struct {
 }
 
 func ProviderBackgroundServiceRegistry(cleanup *cleanup.Service, notifications *ns.Service, deploy deploy.Service,
-	updateChecker *uc.FrabitService, license license.Service) registry.BackgroundServiceRegistry {
-	return NewBackgroundServiceRegistry(cleanup, notifications, deploy, updateChecker, license)
+	updateChecker *uc.FrabitService, license license.Service, remoteCache *remotecache.RemoteCache, authnSrv authn.Service) registry.BackgroundServiceRegistry {
+	return NewBackgroundServiceRegistry(cleanup, notifications, deploy, updateChecker, license, remoteCache, authnSrv)
 }
 
 func NewBackgroundServiceRegistry(services ...registry.BackgroundService) registry.BackgroundServiceRegistry {

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package auth
+package session
 
 import (
 	"context"
@@ -38,13 +38,13 @@ func ProviderService(cfg *config.Config, metaDB *db.MetaStore) Service {
 	return &service{
 		cfg:   cfg,
 		store: metaStore,
-		log:   log.New("auth"),
+		log:   log.New("session"),
 	}
 }
 
-func (s *service) CreateToken(ctx context.Context, auth *CreateUserAuth) (string, error) {
+func (s *service) CreateSession(ctx context.Context, auth *CreateSessionCmd) (string, error) {
 	token, hashedToken, _ := generateToken()
-	userAuth := &UserAuth{
+	userAuth := &Session{
 		Login:     auth.Login,
 		ClientIP:  auth.ClientIP,
 		UserAgent: auth.UserAgent,
@@ -53,7 +53,7 @@ func (s *service) CreateToken(ctx context.Context, auth *CreateUserAuth) (string
 		CreatedAt: utils.NowDatetime(),
 		UpdatedAt: utils.NowDatetime(),
 	}
-	err := s.store.CreateToken(ctx, userAuth)
+	err := s.store.CreateSession(ctx, userAuth)
 	if err != nil {
 		s.log.Error("create user token failed", "Error", err.Error())
 		return "", err
@@ -61,37 +61,47 @@ func (s *service) CreateToken(ctx context.Context, auth *CreateUserAuth) (string
 	return token, nil
 }
 
-// LookupToken query user session token via unhashedToken
-func (s *service) LookupToken(ctx context.Context, unhashedToken string) (*UserAuth, error) {
-	userAuth := &UserAuth{}
-	return userAuth, nil
+// LookupSession LookupToken query user session token via unhashedToken
+func (s *service) LookupSession(ctx context.Context, unhashedToken string) (*Session, error) {
+	hashedToken := hashToken(unhashedToken)
+	s.log.Info("generate hashed token", "Token", hashedToken)
+	session, err := s.store.GetSessionByToken(ctx, hashedToken)
+	if err != nil {
+		s.log.Error("not find specific session", "Error", err.Error())
+		return nil, err
+	}
+	return session, nil
 }
 
-func (s *service) TryRotateToken(ctx context.Context, token *UserAuth, auth *CreateUserAuth) (bool, *UserAuth, error) {
-	userAuth := &UserAuth{}
+func (s *service) TryRotateSession(ctx context.Context, token *Session, auth *CreateSessionCmd) (bool, *Session, error) {
+	userAuth := &Session{}
 	return true, userAuth, nil
 }
 
-func (s *service) RevokeToken(ctx context.Context, token *UserAuth, soft bool) error {
+func (s *service) RevokeSession(ctx context.Context, token *Session, soft bool) error {
+	if !soft {
+		return s.store.DeleteSessionById(ctx, token.Id)
+	}
 	return nil
 }
 
-func (s *service) RevokeAllUserTokens(ctx context.Context, userId int64) error {
-	return nil
+func (s *service) RevokeAllUserSessions(ctx context.Context, login string) error {
+	s.log.Info("revoke all session", "Identity", login)
+	return s.store.RevokeUserAllSessions(ctx, login)
 }
 
-func (s *service) GetUserToken(ctx context.Context, userId, userTokenId int64) (*UserAuth, error) {
-	userAuth := &UserAuth{}
+func (s *service) GetUserSession(ctx context.Context, userId, userTokenId int64) (*Session, error) {
+	userAuth := &Session{}
 	return userAuth, nil
 }
 
-func (s *service) GetUserTokens(ctx context.Context, userId int64) ([]*UserAuth, error) {
-	userAuths := []*UserAuth{}
+func (s *service) GetUserSessions(ctx context.Context, userId int64) ([]*Session, error) {
+	userAuths := []*Session{}
 	return userAuths, nil
 }
 
-func (s *service) GetUserRevokedTokens(ctx context.Context, userId int64) ([]*UserAuth, error) {
-	userAuths := []*UserAuth{}
+func (s *service) GetUserRevokedSessions(ctx context.Context, userId int64) ([]*Session, error) {
+	userAuths := []*Session{}
 	return userAuths, nil
 }
 
@@ -102,7 +112,7 @@ func createToken() string {
 
 func hashToken(token string) string {
 	h := sha256.New()
-	h.Write([]byte(token + config.Security))
+	h.Write([]byte(token))
 	return hex.EncodeToString(h.Sum(nil))
 }
 

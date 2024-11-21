@@ -17,12 +17,14 @@ package apikey
 
 import (
 	"context"
+	"github.com/frabits/frabit/pkg/common/utils"
 
 	"gorm.io/gorm"
 )
 
 type Store interface {
 	AddAPIKey(ctx context.Context, key *APIKey) error
+	GetAPIKeyByHash(ctx context.Context, hash string) (*APIKey, error)
 }
 
 type storeImpl struct {
@@ -35,5 +37,17 @@ func NewStoreImpl(db *gorm.DB) Store {
 
 func (s *storeImpl) AddAPIKey(ctx context.Context, key *APIKey) error {
 	s.DB.Create(key)
+	return nil
+}
+
+func (s *storeImpl) GetAPIKeyByHash(ctx context.Context, hash string) (*APIKey, error) {
+	var apikey APIKey
+	s.DB.Where("hash_key=?", hash).First(&apikey)
+	s.updateLastSeen(ctx, apikey.Id)
+	return &apikey, nil
+}
+
+func (s *storeImpl) updateLastSeen(ctx context.Context, keyId uint32) error {
+	s.DB.Model(&APIKey{}).Where("id=?", keyId).Update("last_used_at", utils.NowDatetime())
 	return nil
 }

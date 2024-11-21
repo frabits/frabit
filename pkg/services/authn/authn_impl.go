@@ -17,6 +17,7 @@ package authn
 
 import (
 	"context"
+	"github.com/frabits/frabit/pkg/services/login"
 	"log/slog"
 	"time"
 
@@ -36,7 +37,7 @@ type AuthnImpl struct {
 	clients map[string]Client
 }
 
-func ProviderService(cfg *config.Config, apikey apikey.Service, user user.Service, secrets secrets.Service) Service {
+func ProviderService(cfg *config.Config, loginAttempt login.Service, apikey apikey.Service, user user.Service, secrets secrets.Service) Service {
 	ai := &AuthnImpl{
 		log:     log.New("authn"),
 		cfg:     cfg,
@@ -58,7 +59,7 @@ func ProviderService(cfg *config.Config, apikey apikey.Service, user user.Servic
 	}
 
 	if len(passwdClient) > 0 {
-		pwClient := ProviderPassword(passwdClient...)
+		pwClient := ProviderPassword(loginAttempt, passwdClient...)
 		basic := ProviderBasic(pwClient)
 		form := ProviderForm(pwClient)
 		ai.RegisterClient(basic)
@@ -74,6 +75,7 @@ func (s *AuthnImpl) Login(ctx context.Context, client string, authReq *AuthReque
 	if !ok {
 		return nil, nil
 	}
+	s.log.Info("found auth client", "Name", authClient.Name())
 	return authClient.Authenticate(ctx, authReq)
 }
 

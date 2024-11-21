@@ -81,9 +81,6 @@ func (s *secrets) Encrypt(payload []byte) ([]byte, error) {
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
 		return nil, err
 	}
-	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		return nil, err
-	}
 
 	stream := cipher.NewCFBEncrypter(block, iv)
 	stream.XORKeyStream(encryptData[SaltLen+aes.BlockSize:], payload)

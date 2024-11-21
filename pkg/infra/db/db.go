@@ -125,12 +125,15 @@ func (ms *MetaStore) genInitialData() []string {
 	initDatetime := time.Now().Format(time.DateTime)
 	initData := make([]string, 0)
 	license := fmt.Sprintf(`insert into license(license_level,current_license,prev_license,created_at,updated_at) values("%s","%s","%s","%s","%s")`, constant.Community, "", "", initDatetime, initDatetime)
-
 	initPasswd := utils.GenRandom(32)
+	if ms.cfg.Server.AdminPassword != "" {
+		ms.log.Info("used provide admin password")
+		initPasswd = ms.cfg.Server.AdminPassword
+	}
 	rands := utils.GenRandom(12)
 	hashPassword := utils.GeneratePassword(initPasswd)
 	ms.log.Info("InitPassword generated", "Username", "admin", "Password", initPasswd)
-	adminAccount := fmt.Sprintf(`insert into user(login,username,email,password,rands,is_admin,is_disabled,is_external,is_email_verified,theme,org_id,created_at,updated_at,last_seen_at) values("%s","%s","%s","%s","%s",%d,%d,%d,%d,"%s",%d,"%s","%s","%s")`, constant.ADMIN, constant.ADMIN, "admin@frabit.com", hashPassword, rands, 1, 0, 0, 1, constant.Dark, 1, initDatetime, initDatetime, initDatetime)
+	adminAccount := fmt.Sprintf(`insert into user(login,username,email,password,rands,is_admin,is_disabled,is_external,is_email_verified,theme,org_id,created_at,updated_at,last_seen_at) values("%s","%s","%s","%s","%s",%d,%d,%d,%d,"%s",%d,"%s","%s","%s")`, constant.ADMIN, constant.ADMIN, "admin@frabit.com", hashPassword, rands, 1, 0, 0, 0, constant.Dark, 1, initDatetime, initDatetime, initDatetime)
 	org := fmt.Sprintf(`insert into org(name,description,created_at,updated_at) values("%s","%s","%s","%s")`, constant.MainOrg, "Default org", initDatetime, initDatetime)
 	version := "v2.2.2"
 	initVersion := fmt.Sprintf(`insert into version(version,created_at,updated_at) values("%s","%s","%s")`, version, initDatetime, initDatetime)

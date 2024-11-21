@@ -13,19 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package auth
+package session
 
 import (
 	"context"
 )
 
 type Service interface {
-	CreateToken(ctx context.Context, auth *CreateUserAuth) (string, error)
-	LookupToken(ctx context.Context, unhashedToken string) (*UserAuth, error)
-	TryRotateToken(ctx context.Context, token *UserAuth, auth *CreateUserAuth) (bool, *UserAuth, error)
-	RevokeToken(ctx context.Context, token *UserAuth, soft bool) error
-	RevokeAllUserTokens(ctx context.Context, userId int64) error
-	GetUserToken(ctx context.Context, userId, userTokenId int64) (*UserAuth, error)
-	GetUserTokens(ctx context.Context, userId int64) ([]*UserAuth, error)
-	GetUserRevokedTokens(ctx context.Context, userId int64) ([]*UserAuth, error)
+	CreateSession(ctx context.Context, auth *CreateSessionCmd) (string, error)
+	LookupSession(ctx context.Context, unhashedToken string) (*Session, error)
+	TryRotateSession(ctx context.Context, token *Session, auth *CreateSessionCmd) (bool, *Session, error)
+	RevokeSession(ctx context.Context, token *Session, soft bool) error
+	RevokeAllUserSessions(ctx context.Context, login string) error
+	GetUserSession(ctx context.Context, userId, userTokenId int64) (*Session, error)
+	GetUserSessions(ctx context.Context, userId int64) ([]*Session, error)
+	GetUserRevokedSessions(ctx context.Context, userId int64) ([]*Session, error)
 }

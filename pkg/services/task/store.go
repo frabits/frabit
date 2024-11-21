@@ -13,25 +13,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package login
+package task
 
-type LoginAttempt struct {
-	Id        uint32 `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
-	Login     string `gorm:"type:varchar(30);not null;unique:uniq_login" json:"login"`
-	ClientIP  string `gorm:"type:varchar(200);not null" json:"client_ip"`
-	CreatedAt string `gorm:"type:varchar(50);not null" json:"created_at"`
+import (
+	"context"
+	"gorm.io/gorm"
+)
+
+type Store interface {
+	CreateTask(ctx context.Context, task *Task) error
+	GetTasks(ctx context.Context) ([]*Task, error)
+	UpdateTask(ctx context.Context, task *Task) ([]*Task, error)
 }
 
-func (a LoginAttempt) TableName() string {
-	return "login_attempt"
+type storeImpl struct {
+	db *gorm.DB
 }
 
-type CreateLoginAttemptCmd struct {
-	Login    string `json:"login"`
-	ClientIP string `json:"client_ip"`
+func providerStore(db *gorm.DB) Store {
+	return &storeImpl{db: db}
 }
 
-type LoginDTO struct {
-	Msg   string `json:"msg"`
-	Token string `json:"token"`
+func (s *storeImpl) CreateTask(ctx context.Context, task *Task) error {
+	return nil
+}
+
+func (s *storeImpl) GetTasks(ctx context.Context) ([]*Task, error) {
+	return nil, nil
+}
+
+func (s *storeImpl) UpdateTask(ctx context.Context, task *Task) ([]*Task, error) {
+	return nil, nil
 }

@@ -16,15 +16,17 @@
 package api
 
 import (
+	"net/http"
+
+	ac "github.com/frabits/frabit/pkg/services/access_control"
 	"github.com/frabits/frabit/pkg/services/settings"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func (hs *HttpServer) applyAdmin(group *gin.RouterGroup) {
 	subRouter := group.Group("/admin")
-	subRouter.POST("/settings", hs.CreateSetting)
-	subRouter.GET("/settings", hs.GetAllSetting)
+	subRouter.POST("/settings", hs.authZ(ac.EvalPermission(ac.ActionSettingWrite)), hs.CreateSetting)
+	subRouter.GET("/settings", hs.authZ(ac.EvalPermission(ac.ActionSettingRead)), hs.GetAllSetting)
 }
 
 func (hs *HttpServer) CreateSetting(c *gin.Context) {

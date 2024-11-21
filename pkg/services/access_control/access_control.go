@@ -15,8 +15,42 @@
 
 package access_control
 
-import "context"
+import (
+	"context"
+	"log/slog"
+
+	"github.com/frabits/frabit/pkg/infra/log"
+	"github.com/frabits/frabit/pkg/services/role"
+	"github.com/frabits/frabit/pkg/services/user"
+)
+
+type AccessControl interface {
+	Evaluate(ctx context.Context, user string, eval Evaluator) (bool, error)
+}
 
 type Service interface {
-	AddRole(ctx context.Context)
+	CreatePermission(ctx context.Context) error
+}
+
+type accessControlImpl struct {
+	log        *slog.Logger
+	userSrv    user.Service
+	roleSrv    role.Service
+	permission Service
+}
+
+func ProviderAccessControl(userSrv user.Service, roleSrv role.Service, permission Service) AccessControl {
+	aci := &accessControlImpl{
+		log: log.New("access.control"),
+	}
+	aci.userSrv = userSrv
+	aci.roleSrv = roleSrv
+	aci.permission = permission
+	return aci
+}
+
+func (s *accessControlImpl) Evaluate(ctx context.Context, user string, eval Evaluator) (bool, error) {
+	// ger user permission
+
+	return true, nil
 }

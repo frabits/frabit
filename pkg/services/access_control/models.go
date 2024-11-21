@@ -13,25 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package login
+package access_control
 
-type LoginAttempt struct {
-	Id        uint32 `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
-	Login     string `gorm:"type:varchar(30);not null;unique:uniq_login" json:"login"`
-	ClientIP  string `gorm:"type:varchar(200);not null" json:"client_ip"`
-	CreatedAt string `gorm:"type:varchar(50);not null" json:"created_at"`
-}
+import "github.com/pkg/errors"
 
-func (a LoginAttempt) TableName() string {
-	return "login_attempt"
-}
+var (
+	ActionUserRead = "user:read"
 
-type CreateLoginAttemptCmd struct {
-	Login    string `json:"login"`
-	ClientIP string `json:"client_ip"`
-}
+	ActionTeamCreate = "team:create"
 
-type LoginDTO struct {
-	Msg   string `json:"msg"`
-	Token string `json:"token"`
-}
+	ActionSettingWrite = "setting:write"
+	ActionSettingRead  = "setting:read"
+)
+
+var (
+	ErrScopeNotMutated = errors.New("scope not mutate")
+)

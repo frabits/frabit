@@ -16,9 +16,12 @@
 package api
 
 import (
-	"github.com/frabits/frabit/pkg/event"
-	"github.com/frabits/frabit/pkg/services/audit"
 	"net/http"
+
+	"github.com/frabits/frabit/pkg/event"
+	ac "github.com/frabits/frabit/pkg/services/access_control"
+	"github.com/frabits/frabit/pkg/services/audit"
+	"github.com/frabits/frabit/pkg/services/authn"
 
 	fb "github.com/frabits/frabit-go-sdk/frabit"
 	"github.com/gin-gonic/gin"
@@ -27,8 +30,9 @@ import (
 func (hs *HttpServer) applyUser(group *gin.RouterGroup) {
 	subRouter := group.Group("/users")
 	subRouter.POST("", hs.CreateUser)
-	subRouter.GET("", hs.GetUsers)
-	subRouter.GET("/:login", hs.GetUserByLogin)
+	subRouter.POST("/verify-email", hs.VerifyEmailStart)
+	subRouter.GET("", hs.authZ(ac.EvalPermission(ac.ActionUserRead)), hs.GetUsers)
+	subRouter.GET("/:login", hs.authZ(ac.EvalPermission(ac.ActionUserRead)), hs.GetUserByLogin)
 	subRouter.DELETE("/:login", hs.DeleteUserByLogin)
 }
 
@@ -52,6 +56,42 @@ func (hs *HttpServer) CreateUser(c *gin.Context) {
 		hs.Logger.Error("add audit event failed")
 	}
 	c.IndentedJSON(http.StatusOK, "create an user successfully")
+}
+
+func (hs *HttpServer) VerifyEmailStart(c *gin.Context) {
+	login := c.GetString(authn.AuthIdentity)
+	if err := hs.verifier.Start(hs.ctx, login); err != nil {
+		hs.Logger.Error("send verify request failed", "Error", err.Error())
+		c.IndentedJSON(http.StatusOK, map[string]any{
+			"title": "send verify request failed",
+			"mesg":  err.Error(),
+		})
+		return
+	}
+
+	auditCmd := &audit.CreateAuditCmd{
+		Username:  login,
+		EventName: event.EvtCreateUser,
+		ClientIp:  c.ClientIP(),
+	}
+	hs.Logger.Info("write audit log", "eventName", auditCmd.EventName)
+	if err := hs.audit.AddAuditEvent(hs.ctx, auditCmd); err != nil {
+		hs.Logger.Error("add audit event failed")
+	}
+	c.IndentedJSON(http.StatusOK, "create an user successfully")
+}
+
+func (hs *HttpServer) VerifyEmailComplete(c *gin.Context) {
+	code := c.Param("code")
+	if err := hs.verifier.Complete(hs.ctx, code); err != nil {
+		hs.Logger.Error("send verify request failed", "Error", err.Error())
+		c.IndentedJSON(http.StatusOK, map[string]any{
+			"title": "verify email failed",
+			"mesg":  err.Error(),
+		})
+		return
+	}
+	c.IndentedJSON(http.StatusOK, "email verified")
 }
 
 func (hs *HttpServer) GetUsers(c *gin.Context) {

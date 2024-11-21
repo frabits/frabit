@@ -15,8 +15,15 @@
 
 package login
 
-import "context"
+import (
+	"context"
+
+	"github.com/frabits/frabit/pkg/registry"
+)
 
 type Service interface {
-	Authenticator(ctx context.Context, authInfo AuthPasswd) error
+	registry.BackgroundService
+	Add(ctx context.Context, cmd *CreateLoginAttemptCmd) error
+	Reset(ctx context.Context, login string) error
+	Validate(ctx context.Context, login string) bool
 }

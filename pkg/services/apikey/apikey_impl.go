@@ -19,6 +19,7 @@ import (
 	"context"
 	"github.com/frabits/frabit/pkg/common/constant"
 	"github.com/frabits/frabit/pkg/common/utils"
+	"github.com/frabits/frabit/pkg/satoken"
 	"github.com/frabits/frabit/pkg/services/user"
 	"log/slog"
 	"time"
@@ -71,4 +72,15 @@ func (s *serviceImpl) AddAPIKey(ctx context.Context, cmd *CreateAPIKeyCmd) (*API
 		return nil, ErrGenerateFailed
 	}
 	return apiKey, nil
+}
+
+func (s *serviceImpl) GetAPIKeyByHash(ctx context.Context, hash string) (*APIKey, error) {
+	prefixToken, err := satoken.Decode(hash)
+	if err != nil {
+		s.log.Error("cannot decode service account token", "Error", err.Error())
+		return nil, err
+	}
+	s.log.Info("decode token from header", "token", prefixToken)
+
+	return s.store.GetAPIKeyByHash(ctx, prefixToken.Hash())
 }
